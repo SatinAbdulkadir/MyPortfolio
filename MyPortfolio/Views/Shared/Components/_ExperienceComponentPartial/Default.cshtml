@@ -1,0 +1,21 @@
+﻿@model List<MyPortfolio.BusinessLayer.Dtos.ExperienceDtos.ResultExperienceDto>
+
+<div class="experience-list">
+    @if (Model != null && Model.Count > 0)
+    {
+        @foreach (var item in Model)
+        {
+            <div class="resume-item">
+                <h4>@item.Head</h4>
+                <h5>@item.DatePeriod</h5>
+                <p><em>@item.Title</em></p>
+                <p>@item.Description</p>
+            </div>
+            <hr />
+        }
+    }
+    else
+    {
+        <p>Henüz bir deneyim verisi eklenmemiş reis.</p>
+    }
+</div>

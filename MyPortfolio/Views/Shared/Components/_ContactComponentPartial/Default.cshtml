@@ -1,0 +1,20 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.ContactDtos.ResultContactDto
+
+@if (Model != null)
+{
+    <div>
+        <h4>@Model.Title</h4>
+        <p>@Model.Description</p>
+        <ul>
+            <li>Telefon: @Model.Phone1</li>
+            <li>Telefon: @Model.Phone2</li>
+            <li>Email: @Model.Email1</li>
+            <li>Email: @Model.Email2</li>
+            <li>Adres: @Model.Address</li>
+        </ul>
+    </div>
+}
+else
+{
+    <p>Henüz bir giriş Contact eklenmemiş.</p>
+}

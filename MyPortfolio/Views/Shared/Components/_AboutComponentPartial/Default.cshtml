@@ -1,0 +1,22 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.AboutDtos.ResultAboutDto
+
+<section id="about" class="py-5">
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                @* Buraya ileride senin bir fotoğrafını koyarız *@
+                <img src="https://via.placeholder.com/500x500" class="img-fluid rounded-3 shadow" alt="Hakkımda">
+            </div>
+            <div class="col-lg-6">
+                @if (Model != null)
+                {
+                    <h2 class="fw-bold mb-4">@Model.Title</h2>
+                    <p class="text-muted mb-4" style="font-size: 1.1rem;">@Model.SubDescription</p>
+                    <div class="p-4 bg-light border-start border-primary border-4 rounded">
+                        <p class="mb-0 italic">@Model.Details</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

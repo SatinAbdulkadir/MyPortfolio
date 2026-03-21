@@ -1,0 +1,17 @@
+﻿@model List<MyPortfolio.BusinessLayer.Dtos.SocialMediaDtos.ResultSocialMediaDto>
+
+<div class="social-links">
+    @if (Model != null && Model.Count > 0)
+    {
+        @foreach (var item in Model)
+        {
+            <a href="@item.Url" class="@item.Title" target="_blank">
+                <i class="@item.Icon"></i>
+            </a>
+        }
+    }
+    else
+    {
+        <h1>Sosyal medya eklenmedi</h1>
+    }
+</div>
