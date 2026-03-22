@@ -22,4 +22,8 @@
     <ProjectReference Include="..\MyPortfolio.EntityLayer\MyPortfolio.EntityLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\vendors\" />
+  </ItemGroup>
+
 </Project>

@@ -1,28 +1,30 @@
 ﻿@model List<MyPortfolio.BusinessLayer.Dtos.PortfolioDtos.ResultPortfolioDto>
 
-<section id="portfolio">
+<section id="portfolio" class="section-padding">
     <div class="container">
         <div class="section-title">
-            <h2>Projelerim</h2>
-            <p>Bugüne kadar tamamladığım bazı çalışmalar.</p>
+            <span class="subtitle">ÇALIŞMALARIM</span>
+            <h2 class="title">Projelerim</h2>
         </div>
 
-        <div class="row">
+        <div class="row g-4">
             @if (Model != null && Model.Count > 0)
             {
                 @foreach (var item in Model)
                 {
-                    <div class="col-lg-4 col-md-6 portfolio-item">
-                        <div class="portfolio-wrap">
-                            @* Veritabanında resim yolu varsa onu basar *@
-                            <img src="@item.ImageUrl" class="img-fluid" alt="@item.Title">
-                            <div class="portfolio-info">
-                                <h4>@item.Title</h4>
-                                <p>@item.SubTitle</p>
-                                <div class="portfolio-links">
-                                    <a href="@item.Url" target="_blank" title="Projeyi Gör">
-                                        <i class="bx bx-link"></i> Detay
-                                    </a>
+                    <div class="col-lg-4 col-md-6">
+                        <div class="portfolio-card">
+                            <div class="portfolio-img">
+                                <img src="@item.ImageUrl" class="img-fluid" alt="@item.Title">
+                                <div class="portfolio-overlay">
+                                    <div class="overlay-content">
+                                        <span class="category">@item.SubTitle</span>
+                                        <h4 class="project-name">@item.Title</h4>
+                                        <p class="project-desc">@item.Description</p>
+                                        <a href="@item.Url" target="_blank" class="project-link">
+                                            İNCELE <i class="fa fa-arrow-right ms-2"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -31,7 +33,9 @@
             }
             else
             {
-                <div class="alert alert-info">Henüz bir proje eklenmemiş reis.</div>
+                <div class="col-12 text-center">
+                    <p class="text-muted">Henüz bir proje eklenmemiş reis, DB'yi bir kontrol et!</p>
+                </div>
             }
         </div>
     </div>

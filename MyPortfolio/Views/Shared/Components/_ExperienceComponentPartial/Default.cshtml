@@ -1,21 +1,32 @@
 ﻿@model List<MyPortfolio.BusinessLayer.Dtos.ExperienceDtos.ResultExperienceDto>
 
-<div class="experience-list">
-    @if (Model != null && Model.Count > 0)
-    {
-        @foreach (var item in Model)
-        {
-            <div class="resume-item">
-                <h4>@item.Head</h4>
-                <h5>@item.DatePeriod</h5>
-                <p><em>@item.Title</em></p>
-                <p>@item.Description</p>
-            </div>
-            <hr />
-        }
-    }
-    else
-    {
-        <p>Henüz bir deneyim verisi eklenmemiş reis.</p>
-    }
-</div>
+<section id="experience" class="section-padding">
+    <div class="container">
+        <div class="section-title">
+            <span class="subtitle">KARİYER YOLCULUĞUM</span>
+            <h2 class="title">Deneyimler</h2>
+        </div>
+
+        <div class="timeline-wrapper">
+            @if (Model != null && Model.Count > 0)
+            {
+                foreach (var item in Model)
+                {
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">@item.DatePeriod</div>
+                        <div class="timeline-content">
+                            <h4 class="exp-head">@item.Head</h4>
+                            <h5 class="exp-title">@item.Title</h5>
+                            <p class="exp-desc">@item.Description</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-dark">Henüz bir deneyim verisi eklenmemiş reis.</div>
+            }
+        </div>
+    </div>
+</section>

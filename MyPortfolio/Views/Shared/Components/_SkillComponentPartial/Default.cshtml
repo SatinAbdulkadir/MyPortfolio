@@ -1,27 +1,40 @@
 ﻿@model List<MyPortfolio.BusinessLayer.Dtos.SkillDtos.ResultSkillDto>
 
-<div class="row skills-content">
-    @if (Model != null && Model.Count > 0)
-    {
-        @foreach (var item in Model)
-        {
-            <div class="col-lg-6">
-                <div class="progress">
-                    <span class="skill">@item.Title <i class="val">@item.Value%</i></span>
-                    <div class="progress-bar-wrap">
-                        <div class="progress-bar" role="progressbar"
-                             style="width: @item.Value%"
-                             aria-valuenow="@item.Value"
-                             aria-valuemin="0"
-                             aria-valuemax="100">
+<section id="skills" class="section-padding">
+    <div class="container">
+        <div class="section-title">
+            <span class="subtitle">YETENEKLERİM</span>
+            <h2 class="title">Teknoloji Envanterim</h2>
+        </div>
+
+        <div class="row skills-content g-4">
+            @if (Model != null && Model.Count > 0)
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="col-lg-6">
+                        <div class="skill-item">
+                            <div class="skill-info">
+                                <span class="skill-name">@item.Title</span>
+                                <span class="skill-val">@item.Value%</span>
+                            </div>
+                            <div class="progress-bar-wrap">
+                                @* CSS ile animasyon yapabilmek için width'i data-width içine saklıyoruz *@
+                                <div class="progress-bar" role="progressbar"
+                                     data-width="@item.Value"
+                                     style="width: 0%">
+                                </div>
+                            </div>
                         </div>
                     </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <div class="alert alert-warning">Veritabanında henüz bir yetenek tanımlanmamış reis.</div>
                 </div>
-            </div>
-        }
-    }
-    else
-    {
-        <div class="alert alert-warning">Henüz bir yetenek eklenmemiş reis!</div>
-    }
-</div>
+            }
+        </div>
+    </div>
+</section>

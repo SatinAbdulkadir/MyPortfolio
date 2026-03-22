@@ -1,16 +1,21 @@
 ﻿@model MyPortfolio.BusinessLayer.Dtos.FeatureDtos.ResultFeatureDto
 
-<section id="home" class="vh-100 d-flex align-items-center text-center bg-light border-bottom">
-    <div class="container">
+<section id="home" class="hero-wrapper">
+    <div class="hero-content">
         @if (Model != null)
         {
-            <h6 class="text-primary text-uppercase fw-bold">Hoş Geldiniz</h6>
-            <h1 class="display-1 fw-bold my-3">@Model.Title</h1>
-            <p class="lead mb-4 text-secondary">@Model.Description</p>
-            <div class="d-flex justify-content-center gap-3">
-                <a href="#portfolio" class="btn btn-primary btn-lg px-4">Projelerimi Gör</a>
-                <a href="#contact" class="btn btn-outline-dark btn-lg px-4">İletişime Geç</a>
+            <span class="hero-subtitle">MİMARIN DÜNYASINA HOŞ GELDİNİZ</span>
+            <h1 class="hero-title">Ben <span>@Model.Title</span></h1>
+            <p class="hero-description">@Model.Description</p>
+
+            <div class="hero-btns">
+                <a href="#portfolio" class="btn-hero btn-primary-hero">PROJELERİMİ GÖR</a>
+                <a href="#contact" class="btn-hero btn-outline-hero">İLETİŞİME GEÇ</a>
             </div>
+        }
+        else
+        {
+            <div class="alert alert-dark">Feature verisi DB'den gelmiyor, veritabanını kontrol et reis!</div>
         }
     </div>
 </section>

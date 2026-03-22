@@ -1,20 +1,58 @@
 ﻿@model MyPortfolio.BusinessLayer.Dtos.ContactDtos.ResultContactDto
 
-@if (Model != null)
-{
-    <div>
-        <h4>@Model.Title</h4>
-        <p>@Model.Description</p>
-        <ul>
-            <li>Telefon: @Model.Phone1</li>
-            <li>Telefon: @Model.Phone2</li>
-            <li>Email: @Model.Email1</li>
-            <li>Email: @Model.Email2</li>
-            <li>Adres: @Model.Address</li>
-        </ul>
+<section id="contact" class="section-padding">
+    <div class="container">
+        <div class="section-title">
+            <span class="subtitle">BANA ULAŞIN</span>
+            <h2 class="title">İletişim</h2>
+        </div>
+
+        @if (Model != null)
+        {
+            <div class="contact-wrapper">
+                <div class="contact-header-info">
+                    <h3 class="contact-title">@Model.Title</h3>
+                    <p class="contact-desc">@Model.Description</p>
+                </div>
+
+                <div class="contact-grid">
+                    <div class="contact-card">
+                        <div class="icon-box"><i class="fa fa-phone"></i></div>
+                        <div class="info-content">
+                            <span class="info-label">Telefon</span>
+                            <p>@Model.Phone1</p>
+                            @if (!string.IsNullOrEmpty(Model.Phone2))
+                            {
+                                <p>@Model.Phone2</p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="contact-card">
+                        <div class="icon-box"><i class="fa fa-envelope"></i></div>
+                        <div class="info-content">
+                            <span class="info-label">E-Posta</span>
+                            <p>@Model.Email1</p>
+                            @if (!string.IsNullOrEmpty(Model.Email2))
+                            {
+                                <p>@Model.Email2</p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="contact-card">
+                        <div class="icon-box"><i class="fa fa-map-marker-alt"></i></div>
+                        <div class="info-content">
+                            <span class="info-label">Adres</span>
+                            <p>@Model.Address</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-dark text-center">İletişim bilgileri henüz girilmemiş.</div>
+        }
     </div>
-}
-else
-{
-    <p>Henüz bir giriş Contact eklenmemiş.</p>
-}
+</section>

@@ -1,0 +1,51 @@
+﻿@model MyPortfolio.WebUI.Models.SidebarViewModel
+
+<div class="sidebar-wrapper">
+    <div class="profile-section">
+        <div class="profile-img">
+            <img src="/images/user-profile.jpg" alt="Profil">
+        </div>
+        @if (Model.Feature != null)
+        {
+            <h3 class="profile-name">@Model.Feature.Title</h3>
+            <p class="profile-title">@Model.Feature.Description</p>
+        }
+    </div>
+
+    <nav class="sidebar-menu">
+        <ul>
+            @* 1. Ana Sayfa Linki (En üste atması için #body veya #home) *@
+            <li><a href="#home"><i class="fa fa-home"></i> ANA SAYFA</a></li>
+
+            <li><a href="#about"><i class="fa fa-user"></i> HAKKIMDA</a></li>
+
+            <li><a href="#experience"><i class="fa fa-briefcase"></i> DENEYİMLER</a></li>
+
+            @* 2. Yeteneklerim Menüye Eklendi *@
+            <li><a href="#skills"><i class="fa fa-star"></i> YETENEKLER</a></li>
+
+            
+            <li><a href="#portfolio"><i class="fa fa-code"></i> PROJELER</a></li>
+
+            @* 3. Referans Kontrolü (Sadece DB'de veri varsa menüde görünür) *@
+            @if (Model.Testimonials != null && Model.Testimonials.Any())
+            {
+                <li><a href="#testimonials"><i class="fa fa-quote-right"></i> REFERANSLAR</a></li>
+            }
+
+            <li><a href="#contact"><i class="fa fa-envelope"></i> İLETİŞİM</a></li>
+        </ul>
+    </nav>
+
+    <div class="social-footer">
+        @if (Model.SocialMedias != null)
+        {
+            foreach (var item in Model.SocialMedias)
+            {
+                <a href="@item.Url" target="_blank" title="@item.Title">
+                    <i class="@item.Icon"></i>
+                </a>
+            }
+        }
+    </div>
+</div>

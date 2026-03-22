@@ -5,13 +5,13 @@
     {
         @foreach (var item in Model)
         {
-            <a href="@item.Url" class="@item.Title" target="_blank">
+            <a href="@item.Url" class="social-icon-btn @item.Title" target="_blank" title="@item.Title">
                 <i class="@item.Icon"></i>
             </a>
         }
     }
     else
     {
-        <h1>Sosyal medya eklenmedi</h1>
+        <p class="text-muted small">Mecralar bekleniyor...</p>
     }
 </div>

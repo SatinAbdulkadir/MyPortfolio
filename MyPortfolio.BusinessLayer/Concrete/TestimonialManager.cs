@@ -17,7 +17,7 @@ namespace MyPortfolio.BusinessLayer.Concrete
         public async Task<List<ResultTestimonialDto>> TGetTestimonialListAsync()
         {
             var values = await _testimonialDal.GetListAsync();
-            return values.Select(x => new ResultTestimonialDto
+            return values.Where(x => x.IsActive).Select(x => new ResultTestimonialDto
             {
                 TestimonialId = x.Id,
                 NameSurname = x.NameSurname,

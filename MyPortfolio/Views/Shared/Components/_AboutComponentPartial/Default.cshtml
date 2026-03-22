@@ -1,20 +1,41 @@
 ﻿@model MyPortfolio.BusinessLayer.Dtos.AboutDtos.ResultAboutDto
 
-<section id="about" class="py-5">
-    <div class="container py-5">
+<section id="about" class="about-section-wrapper">
+    <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-6">
-                @* Buraya ileride senin bir fotoğrafını koyarız *@
-                <img src="https://via.placeholder.com/500x500" class="img-fluid rounded-3 shadow" alt="Hakkımda">
+            <div class="col-lg-5 mb-5 mb-lg-0">
+                <div class="about-img-frame">
+                    @* Buraya kendi fotoğrafını koyduğunda ImageUrl ile bağlarsın *@
+                    <img src="/images/user-profile.jpg" class="img-fluid rounded-4 shadow-lg" alt="Hakkımda">
+                    <div class="experience-badge">
+                        <span class="num">5+</span>
+                        <span class="txt">Yıllık<br>Tecrübe</span>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-6">
+
+            <div class="col-lg-7 ps-lg-5">
                 @if (Model != null)
                 {
-                    <h2 class="fw-bold mb-4">@Model.Title</h2>
-                    <p class="text-muted mb-4" style="font-size: 1.1rem;">@Model.SubDescription</p>
-                    <div class="p-4 bg-light border-start border-primary border-4 rounded">
-                        <p class="mb-0 italic">@Model.Details</p>
+                    <div class="about-info-content">
+                        <span class="subtitle">BİRAZ KENDİMDEN BAHSEDEYİM</span>
+                        <h2 class="about-title">@Model.Title</h2>
+                        <p class="about-subdesc">@Model.SubDescription</p>
+
+                        <div class="about-details-box">
+                            <i class="fa fa-quote-left"></i>
+                            <p>@Model.Details</p>
+                        </div>
+
+                        <div class="about-action-btns">
+                            <a href="#contact" class="btn-hero btn-primary-hero">İLETİŞİME GEÇ</a>
+                            <a href="#" class="btn-hero btn-outline-hero"><i class="fa fa-download me-2"></i>CV İNDİR</a>
+                        </div>
                     </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">Hakkımda verisi veritabanında bulunamadı reis!</div>
                 }
             </div>
         </div>
