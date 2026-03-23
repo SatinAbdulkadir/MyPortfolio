@@ -1,4 +1,5 @@
-﻿using MyPortfolio.BusinessLayer.Abstract;
+﻿using AutoMapper;
+using MyPortfolio.BusinessLayer.Abstract;
 using MyPortfolio.BusinessLayer.Dtos.FeatureDtos;
 using MyPortfolio.DataAccessLayer.Abstract;
 using MyPortfolio.EntityLayer.Concrete;
@@ -8,35 +9,28 @@ namespace MyPortfolio.BusinessLayer.Concrete
     public class FeatureManager : IFeatureService
     {
         private readonly IGenericDal<Feature> _featureDal;
+        private readonly IMapper _mapper; // AutoMapper enjekte edildi
 
-        // DI: DataAccess katmanındaki şablonu buraya enjekte ediyoruz
-        public FeatureManager(IGenericDal<Feature> featureDal)
+        public FeatureManager(IGenericDal<Feature> featureDal, IMapper mapper)
         {
             _featureDal = featureDal;
+            _mapper = mapper;
         }
 
         public async Task<ResultFeatureDto> GetFeatureForBannerAsync()
         {
-            // Veriyi DataAccess'ten çekiyoruz
             var values = await _featureDal.GetListAsync();
-            var data = values.FirstOrDefault(); // Şimdilik ilk kaydı alalım
+            var data = values.FirstOrDefault();
 
-            // Manuel dönüşüm (İleride AutoMapper ile otomatize edeceğiz)
-            if (data != null)
-            {
-                return new ResultFeatureDto
-                {
-                    Title = data.Title,
-                    Description = data.Description
-                };
-            }
-            
-                return null!;
+            // ESKİ: Manuel atama ameleliği
+            // YENİ: Tek satır kurumsal dönüşüm
+            return _mapper.Map<ResultFeatureDto>(data);
         }
 
-        public Task TUpdateFeatureAsync(ResultFeatureDto resultFeatureDto)
+        public async Task TUpdateFeatureAsync(ResultFeatureDto resultFeatureDto)
         {
-            throw new NotImplementedException(); // Admin paneline gelince yazacağız
+            // Admin paneline gelince burayı da _mapper.Map ile tek satırda halledeceğiz reis.
+            throw new NotImplementedException();
         }
     }
 }

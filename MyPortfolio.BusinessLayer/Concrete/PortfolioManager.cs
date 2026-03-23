@@ -1,23 +1,30 @@
-﻿using MyPortfolio.BusinessLayer.Dtos.PortfolioDtos;
+﻿using AutoMapper;
+using MyPortfolio.BusinessLayer.Abstract;
+using MyPortfolio.BusinessLayer.Dtos.PortfolioDtos;
 using MyPortfolio.DataAccessLayer.Abstract;
 using MyPortfolio.EntityLayer.Concrete;
 
-public class PortfolioManager : IPortfolioService
+namespace MyPortfolio.BusinessLayer.Concrete
 {
-    private readonly IGenericDal<Portfolio> _portfolioDal;
-    public PortfolioManager(IGenericDal<Portfolio> portfolioDal) { _portfolioDal = portfolioDal; }
-
-    public async Task<List<ResultPortfolioDto>> TGetPortfolioListAsync()
+    public class PortfolioManager : IPortfolioService
     {
-        var values = await _portfolioDal.GetListAsync();
-        return values.Select(x => new ResultPortfolioDto
+        private readonly IGenericDal<Portfolio> _portfolioDal;
+        private readonly IMapper _mapper; // AutoMapper silahını kuşanıyoruz
+
+        public PortfolioManager(IGenericDal<Portfolio> portfolioDal, IMapper mapper)
         {
-            PortfolioId = x.Id,
-            Title = x.Title,
-            SubTitle = x.SubTitle,
-            ImageUrl = x.ImageUrl,
-            Url = x.Url,
-            Description = x.Description
-        }).ToList();
+            _portfolioDal = portfolioDal;
+            _mapper = mapper;
+        }
+
+        public async Task<List<ResultPortfolioDto>> TGetPortfolioListAsync()
+        {
+            // Veritabanından ham listeyi çekiyoruz
+            var values = await _portfolioDal.GetListAsync();
+
+            // ESKİ: Select ile tek tek atama ameleliği
+            // YENİ: Tek satırda kurumsal liste dönüşümü
+            return _mapper.Map<List<ResultPortfolioDto>>(values);
+        }
     }
 }

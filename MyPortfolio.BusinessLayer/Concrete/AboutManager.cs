@@ -1,68 +1,52 @@
-﻿using MyPortfolio.BusinessLayer.Abstract;
+﻿using AutoMapper; // Kütüphaneyi ekle
+using MyPortfolio.BusinessLayer.Abstract;
 using MyPortfolio.BusinessLayer.Dtos.AboutDtos;
 using MyPortfolio.DataAccessLayer.Abstract;
 using MyPortfolio.EntityLayer.Concrete;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyPortfolio.BusinessLayer.Concrete
 {
-    public class AboutManager :IAboutService
+    public class AboutManager : IAboutService
     {
         private readonly IGenericDal<About> _aboutDal;
-        public AboutManager(IGenericDal<About> aboutDal)
+        private readonly IMapper _mapper; // Mapper nesnemiz
+
+        // Constructor Injection ile IMapper'ı içeri alıyoruz
+        public AboutManager(IGenericDal<About> aboutDal, IMapper mapper)
         {
             _aboutDal = aboutDal;
+            _mapper = mapper;
         }
 
-        // UI Tarafı İçin: Hakkımda bilgisini getirir
         public async Task<ResultAboutDto> TGetAboutAsync()
         {
             var values = await _aboutDal.GetListAsync();
-            var data = values.FirstOrDefault(); // Genelde tek bir "About" kaydı olur
+            var data = values.FirstOrDefault();
 
-            if (data != null)
-            {
-                // Manuel Mapping (AutoMapper gelene kadar böyle devam)
-                return new ResultAboutDto
-                {
-                    AboutId = data.Id,
-                    Title = data.Title,
-                    SubDescription = data.SubDescription,
-                    Details = data.Details
-                };
-            }
-            return null; // Veri yoksa null dönmek iyidir, UI katmanında kontrol ederiz
+            // Manuel atama bitti, tek satırda profesyonel dönüşüm:
+            return _mapper.Map<ResultAboutDto>(data);
         }
 
-        // Admin Paneli İçin: Hakkımda bilgisini günceller
         public async Task TUpdateAboutAsync(UpdateAboutDto updateAboutDto)
         {
-            // Önce mevcut kaydı veritabanından çekelim (Veya direkt DTO'dan Entity yapalım)
             var existingData = await _aboutDal.GetByIdAsync(updateAboutDto.AboutId);
 
             if (existingData != null)
             {
-                existingData.Title = updateAboutDto.Title;
-                existingData.SubDescription = updateAboutDto.SubDescription;
-                existingData.Details = updateAboutDto.Details;
-
+                // DTO'daki verileri mevcut Entity'ye yansıt:
+                _mapper.Map(updateAboutDto, existingData);
                 await _aboutDal.UpdateAsync(existingData);
             }
         }
 
-        // Statü Değiştirme (Gerekirse Aktif/Pasif Yapmak İçin)
         public async Task TChangeAboutStatusAsync(int id)
         {
             var data = await _aboutDal.GetByIdAsync(id);
             if (data != null)
             {
-                data.IsActive = !data.IsActive; // Durumu tersine çevir
+                data.IsActive = !data.IsActive;
                 await _aboutDal.UpdateAsync(data);
             }
         }
-}
+    }
 }

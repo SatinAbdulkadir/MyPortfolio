@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using MyPortfolio.BusinessLayer.Abstract;
 using MyPortfolio.BusinessLayer.Concrete;
 using MyPortfolio.DataAccessLayer.Abstract;
@@ -33,6 +34,13 @@ builder.Services.AddScoped<ITestimonialService, TestimonialManager>();
 // DbContext'i sisteme ve appsettings'deki baðlantýya entegre ediyoruz:
 builder.Services.AddDbContext<MyPortfolioContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Business katmanýndaki Mapping sýnýfýný referans alarak tüm profilleri sisteme kaydeder.
+builder.Services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies());
+
+////////////////////////////////////////////////////////////////////////////////////
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
