@@ -1,0 +1,29 @@
+﻿
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Paneli - MyPortfolio</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/admin_sidebar.css" />
+</head>
+<body>
+    <div class="d-flex" id="wrapper">
+        @await Html.PartialAsync("_AdminSidebarPartial")
+
+        <div id="page-content-wrapper" class="w-100">
+            @await Html.PartialAsync("_AdminNavbarPartial")
+
+            <div class="container-fluid py-4">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

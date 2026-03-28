@@ -1,0 +1,63 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.ContactDtos.UpdateContactDto
+@{
+    ViewData["Title"] = "İletişim Ayarları";
+    Layout = "_AdminLayout";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-white">
+        <h6 class="m-0 fw-bold text-primary"><i class="fas fa-address-card me-2"></i> İletişim Bilgilerimi Güncelle</h6>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            @* Veritabanındaki Id'yi kaybetmemek için gizli alan *@
+            <input type="hidden" asp-for="Id" />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Sayfa Başlığı</label>
+                    <input type="text" asp-for="Title" class="form-control" placeholder="Örn: Bana Ulaşın" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Açıklama Metni</label>
+                    <input type="text" asp-for="Description" class="form-control" placeholder="Örn: Projeleriniz için iletişime geçebilirsiniz.">
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold"><i class="fas fa-envelope me-1 text-danger"></i> E-Posta 1</label>
+                    <input type="email" asp-for="Email1" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold"><i class="fas fa-envelope me-1 text-muted"></i> E-Posta 2 (Opsiyonel)</label>
+                    <input type="email" asp-for="Email2" class="form-control">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold"><i class="fas fa-phone me-1 text-success"></i> Telefon 1</label>
+                    <input type="text" asp-for="Phone1" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold"><i class="fas fa-phone me-1 text-muted"></i> Telefon 2 (Opsiyonel)</label>
+                    <input type="text" asp-for="Phone2" class="form-control">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold"><i class="fas fa-map-marker-alt me-1 text-warning"></i> Açık Adres</label>
+                <textarea asp-for="Address" rows="3" class="form-control" required></textarea>
+            </div>
+
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary shadow-sm px-5">
+                    <i class="fas fa-save me-2"></i> Değişiklikleri Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

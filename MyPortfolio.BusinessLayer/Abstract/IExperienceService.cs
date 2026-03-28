@@ -11,5 +11,9 @@ namespace MyPortfolio.BusinessLayer.Abstract
     {
         // Tüm deneyimleri liste olarak getirecek görev
         Task<List<ResultExperienceDto>> TGetExperienceListAsync();
+        Task TCreateExperienceAsync(CreateExperienceDto createExperienceDto);
+        Task TUpdateExperienceAsync(UpdateExperienceDto updateExperienceDto);
+        Task TDeleteExperienceAsync(int id);
+        Task<UpdateExperienceDto> TGetByIdExperienceAsync(int id);
     }
 }

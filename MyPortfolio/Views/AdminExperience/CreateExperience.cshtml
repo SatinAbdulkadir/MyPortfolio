@@ -1,0 +1,41 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.ExperienceDtos.CreateExperienceDto
+@{
+    ViewData["Title"] = "Yeni Deneyim Ekle";
+    Layout = "_AdminLayout";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-white">
+        <h6 class="m-0 fw-bold text-primary"><i class="fas fa-plus-circle me-2"></i> Yeni Deneyim Ekle</h6>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Şirket / Kurum Adı (Head)</label>
+                <input type="text" asp-for="Head" class="form-control" placeholder="Örn: Google / Bilge Adam" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Ünvan (Title)</label>
+                <input type="text" asp-for="Title" class="form-control" placeholder="Örn: Senior Full Stack Developer" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tarih Aralığı (DatePeriod)</label>
+                <input type="text" asp-for="DatePeriod" class="form-control" placeholder="Örn: Haziran 2022 - Günümüz" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Açıklama (Description)</label>
+                <textarea asp-for="Description" rows="4" class="form-control" placeholder="Neler yaptığını kısaca anlat reis..." required></textarea>
+            </div>
+
+            <div class="text-end">
+                <a href="/AdminExperience/Index" class="btn btn-secondary shadow-sm">İptal</a>
+                <button type="submit" class="btn btn-primary shadow-sm px-4">
+                    <i class="fas fa-save me-1"></i> Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

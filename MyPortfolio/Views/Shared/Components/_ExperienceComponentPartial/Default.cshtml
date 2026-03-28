@@ -2,7 +2,7 @@
 
 <section id="experience" class="section-padding">
     <div class="container">
-        <div class="section-title">
+        <div class="section-title text-center">
             <span class="subtitle">KARİYER YOLCULUĞUM</span>
             <h2 class="title">Deneyimler</h2>
         </div>
@@ -14,18 +14,34 @@
                 {
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
-                        <div class="timeline-date">@item.DatePeriod</div>
+
+                        @* Tarih Kısmı: Daha belirgin ve ikonlu *@
+                        <div class="timeline-date" style="color: #ffb400; font-weight: 600; font-size: 0.9rem;">
+                            <i class="far fa-calendar-check me-1"></i> @item.DatePeriod
+                        </div>
+
                         <div class="timeline-content">
-                            <h4 class="exp-head">@item.Head</h4>
-                            <h5 class="exp-title">@item.Title</h5>
-                            <p class="exp-desc">@item.Description</p>
+                            @* Başlık (Kurum): Beyaz ve Kalın *@
+                            <h4 class="exp-head" style="color: #ffffff; font-weight: 700; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;">
+                                @item.Head
+                            </h4>
+
+                            @* Ünvan: Altın Sarısı / Sarı Tonu *@
+                            <h5 class="exp-title" style="color: #ffb400; font-weight: 500; font-size: 1.1rem; margin-bottom: 15px;">
+                                @item.Title
+                            </h5>
+
+                            @* Açıklama: Daha soluk (Gri) ve okunaklı *@
+                            <p class="exp-desc" style="color: #a0a0a0; line-height: 1.6; font-size: 0.95rem;">
+                                @item.Description
+                            </p>
                         </div>
                     </div>
                 }
             }
             else
             {
-                <div class="alert alert-dark">Henüz bir deneyim verisi eklenmemiş reis.</div>
+                <div class="alert alert-dark text-center">Henüz bir deneyim verisi eklenmemiş reis.</div>
             }
         </div>
     </div>

@@ -25,5 +25,41 @@ namespace MyPortfolio.BusinessLayer.Concrete
             // AutoMapper ile List<Entity> -> List<DTO> dönüşümünü tek satırda yapıyoruz
             return _mapper.Map<List<ResultExperienceDto>>(values);
         }
+
+
+
+        public async Task TCreateExperienceAsync(CreateExperienceDto createExperienceDto)
+        {
+            var value = _mapper.Map<Experience>(createExperienceDto);
+            await _experienceDal.InsertAsync(value);
+        }
+
+        public async Task TDeleteExperienceAsync(int id)
+        {
+            // Önce silinecek veriyi ID ile buluyoruz
+            var value = await _experienceDal.GetByIdAsync(id);
+
+            // Eğer veri varsa silme işlemini yapıyoruz
+            if (value != null)
+            {
+                await _experienceDal.DeleteAsync(value);
+            }
+        }
+
+        public async Task<UpdateExperienceDto> TGetByIdExperienceAsync(int id)
+        {
+            var value = await _experienceDal.GetByIdAsync(id);
+            return _mapper.Map<UpdateExperienceDto>(value);
+        }
+
+        public async Task TUpdateExperienceAsync(UpdateExperienceDto updateExperienceDto)
+        {
+            var existingData = await _experienceDal.GetByIdAsync(updateExperienceDto.Id);
+            if (existingData != null)
+            {
+                _mapper.Map(updateExperienceDto, existingData);
+                await _experienceDal.UpdateAsync(existingData);
+            }
+        }
     }
 }

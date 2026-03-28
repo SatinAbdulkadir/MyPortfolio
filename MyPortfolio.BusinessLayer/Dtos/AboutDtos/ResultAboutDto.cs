@@ -8,7 +8,7 @@ namespace MyPortfolio.BusinessLayer.Dtos.AboutDtos
 {
     public class ResultAboutDto
     {
-        public required int AboutId { get; set; }
+        public required int Id { get; set; }
         public required string Title { get; set; }
         public required string SubDescription { get; set; }
         public required string Details { get; set; }

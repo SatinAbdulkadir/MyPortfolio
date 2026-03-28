@@ -1,0 +1,32 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.FeatureDtos.UpdateFeatureDto
+@{
+    ViewData["Title"] = "Banner Ayarları";
+    Layout = "_AdminLayout";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-white">
+        <h6 class="m-0 fw-bold text-primary"><i class="fas fa-flag me-2"></i> Banner (Öne Çıkan) Bilgilerini Güncelle</h6>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Ad Soyad / Başlık</label>
+                <input type="text" asp-for="Title" class="form-control" placeholder="Örn: Abdulkadir" required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Kısa Tanıtım / Ünvan</label>
+                <textarea asp-for="Description" rows="3" class="form-control" placeholder="Örn: Full Stack Developer & Architect" required></textarea>
+            </div>
+
+            <div class="text-end mt-4">
+                <button type="submit" class="btn btn-primary shadow-sm px-5">
+                    <i class="fas fa-save me-2"></i> Vitrini Güncelle
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

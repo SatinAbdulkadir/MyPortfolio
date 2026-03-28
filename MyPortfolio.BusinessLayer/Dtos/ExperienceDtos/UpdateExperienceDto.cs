@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyPortfolio.BusinessLayer.Dtos.ExperienceDtos
 {
-    public class ResultExperienceDto
+    public class UpdateExperienceDto
     {
         public required int Id { get; set; }
         public required string Head { get; set; }

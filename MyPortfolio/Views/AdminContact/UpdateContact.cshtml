@@ -1,0 +1,46 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.ContactDtos.UpdateContactDto
+@{
+    ViewData["Title"] = "Kanal Güncelle";
+    Layout = "_AdminLayout";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-white">
+        <h6 class="m-0 fw-bold text-info"><i class="fas fa-edit me-2"></i> İletişim Kanalını Düzenle</h6>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            @* ÖNEMLİ: BaseEntity kullandığımız için Id alanını gizli gönderiyoruz *@
+            <input type="hidden" asp-for="Id" />
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Kanal Başlığı</label>
+                    <input type="text" asp-for="Title" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Açıklama</label>
+                    <input type="text" asp-for="Description" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">E-Posta</label>
+                    <input type="email" asp-for="Email1" class="form-control">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Telefon</label>
+                    <input type="text" asp-for="Phone1" class="form-control">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Adres veya Link</label>
+                <textarea asp-for="Address" rows="3" class="form-control" required></textarea>
+            </div>
+            <div class="text-end">
+                <a href="/AdminContact/Index" class="btn btn-secondary shadow-sm">Vazgeç</a>
+                <button type="submit" class="btn btn-info text-white shadow-sm px-4">Değişiklikleri Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>

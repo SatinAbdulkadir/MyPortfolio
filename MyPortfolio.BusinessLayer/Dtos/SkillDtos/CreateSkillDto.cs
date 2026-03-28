@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MyPortfolio.BusinessLayer.Dtos.SkillDtos
 {
-    public class ResultSkillDto
+    public class CreateSkillDto
     {
-        public required int Id { get; set; }
+        
         public required string Title { get; set; }
         public required int Value { get; set; }
     }

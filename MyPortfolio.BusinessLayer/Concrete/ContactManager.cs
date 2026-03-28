@@ -20,11 +20,26 @@ namespace MyPortfolio.BusinessLayer.Concrete
         public async Task<ResultContactDto> TGetContactAsync()
         {
             var values = await _contactDal.GetListAsync();
-            var data = values.FirstOrDefault();
-
-            // ESKİ: 10 satır manuel atama
-            // YENİ: Tek satır kurumsal dönüşüm
+            var data = values.FirstOrDefault(); // Sadece ilk veriyi alıyoruz
             return _mapper.Map<ResultContactDto>(data);
+        }
+        
+
+
+
+
+        public async Task TUpdateContactAsync(UpdateContactDto updateContactDto)
+        {
+            // Veritabanındaki tek kaydı alıyoruz
+            var values = await _contactDal.GetListAsync();
+            var existingData = values.FirstOrDefault();
+
+            if (existingData != null)
+            {
+                // Kurumsal Mapping: DTO'yu mevcut Entity üzerine bindir
+                _mapper.Map(updateContactDto, existingData);
+                await _contactDal.UpdateAsync(existingData);
+            }
         }
     }
 }

@@ -7,7 +7,10 @@ namespace MyPortfolio.BusinessLayer.Abstract
         // UI katmanı sadece bu metodu çağıracak
         Task<ResultFeatureDto> GetFeatureForBannerAsync();
 
-        // Gerekirse diğer Business kuralları buraya gelecek
-        Task TUpdateFeatureAsync(ResultFeatureDto resultFeatureDto);
+       
+
+       
+        // Parametreyi UpdateDto yaptık ki ID ile eşleşsin
+        Task TUpdateFeatureAsync(UpdateFeatureDto updateFeatureDto);
     }
 }

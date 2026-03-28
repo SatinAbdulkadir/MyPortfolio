@@ -29,7 +29,7 @@ namespace MyPortfolio.BusinessLayer.Concrete
 
         public async Task TUpdateAboutAsync(UpdateAboutDto updateAboutDto)
         {
-            var existingData = await _aboutDal.GetByIdAsync(updateAboutDto.AboutId);
+            var existingData = await _aboutDal.GetByIdAsync(updateAboutDto.Id);
 
             if (existingData != null)
             {

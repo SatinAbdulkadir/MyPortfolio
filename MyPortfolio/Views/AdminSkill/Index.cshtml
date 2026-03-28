@@ -1,0 +1,75 @@
+﻿@model List<MyPortfolio.BusinessLayer.Dtos.SkillDtos.ResultSkillDto>
+@{
+    ViewData["Title"] = "Yetenek Listesi";
+    Layout = "_AdminLayout";
+    int count = 0;
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center bg-white">
+        <h6 class="m-0 fw-bold text-primary"><i class="fas fa-tools me-2"></i> Yetenek Envanteri</h6>
+        <a href="/AdminSkill/CreateSkill" class="btn btn-primary btn-sm shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50 me-1"></i> Yeni Yetenek Ekle
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Yetenek Başlığı</th>
+                        <th style="width: 300px;">Seviye (%)</th>
+                        <th style="width: 200px;" class="text-center">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            count++;
+                            <tr>
+                                <td>@count</td>
+                                <td class="fw-bold">@item.Title</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="progress flex-grow-1 me-2" style="height: 10px;">
+                                            @* Dinamik renk ataması: %70 üstü yeşil, %40 altı kırmızı *@
+                                            <div class="progress-bar @(item.Value >= 70 ? "bg-success" : item.Value >= 40 ? "bg-info" : "bg-danger")"
+                                                 role="progressbar"
+                                                 style="width: @item.Value%"
+                                                 aria-valuenow="@item.Value"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                        <span class="small fw-bold">@item.Value%</span>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <a href="/AdminSkill/UpdateSkill/@item.Id" class="btn btn-outline-warning btn-sm me-1">
+                                        <i class="fas fa-edit"></i> Düzenle
+                                    </a>
+                                    <a href="/AdminSkill/DeleteSkill/@item.Id" class="btn btn-outline-danger btn-sm"
+                                       onclick="return confirm('Bu yeteneği silmek istediğine emin misin reis?')">
+                                        <i class="fas fa-trash"></i> Sil
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">
+                                <i class="fas fa-folder-open d-block mb-2 fa-2x"></i>
+                                Henüz bir yetenek eklenmemiş.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -27,10 +27,28 @@ namespace MyPortfolio.BusinessLayer.Concrete
             return _mapper.Map<ResultFeatureDto>(data);
         }
 
-        public async Task TUpdateFeatureAsync(ResultFeatureDto resultFeatureDto)
+        public async Task TUpdateFeatureAsync(UpdateFeatureDto updateFeatureDto)
         {
-            // Admin paneline gelince burayı da _mapper.Map ile tek satırda halledeceğiz reis.
-            throw new NotImplementedException();
+            // Önce tabloda herhangi bir veri var mı ona bakıyoruz (Id'den bağımsız)
+            var values = await _featureDal.GetListAsync();
+            var existingData = values.FirstOrDefault();
+
+            if (existingData != null)
+            {
+                // 1. DURUM: Veri varsa güncelle
+                // AutoMapper sayesinde Id hariç her şeyi üstüne yazar
+                _mapper.Map(updateFeatureDto, existingData);
+                await _featureDal.UpdateAsync(existingData);
+            }
+            else
+            {
+                // 2. DURUM: Tablo bomboşsa hata verme, yenisini oluştur!
+                // Bu sayede "güncelleme yapmıyor" derdinden kurtuluruz
+                var newFeature = _mapper.Map<Feature>(updateFeatureDto);
+                await _featureDal.InsertAsync(newFeature);
+            }
         }
+
+
     }
 }

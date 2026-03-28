@@ -1,8 +1,10 @@
-﻿@model MyPortfolio.BusinessLayer.Dtos.ContactDtos.ResultContactDto
+﻿@using MyPortfolio.BusinessLayer.Dtos.ContactDtos
+@* ARTIK LİSTE DEĞİL, TEKİL NESNE BEKLİYORUZ *@
+@model ResultContactDto
 
 <section id="contact" class="section-padding">
     <div class="container">
-        <div class="section-title">
+        <div class="section-title text-center">
             <span class="subtitle">BANA ULAŞIN</span>
             <h2 class="title">İletişim</h2>
         </div>
@@ -10,12 +12,13 @@
         @if (Model != null)
         {
             <div class="contact-wrapper">
-                <div class="contact-header-info">
+                <div class="contact-header-info text-center mb-5">
                     <h3 class="contact-title">@Model.Title</h3>
                     <p class="contact-desc">@Model.Description</p>
                 </div>
 
                 <div class="contact-grid">
+                    @* 1. Kutu: Telefon *@
                     <div class="contact-card">
                         <div class="icon-box"><i class="fa fa-phone"></i></div>
                         <div class="info-content">
@@ -28,6 +31,7 @@
                         </div>
                     </div>
 
+                    @* 2. Kutu: E-Posta *@
                     <div class="contact-card">
                         <div class="icon-box"><i class="fa fa-envelope"></i></div>
                         <div class="info-content">
@@ -40,6 +44,7 @@
                         </div>
                     </div>
 
+                    @* 3. Kutu: Adres *@
                     <div class="contact-card">
                         <div class="icon-box"><i class="fa fa-map-marker-alt"></i></div>
                         <div class="info-content">
@@ -52,7 +57,7 @@
         }
         else
         {
-            <div class="alert alert-dark text-center">İletişim bilgileri henüz girilmemiş.</div>
+            <div class="alert alert-dark text-center">İletişim bilgisi bulunamadı.</div>
         }
     </div>
 </section>

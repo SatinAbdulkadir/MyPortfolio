@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MyPortfolio.BusinessLayer.Dtos.ExperienceDtos
 {
-    public class ResultExperienceDto
+    public class CreateExperienceDto
     {
-        public required int Id { get; set; }
+       
         public required string Head { get; set; }
         public required string Title { get; set; }//burda daha çok yeteneği ünvanı tarzında
         public required string DatePeriod { get; set; }

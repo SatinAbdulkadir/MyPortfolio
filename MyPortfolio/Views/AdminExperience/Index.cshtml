@@ -1,0 +1,65 @@
+﻿@using MyPortfolio.BusinessLayer.Dtos.ExperienceDtos
+@model List<ResultExperienceDto>
+@{
+    ViewData["Title"] = "Deneyim Listesi";
+    Layout = "_AdminLayout";
+    int count = 0;
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center bg-white">
+        <h6 class="m-0 fw-bold text-primary"><i class="fas fa-briefcase me-2"></i> Deneyim Listesi</h6>
+        <a href="/AdminExperience/CreateExperience" class="btn btn-primary btn-sm shadow-sm">
+            <i class="fas fa-plus fa-sm me-1"></i> Yeni Deneyim Ekle
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Başlık (Şirket/Kurum)</th>
+                        <th>Ünvan</th>
+                        <th>Tarih Aralığı</th>
+                        <th style="width: 150px;">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            count++;
+                            <tr>
+                                <td class="text-center fw-bold">@count</td>
+                                <td>@item.Head</td>
+                                <td><span class="badge bg-secondary">@item.Title</span></td>
+                                <td class="text-center">@item.DatePeriod</td>
+                                <td class="text-center">
+                                    <a href="/AdminExperience/UpdateExperience/@item.Id" class="btn btn-outline-info btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    @* Silme işlemi için az önce yazdığımız Delete action'ına gidiyor *@
+                                    <a href="/AdminExperience/DeleteExperience/@item.Id"
+                                       class="btn btn-outline-danger btn-sm"
+                                       onclick="return confirm('Bu deneyim kaydını silmek istediğine emin misin reis?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                <i class="fas fa-info-circle me-2"></i> Henüz bir deneyim eklenmemiş.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
