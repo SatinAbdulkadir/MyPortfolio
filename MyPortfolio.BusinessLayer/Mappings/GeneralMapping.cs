@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MyPortfolio.BusinessLayer.Dtos.AboutDtos;
+using MyPortfolio.BusinessLayer.Dtos.AppUserDtos;
 using MyPortfolio.BusinessLayer.Dtos.ContactDtos;
 using MyPortfolio.BusinessLayer.Dtos.ExperienceDtos;
 using MyPortfolio.BusinessLayer.Dtos.FeatureDtos;
@@ -17,6 +18,7 @@ namespace MyPortfolio.BusinessLayer.Mappings
         {
             // ReverseMap() sayesinde çift yönlü yol yapıyoruz.
             CreateMap<About, ResultAboutDto>().ReverseMap();
+            CreateMap<ResultAboutDto, UpdateAboutDto>().ReverseMap();
             CreateMap<About, UpdateAboutDto>().ReverseMap();
 
 
@@ -37,14 +39,24 @@ namespace MyPortfolio.BusinessLayer.Mappings
 
 
             CreateMap<Portfolio, ResultPortfolioDto>().ReverseMap();
+            CreateMap<Portfolio, CreatePortfolioDto>().ReverseMap();
+            CreateMap<Portfolio, UpdatePortfolioDto>().ReverseMap();
 
             CreateMap<Skill, ResultSkillDto>().ReverseMap();
             CreateMap<Skill, CreateSkillDto>().ReverseMap();
             CreateMap<Skill, UpdateSkillDto>().ReverseMap();
 
             CreateMap<SocialMedia, ResultSocialMediaDto>().ReverseMap();
+            CreateMap<SocialMedia, CreateSocialMediaDto>().ReverseMap();
+            CreateMap<SocialMedia, UpdateSocialMediaDto>().ReverseMap();
 
             CreateMap<Testimonial, ResultTestimonialDto>().ReverseMap();
+            CreateMap<Testimonial, CreateTestimonialDto>().ReverseMap();
+            CreateMap<Testimonial, UpdateTestimonialDto>().ReverseMap();
+
+
+
+            CreateMap<AppUser, EditProfileDto>().ReverseMap();
 
 
             // İleride Experience, Skill vb. buraya eklenecek.

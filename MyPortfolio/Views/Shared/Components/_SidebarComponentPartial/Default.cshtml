@@ -2,12 +2,10 @@
 
 <div class="sidebar-wrapper">
     <div class="profile-section">
-        <div class="profile-img">
-            <img src="/images/user-profile.jpg" alt="Profil">
-        </div>
+        
         @if (Model.Feature != null)
         {
-            <h3 class="profile-name">@Model.Feature.Title</h3>
+            <h3 class="profile-name">@Model.Feature.Title.ToUpper()</h3>
             <p class="profile-title">@Model.Feature.Description</p>
         }
     </div>

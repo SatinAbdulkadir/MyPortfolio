@@ -9,25 +9,31 @@
         <h6 class="m-0 fw-bold text-primary"><i class="fas fa-plus-circle me-2"></i> Yeni Deneyim Ekle</h6>
     </div>
     <div class="card-body">
-        <form method="post">
+        <form method="post" novalidate>
+            @* novalidate: Tarayıcının basit uyarısını kapatır, bizim profesyonel kuralları açar *@
+
             <div class="mb-3">
                 <label class="form-label fw-bold">Şirket / Kurum Adı (Head)</label>
-                <input type="text" asp-for="Head" class="form-control" placeholder="Örn: Google / Bilge Adam" required />
+                <input type="text" asp-for="Head" class="form-control" placeholder="Örn: Google / Bilge Adam" />
+                <span asp-validation-for="Head" class="text-danger small fw-bold"></span>
             </div>
 
             <div class="mb-3">
                 <label class="form-label fw-bold">Ünvan (Title)</label>
-                <input type="text" asp-for="Title" class="form-control" placeholder="Örn: Senior Full Stack Developer" required />
+                <input type="text" asp-for="Title" class="form-control" placeholder="Örn: Senior Full Stack Developer" />
+                <span asp-validation-for="Title" class="text-danger small fw-bold"></span>
             </div>
 
             <div class="mb-3">
                 <label class="form-label fw-bold">Tarih Aralığı (DatePeriod)</label>
-                <input type="text" asp-for="DatePeriod" class="form-control" placeholder="Örn: Haziran 2022 - Günümüz" required />
+                <input type="text" asp-for="DatePeriod" class="form-control" placeholder="Örn: Haziran 2022 - Günümüz" />
+                <span asp-validation-for="DatePeriod" class="text-danger small fw-bold"></span>
             </div>
 
             <div class="mb-3">
                 <label class="form-label fw-bold">Açıklama (Description)</label>
-                <textarea asp-for="Description" rows="4" class="form-control" placeholder="Neler yaptığını kısaca anlat reis..." required></textarea>
+                <textarea asp-for="Description" rows="4" class="form-control" placeholder="Neler yaptığını kısaca anlat reis..."></textarea>
+                <span asp-validation-for="Description" class="text-danger small fw-bold"></span>
             </div>
 
             <div class="text-end">

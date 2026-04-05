@@ -9,20 +9,28 @@
         <h6 class="m-0 fw-bold text-primary"><i class="fas fa-plus-circle me-2"></i> Yeni Yetenek Ekle</h6>
     </div>
     <div class="card-body">
-        <form method="post">
+        <form method="post" novalidate>
+            @* Value alanını arka planda 100 olarak gönderiyoruz, ekranda kutusu olmayacak *@
+            <input type="hidden" asp-for="Value" value="100" />
+
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Yetenek Başlığı</label>
-                        <input type="text" asp-for="Title" class="form-control" placeholder="Örn: .NET Core, React, SQL..." required />
+                        <input type="text" asp-for="Title" class="form-control" placeholder="Örn: .NET Core, React, SQL..." />
+                        <span asp-validation-for="Title" class="text-danger small fw-bold"></span>
+                        <br />
                         <small class="text-muted">Öne çıkarmak istediğin teknolojiyi yaz reis.</small>
                     </div>
                 </div>
-                <div class="col-md-4">
+
+                <div class="col-md-5">
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Başarı Oranı (%)</label>
-                        <input type="number" asp-for="Value" class="form-control" min="0" max="100" placeholder="0-100" required />
-                        <small class="text-muted">0 ile 100 arasında bir değer gir.</small>
+                        <label class="form-label fw-bold">İkon Sınıfı</label>
+                        <input type="text" asp-for="Icon" class="form-control" placeholder="Örn: fab fa-cuttlefish" />
+                        <span asp-validation-for="Icon" class="text-danger small fw-bold"></span>
+                        <br />
+                        <small class="text-muted"><a href="https://fontawesome.com/v5/search?m=free" target="_blank">İkon kütüphanesine git.</a></small>
                     </div>
                 </div>
             </div>

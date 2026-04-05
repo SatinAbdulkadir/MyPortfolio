@@ -1,0 +1,108 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.AppUserDtos.LoginDto
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Girişi</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* SweetAlert Linki (Login'de de toast istiyorsan) *@
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            background: #1a1a2e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .login-box {
+            background: #16213e;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-control {
+            background: #0f3460;
+            border: 1px solid #1a1a2e;
+            color: white;
+            padding: 12px;
+        }
+
+            .form-control:focus {
+                background: #0f3460;
+                color: white;
+                border-color: #e94560;
+                box-shadow: 0 0 8px rgba(233, 69, 96, 0.5);
+            }
+
+        .btn-primary {
+            background: #e94560;
+            border: none;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+            .btn-primary:hover {
+                background: #c62a48;
+                transform: translateY(-2px);
+            }
+
+        .error-text {
+            font-size: 0.85rem;
+            color: #ff4d4d;
+            display: block;
+            margin-top: 5px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box text-center">
+        <h2 class="mb-2">Yönetici Girişi</h2>
+        <p class="text-muted mb-4 small">Lütfen kimlik bilgilerinizi girin</p>
+
+        <form method="post" novalidate>
+            <div class="mb-3 text-start">
+                <input type="text" asp-for="UserName" class="form-control" placeholder="Kullanıcı Adı" />
+                <span asp-validation-for="UserName" class="error-text fw-bold"></span>
+            </div>
+
+            <div class="mb-4 text-start">
+                <input type="password" asp-for="Password" class="form-control" placeholder="Şifre" />
+                <span asp-validation-for="Password" class="error-text fw-bold"></span>
+            </div>
+
+            @* Genel Hata Mesajı (Kullanıcı adı/şifre yanlış uyarısı buraya düşer) *@
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3 small fw-bold"></div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2">GİRİŞ YAP</button>
+        </form>
+        <p class="mt-4 small text-muted">MyPortfolio v1.0 &copy; @DateTime.Now.Year</p>
+    </div>
+
+    @* Hatalı girişte sağ üstten Toast fırlatalım *@
+    @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(""))
+    {
+        <script>
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Giriş Başarısız!',
+                text: 'Kullanıcı adı veya şifre hatalı reis.',
+                showConfirmButton: false,
+                timer: 3000
+            });
+        </script>
+    }
+</body>
+</html>

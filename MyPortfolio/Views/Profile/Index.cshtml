@@ -1,0 +1,79 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.AppUserDtos.EditProfileDto
+@{
+    ViewData["Title"] = "Profilim ve Şifre";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="col-12 grid-margin stretch-card">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class="card-title mb-4">Profil Bilgilerimi Güncelle</h4>
+            <p class="card-description mb-5">
+                Bu panelden kişisel bilgilerinizi ve giriş şifrenizi güncelleyebilirsiniz.
+            </p>
+
+            <form class="forms-sample" method="post" novalidate>
+                @* Model bazlı genel hataları (Şifre yanlış vb.) göstermek için *@
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-4 fw-bold"></div>
+
+                @* KİŞİSEL BİLGİLER BÖLÜMÜ *@
+                <div class="row mb-4">
+                    <div class="form-group col-md-6 pb-2">
+                        <label class="font-weight-bold">Adınız</label>
+                        <input type="text" asp-for="Name" class="form-control" placeholder="Adınızı giriniz">
+                        <span asp-validation-for="Name" class="text-danger small fw-bold"></span>
+                    </div>
+
+                    <div class="form-group col-md-6 pb-2">
+                        <label class="font-weight-bold">Soyadınız</label>
+                        <input type="text" asp-for="Surname" class="form-control" placeholder="Soyadınızı giriniz">
+                        <span asp-validation-for="Surname" class="text-danger small fw-bold"></span>
+                    </div>
+                </div>
+
+                <div class="form-group mb-4 pb-2">
+                    <label class="font-weight-bold">E-posta Adresiniz</label>
+                    <input type="email" asp-for="Email" class="form-control" placeholder="E-posta adresinizi giriniz">
+                    <span asp-validation-for="Email" class="text-danger small fw-bold"></span>
+                </div>
+
+                <div class="form-group mb-5 pb-2">
+                    <label class="font-weight-bold">Profil Fotoğrafı Linki (URL)</label>
+                    <input type="text" asp-for="ImageUrl" class="form-control" placeholder="/images/user-profile.jpg">
+                    <span asp-validation-for="ImageUrl" class="text-danger small fw-bold"></span>
+                </div>
+
+                @* GÜVENLİK BÖLÜMÜ *@
+                <div class="p-4 mb-5 border-left border-warning" style="background-color: #fffaf0; border-radius: 8px;">
+                    <h5 class="text-warning mb-4"><i class="fas fa-shield-alt me-2"></i> Güvenlik Doğrulaması</h5>
+
+                    <div class="form-group mb-4">
+                        <label><strong>Mevcut Şifreniz</strong> <span class="text-muted small">(Değişiklikleri onaylamak için zorunludur)</span></label>
+                        <input type="password" asp-for="CurrentPassword" class="form-control border-warning" placeholder="Şu anki şifrenizi giriniz">
+                        <span asp-validation-for="CurrentPassword" class="text-danger small fw-bold"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6 mb-3">
+                            <label>Yeni Şifre <span class="text-muted small">(İsteğe bağlı)</span></label>
+                            <input type="password" asp-for="Password" class="form-control" placeholder="Yeni şifre">
+                            <span asp-validation-for="Password" class="text-danger small fw-bold"></span>
+                        </div>
+
+                        <div class="form-group col-md-6 mb-3">
+                            <label>Yeni Şifre Tekrar</label>
+                            <input type="password" asp-for="ConfirmPassword" class="form-control" placeholder="Yeni şifreyi tekrarla">
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small fw-bold"></span>
+                        </div>
+                    </div>
+                </div>
+
+                @* BUTONLAR *@
+                <div class="mt-4 pt-3 border-top">
+                    <button type="submit" class="btn btn-primary btn-lg mr-2 px-4 shadow">Değişiklikleri Kaydet</button>
+                    <button type="reset" class="btn btn-light btn-lg px-4">İptal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

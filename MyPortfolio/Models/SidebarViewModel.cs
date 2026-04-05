@@ -6,8 +6,8 @@ namespace MyPortfolio.WebUI.Models
 {
     public class SidebarViewModel
     {
-        public ResultFeatureDto Feature { get; set; }
-        public List<ResultSocialMediaDto> SocialMedias { get; set; }
-        public List<ResultTestimonialDto> Testimonials { get; set; }
+        public  ResultFeatureDto? Feature { get; set; }
+        public  List<ResultSocialMediaDto>? SocialMedias { get; set; }
+        public List<ResultTestimonialDto>? Testimonials { get; set; }
     }
 }

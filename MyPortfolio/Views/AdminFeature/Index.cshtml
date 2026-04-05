@@ -9,17 +9,20 @@
         <h6 class="m-0 fw-bold text-primary"><i class="fas fa-flag me-2"></i> Banner (Öne Çıkan) Bilgilerini Güncelle</h6>
     </div>
     <div class="card-body">
-        <form method="post">
+        <form method="post" novalidate>
+            @* novalidate şart *@
             <input type="hidden" asp-for="Id" />
 
             <div class="mb-3">
                 <label class="form-label fw-bold">Ad Soyad / Başlık</label>
-                <input type="text" asp-for="Title" class="form-control" placeholder="Örn: Abdulkadir" required />
+                <input type="text" asp-for="Title" class="form-control" placeholder="Örn: Abdulkadir" />
+                <span asp-validation-for="Title" class="text-danger small fw-bold"></span>
             </div>
 
             <div class="mb-3">
                 <label class="form-label fw-bold">Kısa Tanıtım / Ünvan</label>
-                <textarea asp-for="Description" rows="3" class="form-control" placeholder="Örn: Full Stack Developer & Architect" required></textarea>
+                <textarea asp-for="Description" rows="3" class="form-control" placeholder="Örn: Full Stack Developer & Architect"></textarea>
+                <span asp-validation-for="Description" class="text-danger small fw-bold"></span>
             </div>
 
             <div class="text-end mt-4">

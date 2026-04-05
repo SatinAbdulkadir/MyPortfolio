@@ -9,21 +9,27 @@
         <h6 class="m-0 fw-bold text-warning"><i class="fas fa-edit me-2"></i> Yetenek Bilgilerini Düzenle</h6>
     </div>
     <div class="card-body">
-        <form method="post">
-            @* ID'yi saklamayı unutma reis, yoksa güncelleme yapmaz! *@
+        <form method="post" novalidate>
+            @* ID ve Value değerlerini saklıyoruz *@
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="Value" />
 
             <div class="row">
-                <div class="col-md-8">
+                @* Başlık Alanı - Biraz daha genişlettik *@
+                <div class="col-md-7">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Yetenek Başlığı</label>
-                        <input type="text" asp-for="Title" class="form-control" placeholder="Örn: .NET Core" required />
+                        <input type="text" asp-for="Title" class="form-control" placeholder="Örn: .NET Core" />
+                        <span asp-validation-for="Title" class="text-danger small fw-bold"></span>
                     </div>
                 </div>
-                <div class="col-md-4">
+
+                @* İkon Alanı *@
+                <div class="col-md-5">
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Başarı Oranı (%)</label>
-                        <input type="number" asp-for="Value" class="form-control" min="0" max="100" required />
+                        <label class="form-label fw-bold">İkon Sınıfı</label>
+                        <input type="text" asp-for="Icon" class="form-control" placeholder="Örn: fab fa-cuttlefish" />
+                        <span asp-validation-for="Icon" class="text-danger small fw-bold"></span>
                     </div>
                 </div>
             </div>

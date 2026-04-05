@@ -2,40 +2,28 @@
 
 <section id="about" class="about-section-wrapper">
     <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-5 mb-5 mb-lg-0">
-                <div class="about-img-frame">
-                    @* Buraya kendi fotoğrafını koyduğunda ImageUrl ile bağlarsın *@
-                    <img src="/images/user-profile.jpg" class="img-fluid rounded-4 shadow-lg" alt="Hakkımda">
-                    <div class="experience-badge">
-                        <span class="num">5+</span>
-                        <span class="txt">Yıllık<br>Tecrübe</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-7 ps-lg-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
                 @if (Model != null)
                 {
-                    <div class="about-info-content">
-                        <span class="subtitle">BİRAZ KENDİMDEN BAHSEDEYİM</span>
-                        <h2 class="about-title">@Model.Title</h2>
-                        <p class="about-subdesc">@Model.SubDescription</p>
+                    <div class="about-info-content text-center">
+                        <span class="subtitle d-block mb-3">BİRAZ KENDİMDEN BAHSEDEYİM</span>
+                        <h2 class="about-title mb-4">@Model.Title</h2>
+                        <p class="about-subdesc lead mb-5">@Model.SubDescription</p>
 
-                        <div class="about-details-box">
-                            <i class="fa fa-quote-left"></i>
-                            <p>@Model.Details</p>
+                        <div class="about-details-box shadow-sm mb-5">
+                            <i class="fa fa-quote-left d-block mb-3" style="font-size: 2rem; color: var(--primary-color);"></i>
+                            <p class="fs-5 italic">@Model.Details</p>
                         </div>
 
-                        <div class="about-action-btns">
-                            <a href="#contact" class="btn-hero btn-primary-hero">İLETİŞİME GEÇ</a>
-                            <a href="#" class="btn-hero btn-outline-hero"><i class="fa fa-download me-2"></i>CV İNDİR</a>
+                        <div class="about-action-btns d-flex justify-content-center">
+                            <a href="#contact" class="btn-hero btn-primary-hero px-5">İLETİŞİME GEÇ</a>
                         </div>
                     </div>
                 }
                 else
                 {
-                    <div class="alert alert-warning">Hakkımda verisi veritabanında bulunamadı reis!</div>
+                    <div class="alert alert-warning text-center">Hakkımda verisi veritabanında bulunamadı reis!</div>
                 }
             </div>
         </div>

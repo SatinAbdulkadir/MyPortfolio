@@ -1,0 +1,49 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.SocialMediaDtos.CreateSocialMediaDto
+@{
+    ViewData["Title"] = "Yeni Sosyal Medya Ekle";
+    Layout = "_AdminLayout";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-white">
+        <h6 class="m-0 fw-bold text-primary"><i class="fas fa-plus-circle me-2"></i> Yeni Sosyal Medya Hesabı Ekle</h6>
+    </div>
+    <div class="card-body">
+        @* novalidate: Tarayıcıyı susturur, bizim validator'ı konuşturur *@
+        <form method="post" novalidate>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Platform Adı</label>
+                <input type="text" asp-for="Title" class="form-control" placeholder="Örn: LinkedIn, GitHub, Instagram..." />
+                @* Hata Mesajı *@
+                <span asp-validation-for="Title" class="text-danger small fw-bold"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Profil URL</label>
+                <input type="url" asp-for="Url" class="form-control" placeholder="https://..." />
+                @* Hata Mesajı *@
+                <span asp-validation-for="Url" class="text-danger small fw-bold"></span>
+                <br />
+                <small class="text-muted">Profilinin tam bağlantısını yapıştır reis.</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">İkon Kodu (FontAwesome)</label>
+                <input type="text" asp-for="Icon" class="form-control" placeholder="Örn: fab fa-linkedin, fab fa-github" />
+                @* Hata Mesajı *@
+                <span asp-validation-for="Icon" class="text-danger small fw-bold"></span>
+
+                <div class="alert alert-info mt-2 p-2" style="font-size: 0.85rem;">
+                    <i class="fas fa-info-circle me-1"></i> <strong>İpucu:</strong> İkon kodlarını <a href="https://fontawesome.com/v5/search?m=free" target="_blank" class="fw-bold">FontAwesome v5</a> üzerinden bulabilirsin. (Örn: <code>fab fa-twitter</code>)
+                </div>
+            </div>
+
+            <div class="text-end mt-4">
+                <a href="/AdminSocialMedia/Index" class="btn btn-secondary shadow-sm px-4 me-2">Vazgeç</a>
+                <button type="submit" class="btn btn-primary shadow-sm px-5">
+                    <i class="fas fa-save me-2"></i> Mecrayı Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

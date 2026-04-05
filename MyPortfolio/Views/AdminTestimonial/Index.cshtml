@@ -1,0 +1,75 @@
+﻿@model List<MyPortfolio.BusinessLayer.Dtos.TestimonialDtos.ResultTestimonialDto>
+@{
+    ViewData["Title"] = "Referans Listesi";
+    Layout = "_AdminLayout";
+    int count = 0;
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center bg-white">
+        <h6 class="m-0 fw-bold text-primary"><i class="fas fa-comments me-2"></i> Müşteri & İş Ortağı Yorumları</h6>
+        <a href="/AdminTestimonial/CreateTestimonial" class="btn btn-primary btn-sm shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50 me-1"></i> Yeni Referans Ekle
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle" width="100%" cellspacing="0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th style="width: 70px;">Foto</th>
+                        <th>Ad Soyad</th>
+                        <th>Ünvan</th>
+                        <th>Yorum Özeti</th>
+                        <th style="width: 180px;" class="text-center">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            count++;
+                            <tr>
+                                <td>@count</td>
+                                <td class="text-center">
+                                    <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "/img/no-image.png" : item.ImageUrl)"
+                                         class="rounded-circle shadow-sm"
+                                         style="width: 45px; height: 45px; object-fit: cover;"
+                                         alt="User" />
+                                </td>
+                                <td class="fw-bold">@item.NameSurname</td>
+                                <td><span class="badge bg-light text-dark border">@item.Title</span></td>
+                                <td>
+                                    @* Yorum çok uzunsa tabloyu bozmasın diye sınırlıyoruz *@
+                                    <small class="text-muted">
+                                        @(item.Description.Length > 60 ? item.Description.Substring(0, 60) + "..." : item.Description)
+                                    </small>
+                                </td>
+                                <td class="text-center">
+                                    <a href="/AdminTestimonial/UpdateTestimonial/@item.Id" class="btn btn-outline-warning btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="/AdminTestimonial/DeleteTestimonial/@item.Id" class="btn btn-outline-danger btn-sm"
+                                       onclick="return confirm('Bu referansı silmek istediğine emin misin reis?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-5">
+                                <i class="fas fa-comment-slash d-block mb-2 fa-3x"></i>
+                                Henüz bir referans kaydı bulunmuyor.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

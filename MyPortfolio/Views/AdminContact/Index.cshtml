@@ -9,18 +9,21 @@
         <h6 class="m-0 fw-bold text-primary"><i class="fas fa-address-card me-2"></i> İletişim Bilgilerimi Güncelle</h6>
     </div>
     <div class="card-body">
-        <form method="post">
-            @* Veritabanındaki Id'yi kaybetmemek için gizli alan *@
+        <form method="post" novalidate>
+          
+
             <input type="hidden" asp-for="Id" />
 
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold">Sayfa Başlığı</label>
-                    <input type="text" asp-for="Title" class="form-control" placeholder="Örn: Bana Ulaşın" required>
+                    <input type="text" asp-for="Title" class="form-control" placeholder="Örn: Bana Ulaşın">
+                    <span asp-validation-for="Title" class="text-danger small fw-bold"></span>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold">Açıklama Metni</label>
                     <input type="text" asp-for="Description" class="form-control" placeholder="Örn: Projeleriniz için iletişime geçebilirsiniz.">
+                    <span asp-validation-for="Description" class="text-danger small fw-bold"></span>
                 </div>
             </div>
 
@@ -29,28 +32,34 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold"><i class="fas fa-envelope me-1 text-danger"></i> E-Posta 1</label>
-                    <input type="email" asp-for="Email1" class="form-control" required>
+                    <input type="email" asp-for="Email1" class="form-control">
+                    <span asp-validation-for="Email1" class="text-danger small fw-bold"></span>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold"><i class="fas fa-envelope me-1 text-muted"></i> E-Posta 2 (Opsiyonel)</label>
                     <input type="email" asp-for="Email2" class="form-control">
+                    <span asp-validation-for="Email2" class="text-danger small fw-bold"></span>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold"><i class="fas fa-phone me-1 text-success"></i> Telefon 1</label>
-                    <input type="text" asp-for="Phone1" class="form-control" required>
+                    <label class="form-label fw-bold"><i class="fas fa-phone-slash me-1 text-danger"></i> Telefon 1 (Devre Dışı)</label>
+                    @* readonly: Yazmayı engeller | bg-light: Kutuyu grileştirir *@
+                    <input type="text" asp-for="Phone1" class="form-control bg-light" readonly placeholder="Gizlilik nedeniyle kapalı...">
+                    <span asp-validation-for="Phone1" class="text-danger small fw-bold"></span>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold"><i class="fas fa-phone me-1 text-muted"></i> Telefon 2 (Opsiyonel)</label>
-                    <input type="text" asp-for="Phone2" class="form-control">
+                    <label class="form-label fw-bold"><i class="fas fa-phone-slash me-1 text-muted"></i> Telefon 2 (Devre Dışı)</label>
+                    <input type="text" asp-for="Phone2" class="form-control bg-light" readonly placeholder="Gizlilik nedeniyle kapalı...">
+                    <span asp-validation-for="Phone2" class="text-danger small fw-bold"></span>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label fw-bold"><i class="fas fa-map-marker-alt me-1 text-warning"></i> Açık Adres</label>
-                <textarea asp-for="Address" rows="3" class="form-control" required></textarea>
+                <textarea asp-for="Address" rows="3" class="form-control"></textarea>
+                <span asp-validation-for="Address" class="text-danger small fw-bold"></span>
             </div>
 
             <div class="text-end">

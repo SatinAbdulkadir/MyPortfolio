@@ -1,0 +1,74 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.PortfolioDtos.UpdatePortfolioDto
+@{
+    ViewData["Title"] = "Proje Düzenle";
+    Layout = "_AdminLayout";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-white border-bottom-warning">
+        <h6 class="m-0 fw-bold text-warning"><i class="fas fa-edit me-2"></i> Proje Bilgilerini Güncelle</h6>
+    </div>
+    <div class="card-body">
+        @* DİKKAT: Dosya yükleme için enctype="multipart/form-data" şart! *@
+        <form method="post" enctype="multipart/form-data" novalidate>
+            @* Güncelleme için Id ve mevcut ImageUrl bilgisini saklıyoruz *@
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ImageUrl" />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Proje Başlığı</label>
+                        <input type="text" asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger small fw-bold"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Alt Başlık</label>
+                        <input type="text" asp-for="SubTitle" class="form-control" />
+                        <span asp-validation-for="SubTitle" class="text-danger small fw-bold"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Proje Görseli</label>
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            @* Mevcut resmi önizleme olarak gösteriyoruz *@
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <img src="@Model.ImageUrl" class="img-thumbnail shadow-sm" style="width: 80px; height: 60px; object-fit: cover;" />
+                            }
+                            <input type="file" asp-for="ImageFile" class="form-control" accept="image/*" />
+                        </div>
+                        <span asp-validation-for="ImageFile" class="text-danger small fw-bold"></span>
+                        <small class="text-muted">Resmi değiştirmek istemiyorsanız boş bırakın reis.</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Proje Linki</label>
+                        <input type="url" asp-for="Url" class="form-control" />
+                        <span asp-validation-for="Url" class="text-danger small fw-bold"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Proje Açıklaması</label>
+                <textarea asp-for="Description" rows="5" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger small fw-bold"></span>
+            </div>
+
+            <div class="text-end mt-4">
+                <a href="/AdminPortfolio/Index" class="btn btn-secondary shadow-sm px-4 me-2">İptal</a>
+                <button type="submit" class="btn btn-warning shadow-sm px-5 fw-bold text-dark">
+                    <i class="fas fa-sync-alt me-2"></i> Değişiklikleri Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

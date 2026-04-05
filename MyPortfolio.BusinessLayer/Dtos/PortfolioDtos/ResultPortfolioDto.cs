@@ -8,7 +8,7 @@ namespace MyPortfolio.BusinessLayer.Dtos.PortfolioDtos
 {
     public class ResultPortfolioDto
     {
-        public required int PortfolioId { get; set; }
+        public required int Id { get; set; }
         public required string Title { get; set; }
         public required string SubTitle { get; set; }
         public required string ImageUrl { get; set; }

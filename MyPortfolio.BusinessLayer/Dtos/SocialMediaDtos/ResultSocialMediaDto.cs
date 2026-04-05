@@ -8,7 +8,7 @@ namespace MyPortfolio.BusinessLayer.Dtos.SocialMediaDtos
 {
     public class ResultSocialMediaDto
     {
-        public required int SocialMediaId { get; set; }
+        public required int Id { get; set; }
         public required string Title { get; set; }
         public required string Url { get; set; }
         public required string Icon { get; set; }

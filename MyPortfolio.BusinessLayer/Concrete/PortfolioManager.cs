@@ -26,5 +26,39 @@ namespace MyPortfolio.BusinessLayer.Concrete
             // YENİ: Tek satırda kurumsal liste dönüşümü
             return _mapper.Map<List<ResultPortfolioDto>>(values);
         }
+
+
+
+
+
+
+
+        public async Task TCreatePortfolioAsync(CreatePortfolioDto createDto)
+        {
+            var value = _mapper.Map<Portfolio>(createDto);
+            await _portfolioDal.InsertAsync(value);
+        }
+
+        public async Task TDeletePortfolioAsync(int id)
+        {
+            var value = await _portfolioDal.GetByIdAsync(id);
+            if (value != null) await _portfolioDal.DeleteAsync(value);
+        }
+
+        public async Task<UpdatePortfolioDto> TGetByIdAsync(int id)
+        {
+            var value = await _portfolioDal.GetByIdAsync(id);
+            return _mapper.Map<UpdatePortfolioDto>(value);
+        }
+
+        public async Task TUpdatePortfolioAsync(UpdatePortfolioDto updateDto)
+        {
+            var existing = await _portfolioDal.GetByIdAsync(updateDto.Id);
+            if (existing != null)
+            {
+                _mapper.Map(updateDto, existing);
+                await _portfolioDal.UpdateAsync(existing);
+            }
+        }
     }
 }

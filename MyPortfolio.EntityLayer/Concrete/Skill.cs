@@ -11,7 +11,9 @@ namespace MyPortfolio.EntityLayer.Concrete
     public class Skill:BaseEntity
     {
         public required string Title { get; set; }
-        public required  int  Value { get; set; }
+        public   int?  Value { get; set; }
+
+        public string? Icon { get; set; }
 
     }
 }

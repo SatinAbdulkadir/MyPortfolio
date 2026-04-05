@@ -7,32 +7,21 @@
             <h2 class="title">Teknoloji Envanterim</h2>
         </div>
 
-        <div class="row skills-content g-4">
-            @if (Model != null && Model.Count > 0)
+        <div class="skills-grid">
+            @foreach (var item in Model)
             {
-                @foreach (var item in Model)
-                {
-                    <div class="col-lg-6">
-                        <div class="skill-item">
-                            <div class="skill-info">
-                                <span class="skill-name">@item.Title</span>
-                                <span class="skill-val">@item.Value%</span>
-                            </div>
-                            <div class="progress-bar-wrap">
-                                @* CSS ile animasyon yapabilmek için width'i data-width içine saklıyoruz *@
-                                <div class="progress-bar" role="progressbar"
-                                     data-width="@item.Value"
-                                     style="width: 0%">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="col-12">
-                    <div class="alert alert-warning">Veritabanında henüz bir yetenek tanımlanmamış reis.</div>
+                <div class="skill-card">
+                    @* 🔍 KRİTİK NOKTA BURASI: Sabit ikon yerine DB'den geleni yazıyoruz *@
+                    @if (!string.IsNullOrEmpty(item.Icon))
+                    {
+                        <i class="@item.Icon"></i>
+                    }
+                    else
+                    {
+                        @* Eğer DB'de ikon boşsa ayıp olmasın diye terminal gösteriyoruz *@
+                        <i class="fas fa-terminal"></i>
+                    }
+                    <p class="skill-name">@item.Title</p>
                 </div>
             }
         </div>

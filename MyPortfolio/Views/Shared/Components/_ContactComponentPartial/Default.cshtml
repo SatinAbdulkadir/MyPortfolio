@@ -1,5 +1,5 @@
 ﻿@using MyPortfolio.BusinessLayer.Dtos.ContactDtos
-@* ARTIK LİSTE DEĞİL, TEKİL NESNE BEKLİYORUZ *@
+
 @model ResultContactDto
 
 <section id="contact" class="section-padding">
@@ -18,18 +18,7 @@
                 </div>
 
                 <div class="contact-grid">
-                    @* 1. Kutu: Telefon *@
-                    <div class="contact-card">
-                        <div class="icon-box"><i class="fa fa-phone"></i></div>
-                        <div class="info-content">
-                            <span class="info-label">Telefon</span>
-                            <p>@Model.Phone1</p>
-                            @if (!string.IsNullOrEmpty(Model.Phone2))
-                            {
-                                <p>@Model.Phone2</p>
-                            }
-                        </div>
-                    </div>
+                    
 
                     @* 2. Kutu: E-Posta *@
                     <div class="contact-card">

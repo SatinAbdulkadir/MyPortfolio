@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MyPortfolio.EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
@@ -8,13 +9,26 @@ using System.Threading.Tasks;
 
 namespace MyPortfolio.DataAccessLayer.Context
 {
-    public class MyPortfolioContext:DbContext 
+    public class MyPortfolioContext : IdentityDbContext<AppUser, AppRole, int>
     {
+        // 1. Program.cs'den gelecek ayarları karşılayan kapı (Eklendi)
         public MyPortfolioContext(DbContextOptions<MyPortfolioContext> options) : base(options)
         {
-
         }
 
+        // 2. Tasarım araçları (Migration) için boş constructor (Eklendi)
+        public MyPortfolioContext()
+        {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // Bağlantı cümlesindeki olası hatalı karakterler temizlendi
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=.;Database=MyPortfolioDb;Integrated Security=True;TrustServerCertificate=True;");
+            }
+        }
 
         public DbSet<About> Abouts { get; set; }
         public DbSet<Contact> Contacts { get; set; }

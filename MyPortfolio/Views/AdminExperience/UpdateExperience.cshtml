@@ -9,28 +9,34 @@
         <h6 class="m-0 fw-bold text-primary"><i class="fas fa-edit me-2"></i> Deneyimi Düzenle</h6>
     </div>
     <div class="card-body">
-        <form method="post">
-            @* Güncelleme işleminin anahtarı: ID *@
+        <form method="post" novalidate>
+            @* novalidate: Profesyonel validasyonun anahtarı *@
+
+            @* Güncelleme işleminin kalbi: Gizli ID *@
             <input type="hidden" asp-for="Id" />
 
             <div class="mb-3">
                 <label class="form-label fw-bold">Şirket / Kurum Adı</label>
-                <input type="text" asp-for="Head" class="form-control" required />
+                <input type="text" asp-for="Head" class="form-control" />
+                <span asp-validation-for="Head" class="text-danger small fw-bold"></span>
             </div>
 
             <div class="mb-3">
                 <label class="form-label fw-bold">Ünvan</label>
-                <input type="text" asp-for="Title" class="form-control" required />
+                <input type="text" asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger small fw-bold"></span>
             </div>
 
             <div class="mb-3">
                 <label class="form-label fw-bold">Tarih Aralığı</label>
-                <input type="text" asp-for="DatePeriod" class="form-control" required />
+                <input type="text" asp-for="DatePeriod" class="form-control" />
+                <span asp-validation-for="DatePeriod" class="text-danger small fw-bold"></span>
             </div>
 
             <div class="mb-3">
                 <label class="form-label fw-bold">Açıklama</label>
-                <textarea asp-for="Description" rows="4" class="form-control" required></textarea>
+                <textarea asp-for="Description" rows="4" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger small fw-bold"></span>
             </div>
 
             <div class="text-end">

@@ -1,0 +1,64 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.PortfolioDtos.CreatePortfolioDto
+@{
+    ViewData["Title"] = "Yeni Proje Ekle";
+    Layout = "_AdminLayout";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-white">
+        <h6 class="m-0 fw-bold text-primary"><i class="fas fa-plus-circle me-2"></i> Yeni Proje Ekle</h6>
+    </div>
+    <div class="card-body">
+        @* DİKKAT: enctype eklemezsek ImageFile null gelir! *@
+        <form method="post" enctype="multipart/form-data" novalidate>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Proje Başlığı</label>
+                        <input type="text" asp-for="Title" class="form-control" placeholder="Örn: E-Ticaret Uygulaması" />
+                        <span asp-validation-for="Title" class="text-danger small fw-bold"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Alt Başlık / Kategori</label>
+                        <input type="text" asp-for="SubTitle" class="form-control" placeholder="Örn: .NET Core & React" />
+                        <span asp-validation-for="SubTitle" class="text-danger small fw-bold"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Proje Görseli</label>
+                        @* Artık text değil, file tipinde input kullanıyoruz *@
+                        <input type="file" asp-for="ImageFile" class="form-control" accept="image/*" />
+                        <span asp-validation-for="ImageFile" class="text-danger small fw-bold"></span>
+                        <small class="text-muted">Bir resim dosyası seçin (jpg, png vb.)</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Proje Linki (GitHub/Canlı)</label>
+                        <input type="url" asp-for="Url" class="form-control" placeholder="https://github.com/..." />
+                        <span asp-validation-for="Url" class="text-danger small fw-bold"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Proje Açıklaması</label>
+                <textarea asp-for="Description" rows="5" class="form-control" placeholder="Projede hangi teknolojileri kullandın?..."></textarea>
+                <span asp-validation-for="Description" class="text-danger small fw-bold"></span>
+            </div>
+
+            <div class="text-end mt-4">
+                <a href="/AdminPortfolio/Index" class="btn btn-secondary shadow-sm px-4 me-2">Vazgeç</a>
+                <button type="submit" class="btn btn-primary shadow-sm px-5">
+                    <i class="fas fa-save me-2"></i> Projeyi Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

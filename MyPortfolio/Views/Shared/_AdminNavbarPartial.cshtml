@@ -1,35 +1,109 @@
 ﻿<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-3">
     <div class="container-fluid">
-        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+        <div class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
             <div class="input-group">
-                <input type="text" class="form-control bg-light border-0 small" placeholder="Sayfa veya veri ara..." aria-label="Search">
-                <button class="btn btn-primary" type="button">
+                <input type="text" id="adminSearchInput" list="adminNavOptions" class="form-control bg-light border-0 small" placeholder="Hızlı erişim (Örn: Yetenek...)" aria-label="Search">
+
+                <datalist id="adminNavOptions">
+                    <option value="Vitrin Ayarları (Feature)" />
+                    <option value="Projelerim (Portfolio)" />
+                    <option value="Yetenekler (Skill)" />
+                    <option value="Deneyimler (Experience)" />
+                    <option value="Referanslar (Testimonial)" />
+                    <option value="Sosyal Medya (Social)" />
+                    <option value="Hakkımda (About)" />
+                    <option value="Profilim & Şifre" />
+                </datalist>
+
+                <button class="btn btn-primary" type="button" id="btnAdminSearch">
                     <i class="fas fa-search fa-sm"></i>
                 </button>
             </div>
-        </form>
+        </div>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item me-3">
-                    <a class="nav-link text-secondary" href="#"><i class="fa fa-bell"></i></a>
-                </li>
+            <ul class="navbar-nav ms-auto align-items-center">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle fw-bold text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                        <i class="fa fa-user-circle me-1 text-primary"></i> Yönetici Paneli
+                    <a class="nav-link dropdown-toggle fw-bold text-dark d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <div class="bg-primary-light rounded-circle me-2 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; background: rgba(255, 180, 0, 0.1);">
+                            <i class="fa fa-user-shield text-primary"></i>
+                        </div>
+                        <span>Yönetici Paneli</span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                        <li><a class="dropdown-item" href="#"><i class="fa fa-user me-2 small"></i>Profilim</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fa fa-cog me-2 small"></i>Ayarlar</a></li>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-3">
+                        <li class="px-3 py-2 border-bottom mb-2">
+                            <span class="d-block small text-muted">Hoş geldin,</span>
+                            <span class="fw-bold">@User.Identity?.Name</span>
+                        </li>
+                        <li><a class="dropdown-item py-2" href="/Profile/Index"><i class="fa fa-user me-2 text-primary"></i>Profilim & Şifre</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="#"><i class="fa fa-sign-out-alt me-2 small"></i>Çıkış Yap</a></li>
+                        <li><a class="dropdown-item py-2 text-danger fw-bold" href="/Login/Logout"><i class="fa fa-sign-out-alt me-2"></i>Çıkış Yap</a></li>
                     </ul>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const searchInput = document.getElementById('adminSearchInput');
+        const searchBtn = document.getElementById('btnAdminSearch');
+
+        function doSearch() {
+            const val = searchInput.value.toLowerCase().trim();
+            if (val === "") return;
+
+            if (val.includes('vitrin') || val.includes('feature')) {
+                window.location.href = '/AdminFeature/Index';
+            }
+            else if (val.includes('proje') || val.includes('portfolio')) {
+                window.location.href = '/AdminPortfolio/Index';
+            }
+            else if (val.includes('yetenek') || val.includes('skill')) {
+                window.location.href = '/AdminSkill/Index';
+            }
+            else if (val.includes('deneyim') || val.includes('experience')) {
+                window.location.href = '/AdminExperience/Index';
+            }
+            else if (val.includes('referans') || val.includes('testimonial')) {
+                window.location.href = '/AdminTestimonial/Index';
+            }
+            else if (val.includes('sosyal') || val.includes('social')) {
+                window.location.href = '/AdminSocialMedia/Index';
+            }
+            else if (val.includes('hakkım') || val.includes('about')) {
+                window.location.href = '/AdminAbout/Index';
+            }
+            else if (val.includes('profil')) {
+                window.location.href = '/Profile/Index';
+            }
+            else {
+                alert('Aradığın sayfayı bulamadım reis!');
+            }
+        }
+
+        searchInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                doSearch();
+            }
+        });
+
+        searchInput.addEventListener('input', function() {
+            const options = document.getElementById('adminNavOptions').options;
+            for (let i = 0; i < options.length; i++) {
+                if (this.value === options[i].value) {
+                    doSearch();
+                    break;
+                }
+            }
+        });
+
+        searchBtn.addEventListener('click', doSearch);
+    });
+</script>

@@ -1,0 +1,57 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.TestimonialDtos.CreateTestimonialDto
+@{
+    ViewData["Title"] = "Yeni Referans Ekle";
+    Layout = "_AdminLayout";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-white">
+        <h6 class="m-0 fw-bold text-primary"><i class="fas fa-plus-circle me-2"></i> Yeni Referans Ekle</h6>
+    </div>
+    <div class="card-body">
+        @* novalidate: Tarayıcının standart uyarısını kapatır, bizim validator'ı tetikler *@
+        <form method="post" novalidate>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Ad Soyad</label>
+                        <input type="text" asp-for="NameSurname" class="form-control" placeholder="Örn: Ahmet Yılmaz" />
+                        @* Hata Mesajı *@
+                        <span asp-validation-for="NameSurname" class="text-danger small fw-bold"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Ünvan / Şirket</label>
+                        <input type="text" asp-for="Title" class="form-control" placeholder="Örn: CEO @@ TechSolutions" />
+                        @* Hata Mesajı *@
+                        <span asp-validation-for="Title" class="text-danger small fw-bold"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Profil Resmi URL</label>
+                <input type="text" asp-for="ImageUrl" class="form-control" placeholder="https://.../photo.jpg" />
+                @* ImageUrl opsiyonel olsa bile span koymak iyidir *@
+                <span asp-validation-for="ImageUrl" class="text-danger small fw-bold"></span>
+                <br />
+                <small class="text-muted">İnternetten bir resim linki yapıştırabilirsin reis.</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Referans Mesajı (Yorum)</label>
+                <textarea asp-for="Description" rows="4" class="form-control" placeholder="Kişinin senin hakkındaki yorumunu buraya yaz..."></textarea>
+                @* Hata Mesajı *@
+                <span asp-validation-for="Description" class="text-danger small fw-bold"></span>
+            </div>
+
+            <div class="text-end mt-4">
+                <a href="/AdminTestimonial/Index" class="btn btn-secondary shadow-sm px-4 me-2">Vazgeç</a>
+                <button type="submit" class="btn btn-primary shadow-sm px-5">
+                    <i class="fas fa-save me-2"></i> Referansı Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

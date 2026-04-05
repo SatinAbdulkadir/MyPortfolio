@@ -8,7 +8,7 @@ namespace MyPortfolio.BusinessLayer.Dtos.TestimonialDtos
 {
     public class ResultTestimonialDto
     {
-        public required int TestimonialId { get; set; }
+        public required int Id { get; set; }
         public required string NameSurname { get; set; }
         public required string Title { get; set; }//Unvanı
         public required string Description { get; set; }//Yorumları

@@ -189,10 +189,12 @@ section {
 
 .social-footer {
     display: flex;
+    flex-wrap: wrap; /* Sığmayan ikonları aşağı atar */
     justify-content: center;
-    gap: 12px;
-    padding: 20px 0;
+    gap: 10px; /* İkonlar arası boşluk */
+    padding: 20px 15px; /* Yanlardan biraz boşluk */
     margin-top: auto;
+    max-width: 180px; /* 3 taneden sonrasını aşağı atmaya zorlar */
 }
 
     .social-footer a {
@@ -422,14 +424,15 @@ section {
     border-radius: 12px;
     overflow: hidden;
     background: var(--side-bg);
-    height: 300px;
+    height: 200px;
 }
 
 .portfolio-img img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    object-fit: contain;
     transition: 0.6s;
+    display:block;
 }
 
 .portfolio-card:hover .portfolio-img img {
@@ -454,43 +457,75 @@ section {
     opacity: 1;
 }
 
+
+
+
+
+
+
+
+
+
+
+
 /* ==========================================================================
    8. SKILLS (YETENEKLER)
    ========================================================================== */
-.skill-item {
-    margin-bottom: 25px;
+/* 1. Ana Izgara (Grid) Yapısı - Kutuları yan yana dizer */
+.skills-grid {
+    display: grid;
+    /* Her bir kutu en az 130px olsun, sığmazsa aşağı geçsin */
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
 }
 
-.skill-info {
+/* 2. Kare Kutular */
+.skill-card {
+    background: #1c1c1c; /* Koyu arka plan */
+    aspect-ratio: 1 / 1; /* TAM KARE OLMASINI SAĞLAR */
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #333; /* Hafif belirgin çerçeve */
+    border-radius: 12px; /* Modern, hafif köşeli */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 15px;
+    text-align: center;
+    cursor: default;
 }
 
-.skill-name {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-}
+    /* 3. İkon ve Yazı Stili */
+    .skill-card i {
+        width: 40px; /* Sabit bir genişlik veriyoruz */
+        text-align: center; /* Merkeze hizalıyoruz */
+        font-size: 2rem;
+        color: #ffb400; /* Senin sarı rengin */
+        margin-bottom: 12px;
+        transition: transform 0.3s ease;
+    }
 
-.skill-val {
-    color: var(--accent);
-    font-weight: 600;
-}
+    .skill-card .skill-name {
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 0; /* Dış boşlukları sıfırla */
+    }
 
-.progress-bar-wrap {
-    background: rgba(255, 255, 255, 0.05);
-    height: 10px;
-    border-radius: 5px;
-    overflow: hidden;
-}
+    /* 4. HOVER (Üzerine Gelince) */
+    .skill-card:hover {
+        border-color: #ffb400;
+        background: #222;
+        transform: translateY(-8px); /* Yukarı zıplama */
+        box-shadow: 0 10px 20px rgba(255, 180, 0, 0.15);
+    }
 
-.progress-bar {
-    height: 10px;
-    background: var(--accent);
-    border-radius: 5px;
-    transition: 1.5s;
-}
+        .skill-card:hover i {
+            transform: scale(1.1) rotate(5deg); /* İkon hafif büyüsün ve dönsün */
+        }
 
 /* ==========================================================================
    9. TESTIMONIALS (REFERANSLAR) & SWIPER

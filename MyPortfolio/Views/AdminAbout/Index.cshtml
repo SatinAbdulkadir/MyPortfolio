@@ -1,11 +1,9 @@
-﻿@model ResultAboutDto
+﻿@model MyPortfolio.BusinessLayer.Dtos.AboutDtos.UpdateAboutDto
 @{
     ViewData["Title"] = "Hakkımda Bilgileri";
     Layout = "_AdminLayout";
 }
 @using MyPortfolio.BusinessLayer.Dtos.AboutDtos
-
-
 
 <div class="card shadow mb-4">
     <div class="card-header py-3 bg-white">
@@ -13,26 +11,41 @@
     </div>
     <div class="card-body">
         <form method="post">
+            @* Genel hata mesajlarını en üstte topluca göstermek istersen (Opsiyonel) *@
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
             <input type="hidden" asp-for="Id" />
 
-            <div class="mb-3">
+            <div class="mb-4">
                 <label class="form-label fw-bold">Başlık</label>
                 <input type="text" asp-for="Title" class="form-control" placeholder="Örn: Merhaba, Ben Abdulkadir">
+                @* HATA MESAJI *@
+                <span asp-validation-for="Title" class="text-danger small fw-bold"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-4">
                 <label class="form-label fw-bold">Alt Başlık (Kısa Tanıtım)</label>
                 <input type="text" asp-for="SubDescription" class="form-control">
+                @* HATA MESAJI *@
+                <span asp-validation-for="SubDescription" class="text-danger small fw-bold"></span>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-4">
                 <label class="form-label fw-bold">Detaylı Açıklama</label>
                 <textarea asp-for="Details" rows="6" class="form-control"></textarea>
+                @* HATA MESAJI *@
+                <span asp-validation-for="Details" class="text-danger small fw-bold"></span>
             </div>
 
-            <button type="submit" class="btn btn-primary px-4 shadow-sm">
-                <i class="fa fa-save me-2"></i>Değişiklikleri Kaydet
-            </button>
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                    <i class="fa fa-save me-2"></i>Değişiklikleri Kaydet
+                </button>
+                <a href="/AdminAbout/Index" class="btn btn-light px-4 ms-2">İptal</a>
+            </div>
         </form>
     </div>
 </div>
+
+
+
