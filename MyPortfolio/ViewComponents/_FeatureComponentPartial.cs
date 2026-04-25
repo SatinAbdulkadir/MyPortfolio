@@ -7,7 +7,7 @@ namespace MyPortfolio.WebUI.ViewComponents
     {
         private readonly IFeatureService _featureService;
 
-        // Constructor üzerinden servisimizi istiyoruz. 'new'lemek YASAK!
+       
         public _FeatureComponentPartial(IFeatureService featureService)
         {
             _featureService = featureService;
@@ -15,10 +15,10 @@ namespace MyPortfolio.WebUI.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            // Business katmanına gidip DTO'muzu alıyoruz
+            
             var value = await _featureService.GetFeatureForBannerAsync();
 
-            // Veriyi View'e gönderiyoruz
+            
             return View(value);
         }
     }

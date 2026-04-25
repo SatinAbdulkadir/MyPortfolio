@@ -57,8 +57,7 @@ namespace MyPortfolio.WebUI.Controllers
         public async Task<IActionResult> UpdateSkill(int id)
         {
             var value = await _skillService.TGetByIdAsync(id);
-            // NOT: Servis muhtemelen ResultDto dönüyor, UpdateSkill sayfasında hata alırsan 
-            // burada bir AutoMapper dönüşümü (ResultDto -> UpdateSkillDto) yapman gerekebilir.
+            
             return View(value);
         }
 

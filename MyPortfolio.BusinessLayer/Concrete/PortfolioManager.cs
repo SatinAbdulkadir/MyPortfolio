@@ -9,7 +9,7 @@ namespace MyPortfolio.BusinessLayer.Concrete
     public class PortfolioManager : IPortfolioService
     {
         private readonly IGenericDal<Portfolio> _portfolioDal;
-        private readonly IMapper _mapper; // AutoMapper silahını kuşanıyoruz
+        private readonly IMapper _mapper; 
 
         public PortfolioManager(IGenericDal<Portfolio> portfolioDal, IMapper mapper)
         {
@@ -19,11 +19,10 @@ namespace MyPortfolio.BusinessLayer.Concrete
 
         public async Task<List<ResultPortfolioDto>> TGetPortfolioListAsync()
         {
-            // Veritabanından ham listeyi çekiyoruz
+           
             var values = await _portfolioDal.GetListAsync();
 
-            // ESKİ: Select ile tek tek atama ameleliği
-            // YENİ: Tek satırda kurumsal liste dönüşümü
+            
             return _mapper.Map<List<ResultPortfolioDto>>(values);
         }
 

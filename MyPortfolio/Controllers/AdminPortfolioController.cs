@@ -12,7 +12,7 @@ public class AdminPortfolioController : Controller
     private readonly IPortfolioService _portfolioService;
     private readonly IValidator<CreatePortfolioDto> _createValidator;
     private readonly IValidator<UpdatePortfolioDto> _updateValidator;
-    private readonly FileImageHelper _fileImageHelper; // Yardımcımızı buraya çağırdık
+    private readonly FileImageHelper _fileImageHelper; 
 
     public AdminPortfolioController(IPortfolioService portfolioService,
                                     IValidator<CreatePortfolioDto> createValidator,
@@ -44,10 +44,10 @@ public class AdminPortfolioController : Controller
             return View(dto);
         }
 
-        // --- DOSYA YÜKLEME İŞLEMİ ---
+        
         if (dto.ImageFile != null)
         {
-            // Helper sayesinde resmi klasöre kaydet ve yolu ImageUrl'e ata
+           
             dto.ImageUrl = await _fileImageHelper.UploadImageAsync(dto.ImageFile);
         }
 
@@ -60,7 +60,7 @@ public class AdminPortfolioController : Controller
     public async Task<IActionResult> UpdatePortfolio(int id)
     {
         var value = await _portfolioService.TGetByIdAsync(id);
-        // Not: Eğer servis DTO yerine Entity dönüyorsa Mapper ile UpdatePortfolioDto'ya çevirmeyi unutma reis
+       
         return View(value);
     }
 
@@ -75,13 +75,13 @@ public class AdminPortfolioController : Controller
             return View(dto);
         }
 
-        // --- DOSYA GÜNCELLEME İŞLEMİ ---
+  
         if (dto.ImageFile != null)
         {
-            // Yeni bir resim seçildiyse onu yükle ve eski ImageUrl'i ez
+           
             dto.ImageUrl = await _fileImageHelper.UploadImageAsync(dto.ImageFile);
         }
-        // Eğer ImageFile boşsa, dto içindeki mevcut ImageUrl (Hidden inputtan gelen) korunur.
+       
 
         await _portfolioService.TUpdatePortfolioAsync(dto);
         TempData["ValidationResult"] = "success";

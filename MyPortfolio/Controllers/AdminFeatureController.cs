@@ -10,7 +10,7 @@ public class AdminFeatureController : Controller
 {
     private readonly IFeatureService _featureService;
     private readonly IMapper _mapper;
-    private readonly IValidator<UpdateFeatureDto> _validator; // Mimariyi bozmak yok!
+    private readonly IValidator<UpdateFeatureDto> _validator; 
 
     public AdminFeatureController(IFeatureService featureService, IMapper mapper, IValidator<UpdateFeatureDto> validator)
     {
@@ -37,12 +37,12 @@ public class AdminFeatureController : Controller
             {
                 ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
             }
-            TempData["ValidationResult"] = "error"; // Sağ üstten fırlayacak
+            TempData["ValidationResult"] = "error"; 
             return View(dto);
         }
 
         await _featureService.TUpdateFeatureAsync(dto);
-        TempData["ValidationResult"] = "success"; // Başarı bildirimi
+        TempData["ValidationResult"] = "success"; 
         return RedirectToAction("Index");
     }
 }

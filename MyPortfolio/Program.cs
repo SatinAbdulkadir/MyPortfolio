@@ -1,8 +1,3 @@
-
-
-
-
-
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +8,7 @@ using MyPortfolio.DataAccessLayer.Abstract;
 using MyPortfolio.DataAccessLayer.Context;
 using MyPortfolio.DataAccessLayer.Repositories;
 using MyPortfolio.EntityLayer.Concrete;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,7 +63,27 @@ builder.Services.AddScoped<MyPortfolio.BusinessLayer.Helpers.FileImageHelper>();
 
 
 
+//UI Düzenleme 
+
+
+
+builder.Services.AddWebOptimizer(pipeline =>
+{
+    pipeline.AddCssBundle("/css/site.css",
+        "/css/_variables.css",
+        "/css/_base.css",
+        "/css/_layout.css",
+        "/css/_components.css",
+        "/css/_animations.css",
+        "/css/_responsive.css"
+    );
+});
 var app = builder.Build();
+
+
+
+
+
 
 // --- 6. Middleware (Pipeline) Sýralamasý ---
 if (!app.Environment.IsDevelopment())
@@ -77,6 +93,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseWebOptimizer();
 app.UseStaticFiles();
 
 app.UseRouting();

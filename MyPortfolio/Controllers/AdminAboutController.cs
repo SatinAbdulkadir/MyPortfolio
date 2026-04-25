@@ -12,7 +12,7 @@ namespace MyPortfolio.WebUI.Controllers
     public class AdminAboutController : Controller
     {
         private readonly IAboutService _aboutService;
-        private readonly IMapper _mapper; // Mapper'ı ekledik reis
+        private readonly IMapper _mapper; 
         private readonly IValidator<UpdateAboutDto> _validator;
 
         public AdminAboutController(IAboutService aboutService, IMapper mapper,IValidator<UpdateAboutDto> validator)
@@ -25,11 +25,10 @@ namespace MyPortfolio.WebUI.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            // 1. Veriyi servisten çek (Sana ResultAboutDto geliyor)
+            
             var values = await _aboutService.TGetAboutAsync();
 
-            // 2. KRİTİK NOKTA: View 'UpdateAboutDto' beklediği için veriyi mapliyoruz.
-            // Bu sayede sayfa açılırken tip uyuşmazlığı hatası vermez.
+           
             var model = _mapper.Map<UpdateAboutDto>(values);
 
             return View(model);
@@ -38,7 +37,7 @@ namespace MyPortfolio.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(UpdateAboutDto updateAboutDto)
         {
-            // FluentValidation kontrolü
+           
 
             var result = await _validator.ValidateAsync(updateAboutDto);
 
@@ -48,7 +47,7 @@ namespace MyPortfolio.WebUI.Controllers
                 {
                     ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
                 }
-                // Hata varsa sayfaya geri dön (Model zaten UpdateAboutDto, View ile uyumlu)
+                
 
                 TempData["ValidationResult"] = "error";
                 return View(updateAboutDto);
@@ -56,7 +55,7 @@ namespace MyPortfolio.WebUI.Controllers
 
             await _aboutService.TUpdateAboutAsync(updateAboutDto);
 
-            // Güncelleme sonrası sayfayı yenile
+            
             TempData["ValidationResult"] = "success";
             return RedirectToAction("Index");
         }

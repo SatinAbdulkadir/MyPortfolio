@@ -12,7 +12,7 @@ namespace MyPortfolio.WebUI.Controllers
     {
         private readonly IContactService _contactService;
         private readonly IMapper _mapper;
-        private readonly IValidator<UpdateContactDto> _validator; // Mimari tertemiz!
+        private readonly IValidator<UpdateContactDto> _validator; 
 
         public AdminContactController(IContactService contactService, IMapper mapper, IValidator<UpdateContactDto> validator)
         {
@@ -40,12 +40,12 @@ namespace MyPortfolio.WebUI.Controllers
                 {
                     ModelState.AddModelError(item.PropertyName, item.ErrorMessage);
                 }
-                TempData["ValidationResult"] = "error"; // Sağ üstten SweetAlert fırlatır
+                TempData["ValidationResult"] = "error"; 
                 return View(updateContactDto);
             }
 
             await _contactService.TUpdateContactAsync(updateContactDto);
-            TempData["ValidationResult"] = "success"; // Başarı mesajı
+            TempData["ValidationResult"] = "success"; 
             return RedirectToAction("Index");
         }
     }

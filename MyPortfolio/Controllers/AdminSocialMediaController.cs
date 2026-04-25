@@ -55,7 +55,7 @@ public class AdminSocialMediaController : Controller
     public async Task<IActionResult> UpdateSocialMedia(int id)
     {
         var value = await _socialMediaService.TGetByIdAsync(id);
-        // Eğer tip uyuşmazlığı olursa (ResultDto gelirse) buraya Mapper lazım reis unutma!
+        
         return View(value);
     }
 

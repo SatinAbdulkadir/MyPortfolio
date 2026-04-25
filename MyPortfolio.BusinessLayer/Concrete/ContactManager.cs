@@ -9,7 +9,7 @@ namespace MyPortfolio.BusinessLayer.Concrete
     public class ContactManager : IContactService
     {
         private readonly IGenericDal<Contact> _contactDal;
-        private readonly IMapper _mapper; // Mapper enjekte edildi
+        private readonly IMapper _mapper; 
 
         public ContactManager(IGenericDal<Contact> contactDal, IMapper mapper)
         {
@@ -20,7 +20,7 @@ namespace MyPortfolio.BusinessLayer.Concrete
         public async Task<ResultContactDto> TGetContactAsync()
         {
             var values = await _contactDal.GetListAsync();
-            var data = values.FirstOrDefault(); // Sadece ilk veriyi alıyoruz
+            var data = values.FirstOrDefault();
             return _mapper.Map<ResultContactDto>(data);
         }
         
@@ -30,13 +30,13 @@ namespace MyPortfolio.BusinessLayer.Concrete
 
         public async Task TUpdateContactAsync(UpdateContactDto updateContactDto)
         {
-            // Veritabanındaki tek kaydı alıyoruz
+            
             var values = await _contactDal.GetListAsync();
             var existingData = values.FirstOrDefault();
 
             if (existingData != null)
             {
-                // Kurumsal Mapping: DTO'yu mevcut Entity üzerine bindir
+                
                 _mapper.Map(updateContactDto, existingData);
                 await _contactDal.UpdateAsync(existingData);
             }

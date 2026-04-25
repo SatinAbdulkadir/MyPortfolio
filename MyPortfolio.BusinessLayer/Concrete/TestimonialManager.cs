@@ -9,7 +9,7 @@ namespace MyPortfolio.BusinessLayer.Concrete
     public class TestimonialManager : ITestimonialService
     {
         private readonly IGenericDal<Testimonial> _testimonialDal;
-        private readonly IMapper _mapper; // Mapper enjeksiyonu
+        private readonly IMapper _mapper; 
 
         public TestimonialManager(IGenericDal<Testimonial> testimonialDal, IMapper mapper)
         {
@@ -19,11 +19,11 @@ namespace MyPortfolio.BusinessLayer.Concrete
 
         public async Task<List<ResultTestimonialDto>> TGetTestimonialListAsync()
         {
-            // Veritabanından sadece aktif olanları çekiyoruz
+            
             var values = await _testimonialDal.GetListAsync();
             var activeValues = values.Where(x => x.IsActive).ToList();
 
-            // Dönüşümü AutoMapper hallediyor
+           
             return _mapper.Map<List<ResultTestimonialDto>>(activeValues);
         }
 

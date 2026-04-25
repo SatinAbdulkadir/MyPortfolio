@@ -14,9 +14,9 @@ namespace MyPortfolio.BusinessLayer.Mappings
 {
     public class GeneralMapping : Profile
     {
-        public GeneralMapping() // Sadece erişim belirleyici ve sınıf ismi!
+        public GeneralMapping() 
         {
-            // ReverseMap() sayesinde çift yönlü yol yapıyoruz.
+           
             CreateMap<About, ResultAboutDto>().ReverseMap();
             CreateMap<ResultAboutDto, UpdateAboutDto>().ReverseMap();
             CreateMap<About, UpdateAboutDto>().ReverseMap();
@@ -59,7 +59,7 @@ namespace MyPortfolio.BusinessLayer.Mappings
             CreateMap<AppUser, EditProfileDto>().ReverseMap();
 
 
-            // İleride Experience, Skill vb. buraya eklenecek.
+            
         }
     }
 }

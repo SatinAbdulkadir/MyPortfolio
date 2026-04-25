@@ -1,0 +1,9 @@
+﻿:root {
+    --side-bg: #1e1e26;
+    --body-bg: #111116;
+    --accent: #ffb400; /* Altın Sarısı */
+    --text-white: #ffffff;
+    --text-muted: #a9a9a9;
+    --sidebar-width: 260px;
+    --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}

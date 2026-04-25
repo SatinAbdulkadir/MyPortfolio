@@ -6,10 +6,10 @@ namespace MyPortfolio.BusinessLayer.Abstract
 {
     public interface IAppUserService
     {
-        // Profil bilgilerini ekrana getirmek için (Get)
+        
         Task<EditProfileDto> GetUserForEditAsync(string userName);
 
-        // Profil bilgilerini güncellemek için (Post)
+        
         Task<bool> UpdateUserProfileAsync(EditProfileDto editProfileDto, string userName);
     }
 }

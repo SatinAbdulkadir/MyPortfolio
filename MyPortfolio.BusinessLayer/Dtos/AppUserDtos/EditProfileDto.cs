@@ -12,7 +12,7 @@ namespace MyPortfolio.BusinessLayer.Dtos.AppUserDtos
         public required string Surname { get; set; }
         public required string Email { get; set; }
         public string? ImageUrl { get; set; }
-        public string? Password { get; set; } // Şifre değişecekse dolar
+        public string? Password { get; set; } 
         public string? ConfirmPassword { get; set; }
         public  string? CurrentPassword { get; set; }
     }

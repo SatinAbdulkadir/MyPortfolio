@@ -15,7 +15,7 @@ namespace MyPortfolio.DataAccessLayer.Abstract
         Task<List<T>> GetListAsync();
         Task<T?> GetByIdAsync(int id);
 
-        // Özel sorgular atabilmek için (Örn: Sadece durumu aktif olanları getir)
+        
         Task<List<T>> GetByFilterAsync(Expression<Func<T, bool>> filter);
     }
 }

@@ -10,7 +10,7 @@ namespace MyPortfolio.BusinessLayer.Dtos.ExperienceDtos
     {
         public required int Id { get; set; }
         public required string Head { get; set; }
-        public required string Title { get; set; }//burda daha çok yeteneği ünvanı tarzında
+        public required string Title { get; set; }
         public required string DatePeriod { get; set; }
         public required string Description { get; set; }
     }

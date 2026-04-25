@@ -9,7 +9,7 @@ namespace MyPortfolio.DataAccessLayer.Repositories
     {
         private readonly MyPortfolioContext _context;
 
-        // DI (Dependency Injection): Context'i dışarıdan istiyoruz. Asla 'new'lemiyoruz!
+        
         public GenericRepository(MyPortfolioContext context)
         {
             _context = context;

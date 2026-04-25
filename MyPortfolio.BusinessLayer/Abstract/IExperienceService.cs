@@ -9,7 +9,7 @@ namespace MyPortfolio.BusinessLayer.Abstract
 {
     public interface IExperienceService
     {
-        // Tüm deneyimleri liste olarak getirecek görev
+        
         Task<List<ResultExperienceDto>> TGetExperienceListAsync();
         Task TCreateExperienceAsync(CreateExperienceDto createExperienceDto);
         Task TUpdateExperienceAsync(UpdateExperienceDto updateExperienceDto);

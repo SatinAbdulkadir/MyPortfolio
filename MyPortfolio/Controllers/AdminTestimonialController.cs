@@ -55,7 +55,7 @@ public class AdminTestimonialController : Controller
     public async Task<IActionResult> UpdateTestimonial(int id)
     {
         var value = await _testimonialService.TGetByIdAsync(id);
-        // Not: Tip uyuşmazlığı olursa Mapper kullanmayı unutma reis.
+        
         return View(value);
     }
 

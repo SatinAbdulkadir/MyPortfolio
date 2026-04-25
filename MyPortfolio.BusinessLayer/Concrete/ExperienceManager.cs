@@ -9,7 +9,7 @@ namespace MyPortfolio.BusinessLayer.Concrete
     public class ExperienceManager : IExperienceService
     {
         private readonly IGenericDal<Experience> _experienceDal;
-        private readonly IMapper _mapper; // Mapper enjekte edildi
+        private readonly IMapper _mapper; 
 
         public ExperienceManager(IGenericDal<Experience> experienceDal, IMapper mapper)
         {
@@ -19,10 +19,10 @@ namespace MyPortfolio.BusinessLayer.Concrete
 
         public async Task<List<ResultExperienceDto>> TGetExperienceListAsync()
         {
-            // Veritabanından ham veriyi alıyoruz
+            
             var values = await _experienceDal.GetListAsync();
 
-            // AutoMapper ile List<Entity> -> List<DTO> dönüşümünü tek satırda yapıyoruz
+            
             return _mapper.Map<List<ResultExperienceDto>>(values);
         }
 
@@ -36,10 +36,10 @@ namespace MyPortfolio.BusinessLayer.Concrete
 
         public async Task TDeleteExperienceAsync(int id)
         {
-            // Önce silinecek veriyi ID ile buluyoruz
+            
             var value = await _experienceDal.GetByIdAsync(id);
 
-            // Eğer veri varsa silme işlemini yapıyoruz
+            
             if (value != null)
             {
                 await _experienceDal.DeleteAsync(value);

@@ -12,10 +12,10 @@ public class _ExperienceComponentPartial : ViewComponent
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        // Business katmanından List<ResultExperienceDto> geliyor
+        
         var values = await _experienceService.TGetExperienceListAsync();
 
-        // Listeyi View'e paketleyip fırlatıyoruz
+       
         return View(values);
     }
 }

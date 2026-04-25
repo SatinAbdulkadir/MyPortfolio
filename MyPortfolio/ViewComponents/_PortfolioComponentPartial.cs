@@ -13,10 +13,10 @@ namespace MyPortfolio.WebUI.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            // Business katmanından projelerin listesini çekiyoruz
+            
             var values = await _portfolioService.TGetPortfolioListAsync();
 
-            // Listeyi HTML tarafına (View) gönderiyoruz
+           
             return View(values);
         }
     }

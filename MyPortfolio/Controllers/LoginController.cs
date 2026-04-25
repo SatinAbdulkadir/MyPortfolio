@@ -21,7 +21,7 @@ public class LoginController : Controller
         _configuration = configuration;
     }
 
-    // EKSİK OLAN VE HATAYA SEBEP OLAN KISIM BURASIYDI REİS:
+    
     [HttpGet]
     public IActionResult Index(string key)
     {
@@ -56,7 +56,7 @@ public class LoginController : Controller
         return View(model);
     }
 
-    // Çıkış yapma metodunu da güncel yapıya ekleyelim dursun:
+    
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();

@@ -9,10 +9,10 @@ namespace MyPortfolio.BusinessLayer.Abstract
 {
     public interface IContactService
     {
-        // Sadece ilk kaydı getirir (Liste değil!)
+        
         Task<ResultContactDto> TGetContactAsync(); 
         
-        // Sadece ilk kaydı günceller
+       
         Task TUpdateContactAsync(UpdateContactDto updateContactDto);
     }
 }
