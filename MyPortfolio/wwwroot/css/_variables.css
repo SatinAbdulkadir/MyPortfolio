@@ -1,9 +1,22 @@
 ﻿:root {
     --side-bg: #1e1e26;
     --body-bg: #111116;
-    --accent: #ffb400; /* Altın Sarısı */
+    --accent: #ffb400;
     --text-white: #ffffff;
     --text-muted: #a9a9a9;
     --sidebar-width: 260px;
     --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Fluid spacing scale */
+    --space-xs: clamp(4px, 1vw, 8px);
+    --space-sm: clamp(8px, 2vw, 14px);
+    --space-md: clamp(14px, 3vw, 24px);
+    --space-lg: clamp(20px, 4vw, 40px);
+    --space-xl: clamp(30px, 6vw, 60px);
+    /* Fluid font scale */
+    --fs-xs: clamp(0.65rem, 1.8vw, 0.75rem);
+    --fs-sm: clamp(0.75rem, 2vw, 0.85rem);
+    --fs-base: clamp(0.85rem, 2.5vw, 0.95rem);
+    --fs-md: clamp(1rem, 3vw, 1.2rem);
+    --fs-lg: clamp(1.4rem, 5vw, 2.5rem);
+    --fs-xl: clamp(1.8rem, 7vw, 4rem);
 }

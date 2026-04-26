@@ -6,6 +6,9 @@
 
 html {
     scroll-behavior: smooth;
+    /* Prevents font size inflation on mobile (özellikle Samsung/Android sorununu çözer) */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 body {
@@ -14,6 +17,9 @@ body {
     color: var(--text-white);
     overflow-x: hidden;
     line-height: 1.6;
+    /* Smooth font rendering on high-DPR screens (S24 FE gibi) */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -28,6 +34,7 @@ ul {
 img {
     max-width: 100%;
     height: auto;
+    display: block;
 }
 
 section {
@@ -35,30 +42,32 @@ section {
     width: 100%;
     display: block;
     clear: both;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: visible;
     background-color: var(--body-bg);
 }
 
 .section-padding {
-    padding: 60px 0;
+    padding: var(--space-xl) 0;
 }
 
 .section-title {
-    margin-bottom: 30px;
+    margin-bottom: var(--space-lg);
 }
 
-    .section-title .subtitle, .subtitle {
+    .section-title .subtitle,
+    .subtitle {
         color: var(--accent);
         letter-spacing: 5px;
         font-weight: 600;
-        font-size: 0.8rem;
+        font-size: var(--fs-xs);
         display: block;
         margin-bottom: 10px;
         text-transform: uppercase;
     }
 
     .section-title .title {
-        font-size: 2.5rem;
+        font-size: var(--fs-lg);
         font-weight: 700;
         color: var(--text-white);
     }

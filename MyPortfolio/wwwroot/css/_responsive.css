@@ -1,4 +1,7 @@
-﻿@media (max-width: 1024px) {
+﻿/* =====================
+   Tablet — 1024px ve altı
+   ===================== */
+@media (max-width: 1024px) {
     .sidebar-wrapper {
         transform: translateX(-100%);
         transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -17,15 +20,7 @@
     .main-content {
         margin-left: 0 !important;
         width: 100% !important;
-        padding: 0 30px;
-    }
-
-    .hero-title {
-        font-size: 3rem;
-    }
-
-    .hero-description {
-        font-size: 1rem;
+        padding: 0 clamp(16px, 4vw, 30px);
     }
 
     .about-img-frame {
@@ -37,10 +32,11 @@
 
         .about-img-frame img {
             max-width: 320px;
+            margin: 0 auto;
         }
 
     .contact-wrapper {
-        padding: 35px 25px;
+        padding: clamp(20px, 5vw, 35px) clamp(16px, 4vw, 25px);
     }
 
     .contact-grid {
@@ -49,121 +45,54 @@
     }
 }
 
+/* =====================
+   Küçük tablet — 992px
+   ===================== */
 @media (max-width: 992px) {
     .portfolio-card {
         flex: 0 0 calc(50% - 13px);
     }
-
-    .main-content {
-        padding: 0 20px;
-    }
 }
 
+/* =====================
+   Mobil — 767px ve altı
+   ===================== */
 @media (max-width: 767px) {
-    .section-padding {
-        padding: 40px 0;
-    }
-
-    .section-title .title {
-        font-size: 1.7rem;
-        color: var(--text-white) !important;
-        opacity: 1 !important;
-    }
-
-    .section-title .subtitle {
-        color: var(--accent) !important;
-        opacity: 1 !important;
-    }
-
+    /* Sidebar */
     .sidebar-wrapper {
-        width: 240px;
+        width: min(260px, 80vw);
         padding: 20px 0;
     }
 
+    /* Profil */
     .profile-img img {
-        width: 90px;
-        height: 90px;
+        width: 80px;
+        height: 80px;
     }
 
-    .profile-name {
-        font-size: 1.1rem;
-        color: var(--text-white) !important;
-        opacity: 1 !important;
-    }
-
-    .profile-title {
-        color: var(--accent) !important;
-        opacity: 1 !important;
-        font-size: 0.75rem;
-    }
-
+    /* Hero */
     .hero-wrapper {
-        min-height: 100svh;
-        padding: 80px 0 40px;
+        min-height: 100svh; /* small viewport height — mobil adres çubuğu dahil */
+        padding: 0;
         align-items: center;
-        justify-content: flex-start;
     }
 
-    .hero-title {
-        font-size: 2.2rem;
-        line-height: 1.2;
+    .hero-title span {
+        display: inline;
     }
 
-        .hero-title span {
-            color: var(--accent);
-            display: inline;
-            opacity: 1 !important;
-        }
-
-    .hero-subtitle {
-        color: var(--accent) !important;
-        opacity: 1 !important;
-        font-size: 0.7rem;
-        letter-spacing: 3px;
-        display: block;
-        margin-bottom: 15px;
-    }
-
-    .hero-description {
-        font-size: 0.95rem;
-        color: var(--text-white) !important;
-        opacity: 1 !important;
-        max-width: 100%;
-        margin-bottom: 30px;
-    }
-
-    .hero-btns {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-
-    .btn-hero {
-        font-size: 0.75rem;
-        padding: 11px 22px;
-        margin-right: 0;
-    }
-
+    /* About */
     .about-img-frame img {
-        max-width: 240px;
+        max-width: min(240px, 70vw);
         border-radius: 1rem;
+        margin: 0 auto;
     }
 
     .about-img-frame::after {
         display: none;
     }
 
-    .experience-badge {
-        bottom: -5px;
-        right: 5px;
-        padding: 12px 16px;
-        font-size: 0.8rem;
-    }
-
-    .about-details-box {
-        padding: 18px 22px;
-    }
-
+    /* Timeline */
     .timeline-wrapper::before {
         left: 8px;
         transform: none;
@@ -186,10 +115,13 @@
         height: 14px;
     }
 
-    .timeline-content {
-        padding: 18px;
+    /* Social links sidebar altında kaybolmasın */
+    .social-footer {
+        margin-top: 30px;
+        padding: 15px 10px;
     }
 
+    /* Portfolio */
     #portfolio {
         padding-top: 40px !important;
     }
@@ -199,61 +131,60 @@
         background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
     }
 
+    /* Skills — 3 sütun */
     .skills-grid {
         grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
+        gap: 10px;
     }
 
-    .skill-card {
-        padding: 12px 8px;
-        border-radius: 10px;
-    }
-
-        .skill-card i {
-            font-size: 1.6rem;
-            margin-bottom: 8px;
-        }
-
-        .skill-card .skill-name {
-            color: var(--text-white) !important;
-            opacity: 1 !important;
-            font-size: 0.75rem;
-        }
-
+    /* Testimonials */
     .testimonials-slider {
         padding-bottom: 50px !important;
     }
 
-    .testimonial-item {
-        padding: 20px;
-    }
-
-    .contact-wrapper {
-        padding: 25px 16px;
-        border-radius: 14px;
-    }
-
+    /* Contact */
     .contact-grid {
         grid-template-columns: 1fr;
-        gap: 15px;
+        gap: 12px;
     }
-
-    .contact-card {
-        padding: 18px;
-        gap: 14px;
-    }
-
-        .contact-card .icon-box {
-            width: 48px;
-            height: 48px;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-        }
 }
 
-@media (max-width: 576px) {
+/* =====================
+   Küçük mobil — 480px
+   ===================== */
+@media (max-width: 480px) {
     .portfolio-card {
         flex: 0 0 100%;
         height: 180px;
     }
+
+    /* Skills — çok küçük ekranlarda 2 sütun */
+    .skills-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Hero butonları tam genişlik */
+    .btn-hero {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* =====================
+   Ekstra küçük — 360px
+   (Eski/budget Android cihazlar)
+   ===================== */
+@media (max-width: 360px) {
+    .sidebar-wrapper {
+        width: 85vw;
+    }
+
+    .contact-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+        .contact-card .icon-box {
+            margin: 0 auto;
+        }
 }
