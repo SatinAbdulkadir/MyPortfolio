@@ -1,0 +1,29 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=SUNUCU_ADRESI;Database=VERITABANI_ADI;User Id=KULLANICI_ADI;Password=SIFRE;TrustServerCertificate=True;"
+  },
+  "SeedData": {
+    "AdminUserName": "portfolio_admin",
+    "AdminEmail": "admin@abdulkadirsatin.com.tr",
+    "AdminPassword": "GucluSifre_2026!",
+    "AdminName": "Abdulkadir",
+    "AdminSurname": "Satın"
+  },
+  "AdminSettings": {
+    "LoginKey": "ozel-giris-anahtari-buraya"
+  },
+  "MailSettings": {
+    "Server": "mail.abdulkadirsatin.com.tr",
+    "Port": 587,
+    "SenderEmail": "info@abdulkadirsatin.com.tr",
+    "SenderPassword": "MAIL_SIFRESI_BURAYA",
+    "ReceiverEmail": "kisisel_mailin@gmail.com"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
