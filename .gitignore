@@ -362,5 +362,16 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-# Hassas veritabanı bilgilerini korumak için:
+# ASP.NET Core Configuration Files
+# Ana dosyayı şablon olarak bırakabiliriz (Hassas veri içermediği sürece)
+# Ancak kurumsal disiplinde Production ve Staging her zaman engellenmelidir.
+
 appsettings.json
+appsettings.Development.json
+appsettings.Staging.json
+appsettings.Production.json
+
+# Veritabanı ve log dosyaları
+*.mdf
+*.ldf
+/MyPortfolio.WebUI/logs/
