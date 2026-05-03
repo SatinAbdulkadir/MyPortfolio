@@ -15,5 +15,13 @@ namespace MyPortfolio.EntityLayer.Concrete
         public required string MessageDetail { get; set; }
         
         public  bool IsRead { get; set; }
+
+
+
+       
+        
+       
+      
+       
     }
 }

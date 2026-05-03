@@ -4,6 +4,7 @@ using MyPortfolio.BusinessLayer.Dtos.AppUserDtos;
 using MyPortfolio.BusinessLayer.Dtos.ContactDtos;
 using MyPortfolio.BusinessLayer.Dtos.ExperienceDtos;
 using MyPortfolio.BusinessLayer.Dtos.FeatureDtos;
+using MyPortfolio.BusinessLayer.Dtos.MessageDtos;
 using MyPortfolio.BusinessLayer.Dtos.PortfolioDtos;
 using MyPortfolio.BusinessLayer.Dtos.SkillDtos;
 using MyPortfolio.BusinessLayer.Dtos.SocialMediaDtos;
@@ -59,7 +60,13 @@ namespace MyPortfolio.BusinessLayer.Mappings
             CreateMap<AppUser, EditProfileDto>().ReverseMap();
 
 
-            
+            CreateMap<Message, CreateMessageDto>().ReverseMap();
+            CreateMap<Message, ResultMessageDto>().ReverseMap();
+            // İletişim Formu DTO eşleştirmeleri
+            CreateMap<CreateMessageDto, MailRequestDto>().ReverseMap();
+
+
+
         }
     }
 }

@@ -116,4 +116,86 @@
         });
     }
 
+    // ==========================================================================
+    // 5. İLETİŞİM FORMU (AJAX / Fetch API) - v1.0 Kurumsal Entegrasyon
+    // ==========================================================================
+    const contactForm = document.getElementById('contactForm');
+
+    if (contactForm) {
+        contactForm.addEventListener('submit', async function (e) {
+            e.preventDefault(); // Sayfa yenilenmesi (Postback) engellendi
+
+            const btnSubmit = document.getElementById('btnSubmit');
+            const originalBtnText = btnSubmit.innerHTML;
+
+            // 1. Fail-Fast: Cloudflare Turnstile Token Kontrolü
+            const turnstileInput = document.querySelector('[name="cf-turnstile-response"]');
+            const turnstileResponse = turnstileInput ? turnstileInput.value : '';
+
+            if (!turnstileResponse) {
+                alert("Lütfen güvenlik doğrulamasını (CAPTCHA) tamamlayın.");
+                return; // Token yoksa hiç sunucuya gitme, işlemi anında kes
+            }
+
+            // Çoklu tıklama (Spam) engeli ve UX geri bildirimi
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> İşleniyor...';
+
+            // DTO ile birebir eşleşen JSON modeli
+            const messageData = {
+                NameSurname: document.getElementById('NameSurname').value.trim(),
+                Email: document.getElementById('Email').value.trim(),
+                Subject: document.getElementById('Subject').value.trim(),
+                MessageDetail: document.getElementById('MessageDetail').value.trim()
+            };
+
+            try {
+                const response = await fetch('/Home/SendMessage', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'cf-turnstile-response': turnstileResponse // Token'ı Backend'e Header üzerinden yolluyoruz
+                    },
+                    body: JSON.stringify(messageData)
+                });
+
+                // Sunucu 500 hatası verirse json parse etmeye çalışıp patlamasın diye güvenlik kontrolü
+                if (!response.ok && response.status !== 400 && response.status !== 500) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // İşlem tamamen başarılı
+                    alert(result.message);
+                    contactForm.reset();
+                } else {
+                    // KURUMSAL STANDART: Defansif Hata Yönetimi
+                    let finalErrorMessage = result.message || "İşlem sırasında beklenmeyen bir hata oluştu.";
+
+                    // Eğer validasyon hatası varsa ve dizi (array) formatında geldiyse mesaja ekle
+                    if (result.errors && Array.isArray(result.errors) && result.errors.length > 0) {
+                        finalErrorMessage += "\n\nDetaylar:\n" + result.errors.join('\n');
+                    }
+
+                    alert(finalErrorMessage);
+                }
+            } catch (error) {
+                console.error('API Bağlantı Hatası:', error);
+                alert('Sunucuyla iletişim kurulamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyin.');
+            } finally {
+                // Hata da olsa başarılı da olsa butonu aktif hale getir
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = originalBtnText;
+
+                // UX Kuralı: İşlem bittikten sonra Turnstile widget'ını sıfırla ki tekrar kullanılabilsin
+                if (typeof turnstile !== 'undefined') {
+                    turnstile.reset();
+                }
+            }
+        });
+    }
+
 });

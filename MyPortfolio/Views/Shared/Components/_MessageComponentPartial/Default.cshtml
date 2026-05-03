@@ -1,0 +1,100 @@
+﻿<section id="message-form" class="section-padding pt-0">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="contact-wrapper mt-4 p-4 p-md-5" style="background: rgba(255, 255, 255, 0.03); border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.08);">
+                    <div class="text-center mb-5">
+                        <span class="subtitle">İLETİŞİM FORMU</span>
+                        <h2 class="title" style="font-size: 2rem; font-weight: 700;">Mesaj Gönderin</h2>
+                        <p style="color: #a9a9a9; max-width: 500px; margin: 0 auto;">İş teklifleri, teknik sorularınız veya görüşleriniz için bu formu kullanabilirsiniz. En kısa sürede dönüş sağlayacağım.</p>
+                    </div>
+
+                    <form id="contactForm" novalidate>
+                        <div class="row g-4">
+                            @* Ad Soyad *@
+                            <div class="col-md-6">
+                                <div class="form-floating custom-form-group">
+                                    <input type="text" id="NameSurname" name="NameSurname" autocomplete="name" class="form-control custom-input" placeholder="Ad Soyad" required>
+                                    <label for="NameSurname">Ad Soyad</label>
+                                </div>
+                            </div>
+                            @* E-Posta *@
+                            <div class="col-md-6">
+                                <div class="form-floating custom-form-group">
+                                    <input type="email" id="Email" name="Email" autocomplete="email" class="form-control custom-input" placeholder="E-Posta" required>
+                                    <label for="Email">E-Posta Adresiniz</label>
+                                </div>
+                            </div>
+                            @* Konu *@
+                            <div class="col-12">
+                                <div class="form-floating custom-form-group">
+                                    <input type="text" id="Subject" name="Subject" autocomplete="off" class="form-control custom-input" placeholder="Konu" required>
+                                    <label for="Subject">Konu</label>
+                                </div>
+                            </div>
+                            @* Mesaj Detayı *@
+                            <div class="col-12">
+                                <div class="form-floating custom-form-group">
+                                    <textarea id="MessageDetail" name="MessageDetail" autocomplete="off" class="form-control custom-input" style="height: 150px" placeholder="Mesajınız" required></textarea>
+                                    <label for="MessageDetail">Mesajınız</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 text-center mt-3">
+                                <!-- BURAYA CLOUDFLARE SITE KEY YAZILACAK -->
+                                <div class="cf-turnstile" data-sitekey="0x4AAAAAADIX1U3xUbSNrznV"></div>
+                            </div>
+                            @* Gönder Butonu *@
+                            <div class="col-12 text-center mt-4">
+                                <button type="submit" id="btnSubmit" class="btn btn-hero btn-primary-hero px-5 py-3">
+                                    <span>MESAJI GÖNDER</span>
+                                    <i class="fa fa-paper-plane ms-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Kontrast ve Okunabilirlik Düzenlemeleri */
+    .custom-input {
+        background: rgba(255, 255, 255, 0.07) !important; /* Daha açık arka plan */
+        color: #ffffff !important; /* Bembeyaz yazı */
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 8px !important;
+        transition: var(--transition) !important;
+    }
+
+    /* Input içine yazılan yazı okunmuyorsa burası kurtarır */
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-color: var(--accent) !important;
+        box-shadow: none !important;
+    }
+
+    /* Label Okunabilirliği */
+    .form-floating > label {
+        color: #d1d1d1 !important; /* Gri yerine daha açık bir gri/beyaz tonu */
+        padding-left: 1.25rem;
+    }
+
+    /* Input aktifken label rengi */
+    .form-floating > .form-control:focus ~ label,
+    .form-floating > .form-control:not(:placeholder-shown) ~ label {
+        color: var(--accent) !important;
+        transform: scale(.85) translateY(-.75rem) translateX(.15rem) !important;
+    }
+
+    /* Chrome/Edge otomatik doldurma rengi düzeltme */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+        -webkit-text-fill-color: #ffffff !important;
+        -webkit-box-shadow: 0 0 0px 1000px #1e1e26 inset !important;
+        transition: background-color 5000s ease-in-out 0s;
+    }
+</style>
