@@ -1,4 +1,4 @@
-﻿/* =====================
+/* =====================
    Tablet — 1024px ve altı
    ===================== */
 @media (max-width: 1024px) {
@@ -23,18 +23,6 @@
         padding: 0 clamp(16px, 4vw, 30px);
     }
 
-    .about-img-frame {
-        margin-right: 0;
-        margin-bottom: 30px;
-        display: block;
-        text-align: center;
-    }
-
-        .about-img-frame img {
-            max-width: 320px;
-            margin: 0 auto;
-        }
-
     .contact-wrapper {
         padding: clamp(20px, 5vw, 35px) clamp(16px, 4vw, 25px);
     }
@@ -46,28 +34,13 @@
 }
 
 /* =====================
-   Küçük tablet — 992px
-   ===================== */
-@media (max-width: 992px) {
-    .portfolio-card {
-        flex: 0 0 calc(50% - 13px);
-    }
-}
-
-/* =====================
    Mobil — 767px ve altı
    ===================== */
 @media (max-width: 767px) {
     /* Sidebar */
     .sidebar-wrapper {
-        width: min(260px, 80vw);
-        padding: 20px 0;
-    }
-
-    /* Profil */
-    .profile-img img {
-        width: 80px;
-        height: 80px;
+        width: min(280px, 82vw);
+        padding: 24px 0 16px;
     }
 
     /* Hero */
@@ -81,14 +54,7 @@
         display: inline;
     }
 
-    /* About */
-    .about-img-frame img {
-        max-width: min(240px, 70vw);
-        border-radius: 1rem;
-        margin: 0 auto;
-    }
-
-    .about-img-frame::after {
+    .hero-scroll-hint {
         display: none;
     }
 
@@ -128,7 +94,7 @@
 
     .portfolio-overlay {
         opacity: 1;
-        background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+        background: linear-gradient(to top, rgba(5, 5, 10, 0.92) 0%, transparent 65%);
     }
 
     /* Skills — 3 sütun */
@@ -147,6 +113,14 @@
         grid-template-columns: 1fr;
         gap: 12px;
     }
+
+    /* Back-to-top hamburger ile çakışmasın diye biraz içeride */
+    #back-to-top {
+        bottom: 16px;
+        right: 16px;
+        width: 42px;
+        height: 42px;
+    }
 }
 
 /* =====================
@@ -154,8 +128,7 @@
    ===================== */
 @media (max-width: 480px) {
     .portfolio-card {
-        flex: 0 0 100%;
-        height: 180px;
+        height: 200px;
     }
 
     /* Skills — çok küçük ekranlarda 2 sütun */

@@ -1,19 +1,19 @@
-﻿@model MyPortfolio.BusinessLayer.Dtos.AboutDtos.ResultAboutDto
+@model MyPortfolio.BusinessLayer.Dtos.AboutDtos.ResultAboutDto
 
-<section id="about" class="about-section-wrapper">
+<section id="about" class="about-section-wrapper section-padding">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 @if (Model != null)
                 {
                     <div class="about-info-content text-center">
-                        <span class="subtitle d-block mb-3">BİRAZ KENDİMDEN BAHSEDEYİM</span>
+                        <span class="subtitle mb-3">BİRAZ KENDİMDEN BAHSEDEYİM</span>
                         <h2 class="about-title mb-4">@Model.Title</h2>
                         <p class="about-subdesc lead mb-5">@Model.SubDescription</p>
 
-                        <div class="about-details-box shadow-sm mb-5">
-                            <i class="fa fa-quote-left d-block mb-3" style="font-size: 2rem; color: var(--primary-color);"></i>
-                            <p class="fs-5 italic">@Model.Details</p>
+                        <div class="about-details-box mb-5">
+                            <i class="fa fa-quote-left quote-mark"></i>
+                            <p class="fs-5">@Model.Details</p>
                         </div>
 
                         <div class="about-action-btns d-flex justify-content-center">

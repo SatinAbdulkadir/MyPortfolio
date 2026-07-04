@@ -1,4 +1,4 @@
-﻿@using MyPortfolio.BusinessLayer.Dtos.ContactDtos
+@using MyPortfolio.BusinessLayer.Dtos.ContactDtos
 
 @model ResultContactDto
 
@@ -18,22 +18,21 @@
                 </div>
 
                 <div class="contact-grid">
-                    
 
-                    @* 2. Kutu: E-Posta *@
+                    @* E-Posta *@
                     <div class="contact-card">
                         <div class="icon-box"><i class="fa fa-envelope"></i></div>
                         <div class="info-content">
                             <span class="info-label">E-Posta</span>
-                            <p>@Model.Email1</p>
+                            <p><a href="mailto:@Model.Email1">@Model.Email1</a></p>
                             @if (!string.IsNullOrEmpty(Model.Email2))
                             {
-                                <p>@Model.Email2</p>
+                                <p><a href="mailto:@Model.Email2">@Model.Email2</a></p>
                             }
                         </div>
                     </div>
 
-                    @* 3. Kutu: Adres *@
+                    @* Adres *@
                     <div class="contact-card">
                         <div class="icon-box"><i class="fa fa-map-marker-alt"></i></div>
                         <div class="info-content">

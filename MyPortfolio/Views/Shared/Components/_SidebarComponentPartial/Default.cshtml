@@ -1,8 +1,15 @@
-﻿@model MyPortfolio.WebUI.Models.SidebarViewModel
+@model MyPortfolio.WebUI.Models.SidebarViewModel
 
 <div class="profile-section">
     @if (Model.Feature != null)
     {
+        var initials = string.Concat(
+            Model.Feature.Title
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Take(2)
+                .Select(w => char.ToUpper(w[0])));
+
+        <div class="profile-avatar" aria-hidden="true">@initials</div>
         <h3 class="profile-name">@Model.Feature.Title.ToUpper()</h3>
         <p class="profile-title">@Model.Feature.Description</p>
     }

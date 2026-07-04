@@ -1,17 +1,44 @@
-﻿:root {
-    --side-bg: #1e1e26;
-    --body-bg: #111116;
+:root {
+    /* Marka renkleri */
     --accent: #ffb400;
-    --text-white: #ffffff;
-    --text-muted: #a9a9a9;
-    --sidebar-width: 260px;
+    --accent-2: #ff7a18;
+    --accent-soft: rgba(255, 180, 0, 0.12);
+    --accent-border: rgba(255, 180, 0, 0.35);
+    --gradient-accent: linear-gradient(120deg, #ffd76a 0%, #ffb400 45%, #ff7a18 100%);
+    --primary-color: var(--accent); /* eski görünümlerle geriye dönük uyumluluk */
+
+    /* Yüzeyler (cam efekti katmanları) */
+    --body-bg: #08080d;
+    --side-bg: rgba(13, 13, 21, 0.88);
+    --surface: rgba(255, 255, 255, 0.03);
+    --surface-2: rgba(255, 255, 255, 0.055);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+
+    /* Metin */
+    --text-white: #f5f5f7;
+    --text-muted: #a0a0b2;
+
+    /* Tipografi */
+    --font-display: 'Space Grotesk', 'Poppins', sans-serif;
+    --font-body: 'Inter', 'Poppins', sans-serif;
+
+    /* Yerleşim ve efektler */
+    --sidebar-width: 280px;
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
     --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --shadow-glow: 0 10px 40px rgba(255, 180, 0, 0.15);
+    --shadow-card: 0 20px 50px rgba(0, 0, 0, 0.45);
+
     /* Fluid spacing scale */
     --space-xs: clamp(4px, 1vw, 8px);
     --space-sm: clamp(8px, 2vw, 14px);
     --space-md: clamp(14px, 3vw, 24px);
     --space-lg: clamp(20px, 4vw, 40px);
     --space-xl: clamp(30px, 6vw, 60px);
+
     /* Fluid font scale */
     --fs-xs: clamp(0.65rem, 1.8vw, 0.75rem);
     --fs-sm: clamp(0.75rem, 2vw, 0.85rem);

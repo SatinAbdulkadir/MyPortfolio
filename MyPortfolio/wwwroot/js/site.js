@@ -198,4 +198,90 @@
         });
     }
 
+    // ==========================================================================
+    // 6. SCROLL REVEAL — İçerik görünüme girince yumuşakça belirir
+    // ==========================================================================
+    var prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+        var revealSelectors = [
+            '.section-title',
+            '.about-info-content',
+            '.timeline-item',
+            '.skill-card',
+            '#portfolio .row > [class*="col-"]',
+            '.testimonial-item',
+            '.contact-card',
+            '.contact-header-info',
+            '.message-form-wrapper'
+        ];
+
+        var revealTargets = document.querySelectorAll(revealSelectors.join(', '));
+
+        // Aynı grid içindeki kartlara kademeli gecikme ver (stagger efekti)
+        var staggerIndex = {};
+        revealTargets.forEach(function (el) {
+            var parentKey = el.parentElement ? Array.prototype.indexOf.call(document.querySelectorAll('*'), el.parentElement) : 0;
+            staggerIndex[parentKey] = (staggerIndex[parentKey] || 0) + 1;
+            el.style.setProperty('--reveal-delay', (Math.min(staggerIndex[parentKey] - 1, 8) * 0.07) + 's');
+            el.classList.add('reveal');
+        });
+
+        var revealObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+        revealTargets.forEach(function (el) {
+            revealObserver.observe(el);
+        });
+    }
+
+    // ==========================================================================
+    // 7. SCROLLSPY — Görünen bölümün menü linkini vurgular
+    // ==========================================================================
+    var menuLinks = document.querySelectorAll('.sidebar-menu a[href^="#"]');
+
+    if (menuLinks.length > 0 && 'IntersectionObserver' in window) {
+        var sectionMap = {};
+        menuLinks.forEach(function (link) {
+            var section = document.querySelector(link.getAttribute('href'));
+            if (section) {
+                sectionMap[section.id] = link;
+            }
+        });
+
+        var spyObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting && sectionMap[entry.target.id]) {
+                    menuLinks.forEach(function (l) { l.classList.remove('active'); });
+                    sectionMap[entry.target.id].classList.add('active');
+                }
+            });
+        }, { rootMargin: '-35% 0px -55% 0px' });
+
+        Object.keys(sectionMap).forEach(function (id) {
+            spyObserver.observe(document.getElementById(id));
+        });
+    }
+
+    // ==========================================================================
+    // 8. YUKARI DÖN BUTONU
+    // ==========================================================================
+    var backToTopBtn = document.getElementById('back-to-top');
+
+    if (backToTopBtn) {
+        window.addEventListener('scroll', function () {
+            backToTopBtn.classList.toggle('visible', window.scrollY > 500);
+        }, { passive: true });
+
+        backToTopBtn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        });
+    }
+
 });

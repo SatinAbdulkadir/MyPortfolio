@@ -1,15 +1,21 @@
-﻿@model MyPortfolio.BusinessLayer.Dtos.FeatureDtos.ResultFeatureDto
+@model MyPortfolio.BusinessLayer.Dtos.FeatureDtos.ResultFeatureDto
 
 <section id="home" class="hero-wrapper">
+    @* Dekoratif ışıma blobları *@
+    <div class="hero-bg" aria-hidden="true">
+        <div class="hero-blob blob-1"></div>
+        <div class="hero-blob blob-2"></div>
+    </div>
+
     <div class="hero-content">
         @if (Model != null)
         {
-            <span class="hero-subtitle">GELİŞTİRİCİNİN DÜNYASINA HOŞ GELDİNİZ</span>
+            <span class="hero-badge"><span class="pulse-dot"></span> GELİŞTİRİCİNİN DÜNYASINA HOŞ GELDİNİZ</span>
             <h1 class="hero-title">Ben <span>@Model.Title</span></h1>
             <p class="hero-description">@Model.Description</p>
 
             <div class="hero-btns">
-                <a href="#portfolio" class="btn-hero btn-primary-hero">PROJELERİMİ GÖR</a>
+                <a href="#portfolio" class="btn-hero btn-primary-hero">PROJELERİMİ GÖR <i class="fa fa-arrow-right"></i></a>
                 <a href="#contact" class="btn-hero btn-outline-hero">İLETİŞİME GEÇ</a>
             </div>
         }
@@ -18,4 +24,8 @@
             <div class="alert alert-dark">Feature verisi DB'den gelmiyor, veritabanını kontrol et reis!</div>
         }
     </div>
+
+    <a href="#about" class="hero-scroll-hint">
+        <i class="fa fa-angle-down"></i> KAYDIR
+    </a>
 </section>

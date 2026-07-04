@@ -1,13 +1,15 @@
-﻿.sidebar-wrapper {
+.sidebar-wrapper {
     width: var(--sidebar-width);
     height: 100vh;
     height: 100dvh; /* dynamic viewport height — Samsung gibi tarayıcılarda address bar'ı hesaba katar */
     background: var(--side-bg);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 30px 0;
-    border-right: 1px solid #2a2a35;
+    padding: 34px 0 20px;
+    border-right: 1px solid var(--border);
     position: fixed;
     left: 0;
     top: 0;
@@ -37,18 +39,20 @@
     top: 15px;
     right: 15px;
     z-index: 1100;
-    width: 44px;
-    height: 44px;
-    background: var(--accent);
-    border: none;
-    border-radius: 8px;
+    width: 46px;
+    height: 46px;
+    background: rgba(13, 13, 21, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--accent-border);
+    border-radius: 12px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 5px;
     cursor: pointer;
     transition: var(--transition);
-    box-shadow: 0 4px 15px rgba(255, 180, 0, 0.35);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 180, 0, 0.15);
     /* Ensures tap target is never clipped */
     touch-action: manipulation;
 }
@@ -57,7 +61,7 @@
         display: block;
         width: 22px;
         height: 2px;
-        background: #111;
+        background: var(--accent);
         border-radius: 2px;
         transition: var(--transition);
     }
@@ -85,10 +89,48 @@
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
     z-index: 999;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
 }
 
     #sidebar-overlay.active {
         display: block;
+    }
+
+/* Yukarı dön butonu */
+#back-to-top {
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    z-index: 1090;
+    width: 46px;
+    height: 46px;
+    border: 1px solid var(--accent-border);
+    border-radius: 50%;
+    background: rgba(13, 13, 21, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--accent);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(12px);
+    transition: var(--transition);
+    touch-action: manipulation;
+}
+
+    #back-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    #back-to-top:hover {
+        background: var(--accent);
+        color: #111;
+        box-shadow: var(--shadow-glow);
     }
