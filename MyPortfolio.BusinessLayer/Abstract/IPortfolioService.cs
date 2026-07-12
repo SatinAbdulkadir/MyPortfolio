@@ -7,4 +7,7 @@ public interface IPortfolioService
     Task TUpdatePortfolioAsync(UpdatePortfolioDto updateDto);
     Task TDeletePortfolioAsync(int id);
     Task<UpdatePortfolioDto> TGetByIdAsync(int id);
+
+    // Public detay sayfası için: entity'yi Result DTO olarak döner
+    Task<ResultPortfolioDto?> TGetPortfolioByIdAsync(int id);
 }

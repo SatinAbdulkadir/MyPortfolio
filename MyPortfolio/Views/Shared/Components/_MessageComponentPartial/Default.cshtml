@@ -10,6 +10,8 @@
                     </div>
 
                     <form id="contactForm" novalidate>
+                        @* CSRF token: site.js bu alanı okuyup fetch isteğine header olarak ekler *@
+                        @Html.AntiForgeryToken()
                         <div class="row g-4">
                             @* Ad Soyad *@
                             <div class="col-md-6">

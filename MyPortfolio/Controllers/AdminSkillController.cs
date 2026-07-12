@@ -46,7 +46,8 @@ namespace MyPortfolio.WebUI.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult> DeleteSkill(int id)
+        [HttpPost]
+    public async Task<IActionResult> DeleteSkill(int id)
         {
             await _skillService.TDeleteSkillAsync(id);
             TempData["ValidationResult"] = "success";

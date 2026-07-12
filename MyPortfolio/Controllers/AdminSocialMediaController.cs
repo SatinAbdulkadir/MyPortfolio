@@ -44,6 +44,7 @@ public class AdminSocialMediaController : Controller
         return RedirectToAction("Index");
     }
 
+    [HttpPost]
     public async Task<IActionResult> DeleteSocialMedia(int id)
     {
         await _socialMediaService.TDeleteSocialMediaAsync(id);

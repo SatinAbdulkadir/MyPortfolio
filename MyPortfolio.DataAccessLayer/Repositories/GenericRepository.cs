@@ -33,6 +33,20 @@ namespace MyPortfolio.DataAccessLayer.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task InsertRangeAsync(List<T> entities)
+        {
+            if (entities.Count == 0) return;
+            await _context.Set<T>().AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteRangeAsync(List<T> entities)
+        {
+            if (entities.Count == 0) return;
+            _context.Set<T>().RemoveRange(entities);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<List<T>> GetListAsync()
         {
             return await _context.Set<T>().ToListAsync();

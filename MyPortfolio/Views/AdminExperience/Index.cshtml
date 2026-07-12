@@ -40,12 +40,13 @@
                                     <a href="/AdminExperience/UpdateExperience/@item.Id" class="btn btn-outline-info btn-sm">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    @* Silme işlemi için az önce yazdığımız Delete action'ına gidiyor *@
-                                    <a href="/AdminExperience/DeleteExperience/@item.Id"
-                                       class="btn btn-outline-danger btn-sm"
-                                       onclick="return confirm('Bu deneyim kaydını silmek istediğine emin misin reis?')">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    @* Silme POST + antiforgery token ile yapılır (CSRF koruması) *@
+                                    <form method="post" action="/AdminExperience/DeleteExperience/@item.Id" asp-antiforgery="true" class="d-inline"
+                                          onsubmit="return confirm('Bu deneyim kaydını silmek istediğine emin misin reis?')">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         }

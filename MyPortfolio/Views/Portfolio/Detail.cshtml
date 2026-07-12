@@ -1,0 +1,229 @@
+@model MyPortfolio.WebUI.Models.PortfolioDetailViewModel
+@using MyPortfolio.BusinessLayer.Helpers
+@{
+    ViewData["Title"] = Model.Portfolio.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var technologies = (Model.Detail?.Technologies ?? "")
+        .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+    // Video üç şekilde gösterilir: YouTube → embed, yerel/mp4 → <video>,
+    // tanınmayan harici link → bozuk oynatıcı yerine "Videoyu İzle" butonu
+    var videoUrl = Model.Detail?.VideoUrl;
+    string? youTubeEmbedUrl = VideoUrlHelper.GetYouTubeEmbedUrl(videoUrl);
+    bool hasLocalVideo = youTubeEmbedUrl == null && VideoUrlHelper.IsDirectVideoFile(videoUrl);
+    bool hasExternalVideoLink = youTubeEmbedUrl == null && !hasLocalVideo && !string.IsNullOrWhiteSpace(videoUrl);
+}
+
+<section class="detail-page section-padding">
+    <div class="container">
+
+        @* Üst şerit: geri dön *@
+        <a href="/#portfolio" class="detail-back-link">
+            <i class="fa fa-arrow-left"></i> Tüm Projelere Dön
+        </a>
+
+        @* Başlık bloğu *@
+        <div class="detail-header">
+            <span class="subtitle">PROJE DETAYI</span>
+            <h1 class="detail-title">@Model.Portfolio.Title</h1>
+            <div class="detail-chips">
+                <span class="tech-chip subtitle-chip">@Model.Portfolio.SubTitle</span>
+                @foreach (var tech in technologies)
+                {
+                    <span class="tech-chip">@tech</span>
+                }
+            </div>
+        </div>
+
+        @* Kapak görseli *@
+        <div class="detail-cover">
+            <img src="@Model.Portfolio.ImageUrl" alt="@Model.Portfolio.Title" />
+        </div>
+
+        <div class="detail-layout">
+
+            @* Sol: içerik *@
+            <div class="detail-content">
+
+                <div class="detail-section">
+                    <h3 class="detail-section-title"><i class="fa fa-circle-info"></i> Proje Hakkında</h3>
+                    <p class="detail-text">@Model.Portfolio.Description</p>
+                    @if (Model.Detail != null)
+                    {
+                        <p class="detail-text detail-long-text">@Model.Detail.DetailDescription</p>
+                    }
+                </div>
+
+                @if (technologies.Length > 0)
+                {
+                    <div class="detail-section">
+                        <h3 class="detail-section-title"><i class="fa fa-layer-group"></i> Kullanılan Teknolojiler</h3>
+                        <div class="detail-chips">
+                            @foreach (var tech in technologies)
+                            {
+                                <span class="tech-chip tech-chip-lg"><i class="fa fa-check"></i> @tech</span>
+                            }
+                        </div>
+                    </div>
+                }
+
+                @if (youTubeEmbedUrl != null || hasLocalVideo || hasExternalVideoLink)
+                {
+                    <div class="detail-section">
+                        <h3 class="detail-section-title"><i class="fa fa-circle-play"></i> Tanıtım Videosu</h3>
+                        @if (youTubeEmbedUrl != null)
+                        {
+                            <div class="video-frame">
+                                <iframe src="@youTubeEmbedUrl"
+                                        title="@Model.Portfolio.Title tanıtım videosu"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowfullscreen loading="lazy"></iframe>
+                            </div>
+                        }
+                        else if (hasLocalVideo)
+                        {
+                            <div class="video-frame">
+                                <video controls preload="metadata" playsinline>
+                                    <source src="@videoUrl" type="video/mp4">
+                                    Tarayıcınız video oynatmayı desteklemiyor.
+                                </video>
+                            </div>
+                        }
+                        else
+                        {
+                            @* Tanınmayan harici platform: oynatıcı yerine link *@
+                            <a href="@videoUrl" target="_blank" rel="noopener" class="btn-hero btn-outline-hero">
+                                <i class="fa fa-circle-play"></i> VİDEOYU İZLE
+                            </a>
+                        }
+                    </div>
+                }
+
+                @if (Model.GalleryImages.Count > 0)
+                {
+                    <div class="detail-section">
+                        <h3 class="detail-section-title"><i class="fa fa-images"></i> Proje Görselleri</h3>
+                        <div class="gallery-grid">
+                            @foreach (var image in Model.GalleryImages)
+                            {
+                                <button type="button" class="gallery-item" data-full="@image.ImageUrl" aria-label="Görseli büyüt">
+                                    <img src="@image.ImageUrl" alt="@Model.Portfolio.Title görseli" loading="lazy" />
+                                    <span class="gallery-zoom"><i class="fa fa-magnifying-glass-plus"></i></span>
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @* Sağ: sticky panel *@
+            <aside class="detail-panel-wrapper">
+                <div class="detail-panel">
+                    <h4 class="detail-panel-title">Proje Bağlantıları</h4>
+
+                    <a href="@Model.Portfolio.Url" target="_blank" rel="noopener" class="btn-hero btn-primary-hero w-100 justify-content-center">
+                        <i class="fab fa-github"></i> GITHUB'DA GÖR
+                    </a>
+                    <a href="/" class="btn-hero btn-outline-hero w-100 justify-content-center">
+                        <i class="fa fa-home"></i> ANA SAYFAYA DÖN
+                    </a>
+
+                    <div class="detail-panel-meta">
+                        <div class="meta-row">
+                            <span class="meta-label"><i class="fa fa-tag"></i> Kategori</span>
+                            <span class="meta-value">@Model.Portfolio.SubTitle</span>
+                        </div>
+                        @if (technologies.Length > 0)
+                        {
+                            <div class="meta-row">
+                                <span class="meta-label"><i class="fa fa-layer-group"></i> Teknoloji</span>
+                                <span class="meta-value">@technologies.Length adet</span>
+                            </div>
+                        }
+                        @if (Model.GalleryImages.Count > 0)
+                        {
+                            <div class="meta-row">
+                                <span class="meta-label"><i class="fa fa-images"></i> Görsel</span>
+                                <span class="meta-value">@Model.GalleryImages.Count adet</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        @* Diğer projeler *@
+        @if (Model.OtherProjects.Count > 0)
+        {
+            <div class="other-projects">
+                <div class="section-title">
+                    <span class="subtitle">GEZMEYE DEVAM ET</span>
+                    <h2 class="title">Diğer Projeler</h2>
+                </div>
+                <div class="row g-4">
+                    @foreach (var item in Model.OtherProjects)
+                    {
+                        @await Html.PartialAsync("_ProjectCardPartial", item)
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+@* Lightbox: galeri görseli tam ekran önizleme *@
+<div id="lightbox" class="lightbox" aria-hidden="true">
+    <button type="button" class="lightbox-close" aria-label="Kapat"><i class="fa fa-xmark"></i></button>
+    <button type="button" class="lightbox-nav lightbox-prev" aria-label="Önceki görsel"><i class="fa fa-chevron-left"></i></button>
+    <img src="" alt="Büyütülmüş proje görseli" />
+    <button type="button" class="lightbox-nav lightbox-next" aria-label="Sonraki görsel"><i class="fa fa-chevron-right"></i></button>
+</div>
+
+@section Scripts {
+    <script>
+        // Lightbox — yalnızca bu sayfada gerekli olduğu için site.js yerine burada
+        document.addEventListener("DOMContentLoaded", function () {
+            var lightbox = document.getElementById('lightbox');
+            var lightboxImg = lightbox.querySelector('img');
+            var items = Array.prototype.slice.call(document.querySelectorAll('.gallery-item'));
+            var currentIndex = 0;
+
+            if (items.length === 0) return;
+
+            function show(index) {
+                currentIndex = (index + items.length) % items.length;
+                lightboxImg.src = items[currentIndex].dataset.full;
+                lightbox.classList.add('open');
+                lightbox.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function close() {
+                lightbox.classList.remove('open');
+                lightbox.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
+
+            items.forEach(function (item, index) {
+                item.addEventListener('click', function () { show(index); });
+            });
+
+            lightbox.querySelector('.lightbox-close').addEventListener('click', close);
+            lightbox.querySelector('.lightbox-prev').addEventListener('click', function (e) { e.stopPropagation(); show(currentIndex - 1); });
+            lightbox.querySelector('.lightbox-next').addEventListener('click', function (e) { e.stopPropagation(); show(currentIndex + 1); });
+
+            // Boş alana tıklayınca kapat
+            lightbox.addEventListener('click', function (e) {
+                if (e.target === lightbox) close();
+            });
+
+            document.addEventListener('keydown', function (e) {
+                if (!lightbox.classList.contains('open')) return;
+                if (e.key === 'Escape') close();
+                if (e.key === 'ArrowLeft') show(currentIndex - 1);
+                if (e.key === 'ArrowRight') show(currentIndex + 1);
+            });
+        });
+    </script>
+}

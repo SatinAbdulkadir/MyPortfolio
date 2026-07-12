@@ -41,7 +41,14 @@
                         </li>
                         <li><a class="dropdown-item py-2" href="/Profile/Index"><i class="fa fa-user me-2 text-primary"></i>Profilim & Şifre</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item py-2 text-danger fw-bold" href="/Login/Logout"><i class="fa fa-sign-out-alt me-2"></i>Çıkış Yap</a></li>
+                        <li>
+                            @* Çıkış da durum değiştiren bir işlem: POST + antiforgery token ile yapılır *@
+                            <form method="post" action="/Login/Logout" asp-antiforgery="true" class="m-0">
+                                <button type="submit" class="dropdown-item py-2 text-danger fw-bold">
+                                    <i class="fa fa-sign-out-alt me-2"></i>Çıkış Yap
+                                </button>
+                            </form>
+                        </li>
                     </ul>
                 </li>
             </ul>

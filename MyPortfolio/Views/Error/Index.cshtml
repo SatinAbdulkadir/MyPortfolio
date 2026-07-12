@@ -1,0 +1,98 @@
+@{
+    Layout = null;
+    // Bu sayfa bilinçli olarak _Layout kullanmaz: sidebar bileşenleri DB'den veri çeker,
+    // veritabanı hatasında hata sayfasının kendisi de patlardı. Tamamen bağımsızdır.
+    int statusCode = ViewBag.StatusCode ?? 500;
+    string errorTitle = ViewBag.ErrorTitle ?? "Bir Şeyler Ters Gitti";
+    string errorMessage = ViewBag.ErrorMessage ?? "Beklenmeyen bir durum oluştu.";
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@statusCode - @errorTitle</title>
+    <meta name="theme-color" content="#08080d" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(ellipse 60% 45% at 15% 0%, rgba(255, 180, 0, 0.07), transparent 60%),
+                radial-gradient(ellipse 55% 45% at 85% 95%, rgba(255, 122, 24, 0.06), transparent 60%),
+                #08080d;
+            font-family: 'Inter', sans-serif;
+            color: #f5f5f7;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .error-box {
+            max-width: 560px;
+            padding: clamp(30px, 6vw, 60px);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .error-code {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(4rem, 18vw, 7rem);
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(120deg, #ffd76a 0%, #ffb400 45%, #ff7a18 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.2rem, 4vw, 1.7rem);
+            margin-bottom: 14px;
+        }
+
+        p {
+            color: #a0a0b2;
+            line-height: 1.7;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 32px;
+            border-radius: 100px;
+            background: linear-gradient(120deg, #ffd76a 0%, #ffb400 45%, #ff7a18 100%);
+            color: #14100a;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+            .btn-home:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 14px 30px rgba(255, 180, 0, 0.3);
+            }
+    </style>
+</head>
+<body>
+    <main class="error-box">
+        <div class="error-code">@statusCode</div>
+        <h1>@errorTitle</h1>
+        <p>@errorMessage</p>
+        <a href="/" class="btn-home">← ANA SAYFAYA DÖN</a>
+    </main>
+</body>
+</html>

@@ -29,6 +29,8 @@ public class LoginController : Controller
 
         if (key==secretKey)
         {
+            // Key, POST'ta tekrar doğrulanmak üzere forma hidden alan olarak gömülür
+            ViewBag.LoginKey = key;
             return View();
         }
 
@@ -36,8 +38,18 @@ public class LoginController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Index(LoginDto model)
+    public async Task<IActionResult> Index(LoginDto model, string key)
     {
+        // Güvenlik: gizli anahtar sadece GET'te değil POST'ta da doğrulanır;
+        // yoksa form sayfasını hiç görmeden direkt POST atarak şifre denenebilir
+        var secretKey = _configuration.GetValue<string>("AdminSettings:LoginKey");
+        if (key != secretKey)
+        {
+            return NotFound();
+        }
+
+        ViewBag.LoginKey = key;
+
         var validationResult = await _validator.ValidateAsync(model);
         if (!validationResult.IsValid)
         {
@@ -45,18 +57,26 @@ public class LoginController : Controller
             return View(model);
         }
 
-        var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, false, false);
+        // lockoutOnFailure: true → 5 hatalı denemede hesap 30 dk kilitlenir (brute-force koruması)
+        var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, false, true);
 
         if (result.Succeeded)
         {
             return RedirectToAction("Index", "AdminExperience");
         }
 
+        if (result.IsLockedOut)
+        {
+            ModelState.AddModelError("", "Çok fazla hatalı deneme yapıldı. Hesap 30 dakika kilitlendi.");
+            return View(model);
+        }
+
         ModelState.AddModelError("", "Kullanıcı adı veya şifre hatalı reis!");
         return View(model);
     }
 
-    
+    // POST: üçüncü taraf bir sayfanın GET isteğiyle admini sessizce oturumdan düşürmesini engeller
+    [HttpPost]
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();

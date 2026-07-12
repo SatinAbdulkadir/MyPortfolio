@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--
+    BAKIM MODU ÖRNEĞİ
+    =================
+    Kullanımı: Bu dosyanın adını "app_offline.htm" yapıp Plesk'te sitenin KÖK klasörüne
+    (wwwroot'a değil, uygulamanın ana dizinine) koy. IIS bu dosyayı görünce uygulamayı
+    durdurur ve tüm ziyaretçilere bu sayfayı gösterir. Bakım bitince dosyayı sil ya da
+    adını geri değiştir — site otomatik olarak tekrar açılır.
+-->
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bakımdayız - Abdulkadir Portfolio</title>
+    <meta name="theme-color" content="#08080d" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse 60% 45% at 15% 0%, rgba(255, 180, 0, 0.07), transparent 60%), #08080d;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            color: #f5f5f7;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .maintenance-box {
+            max-width: 520px;
+            padding: 50px 40px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+        }
+
+        .icon { font-size: 3.5rem; margin-bottom: 18px; }
+
+        h1 {
+            font-size: 1.6rem;
+            margin-bottom: 14px;
+            background: linear-gradient(120deg, #ffd76a, #ffb400, #ff7a18);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p { color: #a0a0b2; line-height: 1.7; font-size: 0.95rem; }
+    </style>
+</head>
+<body>
+    <main class="maintenance-box">
+        <div class="icon">🔧</div>
+        <h1>Kısa Bir Bakım Molası</h1>
+        <p>Site şu anda planlı bakım nedeniyle geçici olarak kapalı. Birazdan çok daha iyi haliyle geri döneceğiz — lütfen birkaç dakika sonra tekrar dene.</p>
+    </main>
+</body>
+</html>

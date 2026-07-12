@@ -1,4 +1,10 @@
 @model MyPortfolio.WebUI.Models.SidebarViewModel
+@{
+    // Proje detay sayfasındayken menüde PROJELER vurgulanır ("projeler bölgesindesin" hissi);
+    // sayfanın kendisi konum bilgisini breadcrumb ve sticky panelle verir
+    var currentPath = Context.Request.Path.Value ?? "";
+    var isDetailPage = currentPath.StartsWith("/Portfolio/Detail", StringComparison.OrdinalIgnoreCase);
+}
 
 <div class="profile-section">
     @if (Model.Feature != null)
@@ -15,18 +21,20 @@
     }
 </div>
 
+@* Linkler "/#bolum" formatında: ana sayfada yumuşak kaydırma yapar,
+   detay gibi diğer sayfalarda ise ana sayfaya dönüp ilgili bölüme gider *@
 <nav class="sidebar-menu">
     <ul>
-        <li><a href="#home"><i class="fa fa-home"></i> ANA SAYFA</a></li>
-        <li><a href="#about"><i class="fa fa-user"></i> HAKKIMDA</a></li>
-        <li><a href="#experience"><i class="fa fa-briefcase"></i> DENEYİMLER</a></li>
-        <li><a href="#skills"><i class="fa fa-star"></i> YETENEKLER</a></li>
-        <li><a href="#portfolio"><i class="fa fa-code"></i> PROJELER</a></li>
+        <li><a href="/#home"><i class="fa fa-home"></i> ANA SAYFA</a></li>
+        <li><a href="/#about"><i class="fa fa-user"></i> HAKKIMDA</a></li>
+        <li><a href="/#experience"><i class="fa fa-briefcase"></i> DENEYİMLER</a></li>
+        <li><a href="/#skills"><i class="fa fa-star"></i> YETENEKLER</a></li>
+        <li><a href="/#portfolio" class="@(isDetailPage ? "active" : "")"><i class="fa fa-code"></i> PROJELER</a></li>
         @if (Model.Testimonials != null && Model.Testimonials.Any())
         {
-            <li><a href="#testimonials"><i class="fa fa-quote-right"></i> REFERANSLAR</a></li>
+            <li><a href="/#testimonials"><i class="fa fa-quote-right"></i> REFERANSLAR</a></li>
         }
-        <li><a href="#contact"><i class="fa fa-envelope"></i> İLETİŞİM</a></li>
+        <li><a href="/#contact"><i class="fa fa-envelope"></i> İLETİŞİM</a></li>
     </ul>
 </nav>
 

@@ -14,33 +14,35 @@ using MyPortfolio.EntityLayer.Concrete;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient();
 
-// --- 1. Katman Kayýtlarý (Dependency Injection) ---
+// --- 1. Katman Kayï¿½tlarï¿½ (Dependency Injection) ---
 builder.Services.AddScoped(typeof(IGenericDal<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IFeatureService, FeatureManager>();
 builder.Services.AddScoped<IAboutService, AboutManager>();
 builder.Services.AddScoped<IContactService, ContactManager>();
 builder.Services.AddScoped<IExperienceService, ExperienceManager>();
 builder.Services.AddScoped<IPortfolioService, PortfolioManager>();
+builder.Services.AddScoped<IPortfolioDetailService, PortfolioDetailManager>();
+builder.Services.AddScoped<IPortfolioImageService, PortfolioImageManager>();
 builder.Services.AddScoped<ISkillService, SkillManager>();
 builder.Services.AddScoped<ISocialMediaService, SocialMediaManager>();
 builder.Services.AddScoped<ITestimonialService, TestimonialManager>();
 builder.Services.AddScoped<IAppUserService, AppUserManager>();
 builder.Services.AddScoped<IMessageService, MessageManager>();
 builder.Services.AddScoped<ITurnstileService,TurnstileService>();
-///  Ayarlarý JSON'dan Model ile eþleþtir (Options Pattern)
+///  Ayarlarï¿½ JSON'dan Model ile eï¿½leï¿½tir (Options Pattern)
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
-//  Servis kaydýný gerçekleþtir
+//  Servis kaydï¿½nï¿½ gerï¿½ekleï¿½tir
 builder.Services.AddScoped<IMailService, MailManager>();
 
-// --- 2. Veritabaný Baðlantýsý ---
+// --- 2. Veritabanï¿½ Baï¿½lantï¿½sï¿½ ---
 builder.Services.AddDbContext<MyPortfolioContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// --- 3. Araçlar (AutoMapper) ---
+// --- 3. Araï¿½lar (AutoMapper) ---
 builder.Services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies());
 
-// --- 4. Identity ve Güvenlik Ayarlarý ---
+// --- 4. Identity ve Gï¿½venlik Ayarlarï¿½ ---
 builder.Services.AddIdentity<AppUser, AppRole>()
     .AddEntityFrameworkStores<MyPortfolioContext>()
     .AddDefaultTokenProviders();
@@ -57,33 +59,54 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Lockout.MaxFailedAccessAttempts = 5;
 });
 
-// --- 5. Cookie ve Oturum Politikasý ---
+// --- 5. Cookie ve Oturum Politikasï¿½ ---
 builder.Services.ConfigureApplicationCookie(options =>
 {
     // Rotalar
     options.LoginPath = "/Login/Index/";
     options.LogoutPath = "/Login/Logout/";
-    options.AccessDeniedPath = "/ErrorPage/Index/";
+    options.AccessDeniedPath = "/Error/403"; // TemalÄ± "EriÅŸim Engellendi" sayfasÄ±
 
-    // Güvenlik ve Kimlik Özellikleri
+    // Gï¿½venlik ve Kimlik ï¿½zellikleri
     options.Cookie.HttpOnly = true;
     options.Cookie.SameSite = SameSiteMode.Strict; 
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; 
     options.Cookie.Name = "MyPortfolio.Identity.Cookie";
 
-    // Oturum Süresi
+    // Oturum Sï¿½resi
     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
     options.SlidingExpiration = true;
 });
 
-builder.Services.AddControllersWithViews();
+// CSRF korumasÄ±: tÃ¼m POST/PUT/DELETE isteklerinde antiforgery token otomatik doÄŸrulanÄ±r.
+// Form tag helper'larÄ± token'Ä± formlara kendiliÄŸinden gÃ¶mer; AJAX istekleri ise
+// token'Ä± aÅŸaÄŸÄ±da tanÄ±mlanan header ile gÃ¶nderir (bkz. site.js iletiÅŸim formu).
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute());
+
+    // Admin'de yapÄ±lan her baÅŸarÄ±lÄ± POST, public sayfa Ã¶nbelleÄŸinin sÃ¼rÃ¼mÃ¼nÃ¼ yeniler
+    options.Filters.Add(typeof(MyPortfolio.WebUI.Filters.AdminContentCacheBustFilter));
+});
+
+// --- Ã–nbellekleme ---
+// Ana sayfa bileÅŸenleri cache tag helper ile Ã¶nbelleÄŸe alÄ±nÄ±r (bkz. Home/Index.cshtml);
+// bÃ¶ylece her ziyarette 8+ DB sorgusu yerine Ã¶nbellekten hazÄ±r HTML servis edilir.
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<MyPortfolio.WebUI.Services.ContentCacheVersion>();
+
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "RequestVerificationToken";
+});
 
 builder.Services.AddValidatorsFromAssemblyContaining<AboutValidator>();
 builder.Services.AddScoped<MyPortfolio.BusinessLayer.Helpers.FileImageHelper>();
 
 
 
-//UI Düzenleme 
+
+//UI Dï¿½zenleme 
 
 
 
@@ -105,20 +128,45 @@ var app = builder.Build();
 
 
 
-// --- 6. Middleware (Pipeline) Sýralamasý ---
+// --- 6. Middleware (Pipeline) Sï¿½ralamasï¿½ ---
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    // Yakalanmamï¿½ï¿½ exception'lar temalï¿½ 500 sayfasï¿½na yï¿½nlenir (ErrorController)
+    app.UseExceptionHandler("/Error/500");
     app.UseHsts();
 }
 
+// 404, 403, 429 gibi boï¿½ gï¿½vdeli hata yanï¿½tlarï¿½nï¿½ temalï¿½ hata sayfasï¿½yla deï¿½iï¿½tirir.
+// URL deï¿½iï¿½mez (re-execute), JSON dï¿½nen endpoint'ler etkilenmez.
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
+
 app.UseHttpsRedirection();
+
+// --- Gï¿½venlik Baï¿½lï¿½klarï¿½ (Security Headers) ---
+app.Use(async (context, next) =>
+{
+    // Tarayï¿½cï¿½, sunucunun bildirdiï¿½i iï¿½erik tï¿½rï¿½ne gï¿½venir; MIME-sniffing yapamaz
+    context.Response.Headers["X-Content-Type-Options"] = "nosniff";
+    // Site baï¿½ka sitelerin iï¿½ine iframe olarak gï¿½mï¿½lemez (clickjacking engeli)
+    context.Response.Headers["X-Frame-Options"] = "DENY";
+    // Dï¿½ï¿½ sitelere geï¿½erken tam URL yerine sadece origin bilgisi sï¿½zar
+    context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+    // Kullanï¿½lmayan tarayï¿½cï¿½ yetenekleri (kamera, mikrofon, konum) kapatï¿½lï¿½r
+    context.Response.Headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
+    await next();
+});
+
 app.UseWebOptimizer();
 app.UseStaticFiles();
 
 app.UseRouting();
 
-// KRÝTÝK BÖLGE: Sýralama asla deðiþmemeli!
+// --- Rate Limiting (istek sÄ±nÄ±rlama) ---
+// Mesaj formu ve login POST'larÄ±nÄ± IP baÅŸÄ±na sÄ±nÄ±rlar; brute-force ve spam'i frenler.
+// Kurallar middleware'in kendi iÃ§inde tanÄ±mlÄ±: Middlewares/SimpleRateLimitMiddleware.cs
+app.UseMiddleware<MyPortfolio.WebUI.Middlewares.SimpleRateLimitMiddleware>();
+
+// KRï¿½Tï¿½K Bï¿½LGE: Sï¿½ralama asla deï¿½iï¿½memeli!
 app.UseAuthentication(); // 1. Kimsin?
 app.UseAuthorization();  // 2. Girebilir misin?
 
@@ -132,28 +180,28 @@ using (var scope = app.Services.CreateScope())
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
     var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 
-    // Eðer veritabanýnda hiç kullanýcý yoksa (Ýlk kurulum)
+    // Eï¿½er veritabanï¿½nda hiï¿½ kullanï¿½cï¿½ yoksa (ï¿½lk kurulum)
     if (!userManager.Users.Any())
     {
         var adminSettings = configuration.GetSection("AdminUser");
 
         var user = new AppUser
         {
-            UserName = adminSettings["UserName"] ?? "admin", // Null ise varsayýlan deðer
+            UserName = adminSettings["UserName"] ?? "admin", // Null ise varsayï¿½lan deï¿½er
             Email = adminSettings["Email"] ?? "admin@site.com",
             Name = "Abdulkadir",
             Surname = "Admin",
             EmailConfirmed = true
         };
 
-        // appsettings'den oku, yoksa varsayýlan güvenli þifreyi dene
+        // appsettings'den oku, yoksa varsayï¿½lan gï¿½venli ï¿½ifreyi dene
         string password = adminSettings["Password"] ?? "AS_Portfolio_2026_V1!";
 
         var result = await userManager.CreateAsync(user, password);
 
         if (!result.Succeeded)
         {
-            // Eðer Identity kurallarýna (8 karakter vb.) takýlýrsa hata burada yakalanýr
+            // Eï¿½er Identity kurallarï¿½na (8 karakter vb.) takï¿½lï¿½rsa hata burada yakalanï¿½r
             foreach (var error in result.Errors)
             {
                 Console.WriteLine($"Seed Hata: {error.Description}");

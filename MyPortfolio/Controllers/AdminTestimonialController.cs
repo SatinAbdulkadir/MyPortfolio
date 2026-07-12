@@ -44,6 +44,7 @@ public class AdminTestimonialController : Controller
         return RedirectToAction("Index");
     }
 
+    [HttpPost]
     public async Task<IActionResult> DeleteTestimonial(int id)
     {
         await _testimonialService.TDeleteTestimonialAsync(id);

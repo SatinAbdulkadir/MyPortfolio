@@ -19,7 +19,7 @@ namespace MyPortfolio.Controllers
         private readonly IMapper _mapper;
         private readonly IValidator<CreateMessageDto> _validator;
         private readonly ILogger<HomeController> _logger;
-        private readonly ITurnstileService _turnstileService; // Güvenlik Servisi Eklendi
+        private readonly ITurnstileService _turnstileService; // Gï¿½venlik Servisi Eklendi
 
         public HomeController(
             IMessageService messageService,
@@ -48,49 +48,49 @@ namespace MyPortfolio.Controllers
             [FromBody] CreateMessageDto createMessageDto,
             [FromHeader(Name = "cf-turnstile-response")] string turnstileToken) // Token Header'dan okunur
         {
-            // 0. Güvenlik Katmaný: Bot Kontrolü (Fail-Fast)
+            // 0. Gï¿½venlik Katmanï¿½: Bot Kontrolï¿½ (Fail-Fast)
             bool isHuman = await _turnstileService.VerifyTokenAsync(turnstileToken);
             if (!isHuman)
             {
-                _logger.LogWarning("Cloudflare Turnstile doðrulamasý baþarýsýz. Olasý bot engellendi. IP: {Ip}", HttpContext.Connection.RemoteIpAddress);
-                return Json(new { success = false, message = "Güvenlik doðrulamasý baþarýsýz oldu. Lütfen sayfayý yenileyip tekrar deneyin." });
+                _logger.LogWarning("Cloudflare Turnstile doï¿½rulamasï¿½ baï¿½arï¿½sï¿½z. Olasï¿½ bot engellendi. IP: {Ip}", HttpContext.Connection.RemoteIpAddress);
+                return Json(new { success = false, message = "Gï¿½venlik doï¿½rulamasï¿½ baï¿½arï¿½sï¿½z oldu. Lï¿½tfen sayfayï¿½ yenileyip tekrar deneyin." });
             }
 
-            // 1. Validasyon Kontrolü
+            // 1. Validasyon Kontrolï¿½
             var validationResult = await _validator.ValidateAsync(createMessageDto);
             if (!validationResult.IsValid)
             {
                 var errors = validationResult.Errors.Select(x => x.ErrorMessage).ToList();
-                return Json(new { success = false, message = "Lütfen formdaki hatalarý düzeltin.", errors = errors });
+                return Json(new { success = false, message = "Lï¿½tfen formdaki hatalarï¿½ dï¿½zeltin.", errors = errors });
             }
 
             try
             {
-                // 2. Önce Veritabanýna Kaydet
+                // 2. ï¿½nce Veritabanï¿½na Kaydet
                 await _messageService.AddMessageAsync(createMessageDto);
 
-                // 3. Mail Servisi Ýçin Veriyi Dönüþtür
+                // 3. Mail Servisi ï¿½ï¿½in Veriyi Dï¿½nï¿½ï¿½tï¿½r
                 var mailRequest = _mapper.Map<MailRequestDto>(createMessageDto);
 
-                // 4. Asenkron Mail Gönderimi
+                // 4. Asenkron Mail Gï¿½nderimi
                 await _mailService.SendEmailAsync(mailRequest);
 
-                return Json(new { success = true, message = "Mesajýnýz baþarýyla iletildi. En kýsa sürede dönüþ yapacaðým." });
+                return Json(new { success = true, message = "Mesajï¿½nï¿½z baï¿½arï¿½yla iletildi. En kï¿½sa sï¿½rede dï¿½nï¿½ï¿½ yapacaï¿½ï¿½m." });
             }
             catch (AutoMapperMappingException ex)
             {
-                _logger.LogError(ex, "AutoMapper DTO dönüþüm hatasý.");
-                return Json(new { success = false, message = "Sistemsel bir veri hatasý oluþtu." });
+                _logger.LogError(ex, "AutoMapper DTO dï¿½nï¿½ï¿½ï¿½m hatasï¿½.");
+                return Json(new { success = false, message = "Sistemsel bir veri hatasï¿½ oluï¿½tu." });
             }
             catch (Exception ex)
             {
-                // KESÝN KURAL: Sunucu hatasý UI'a basýlmaz, loglanýr.
-                _logger.LogError(ex, "Mesaj iþlenirken kritik bir hata oluþtu. Ziyaretçi maili: {Email}", createMessageDto.Email);
+                // KESï¿½N KURAL: Sunucu hatasï¿½ UI'a basï¿½lmaz, loglanï¿½r.
+                _logger.LogError(ex, "Mesaj iï¿½lenirken kritik bir hata oluï¿½tu. Ziyaretï¿½i maili: {Email}", createMessageDto.Email);
 
                 return Json(new
                 {
                     success = false,
-                    message = "Mesajýnýz veritabanýna kaydedildi ancak e-posta bildiriminde geçici bir sorun oluþtu."
+                    message = "Mesajï¿½nï¿½z veritabanï¿½na kaydedildi ancak e-posta bildiriminde geï¿½ici bir sorun oluï¿½tu."
                 });
             }
         }

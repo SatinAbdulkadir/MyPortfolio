@@ -12,6 +12,10 @@ namespace MyPortfolio.DataAccessLayer.Abstract
         Task InsertAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
+
+        // Toplu işlemler: N kayıt için N ayrı SaveChanges yerine tek veritabanı turu
+        Task InsertRangeAsync(List<T> entities);
+        Task DeleteRangeAsync(List<T> entities);
         Task<List<T>> GetListAsync();
         Task<T?> GetByIdAsync(int id);
 

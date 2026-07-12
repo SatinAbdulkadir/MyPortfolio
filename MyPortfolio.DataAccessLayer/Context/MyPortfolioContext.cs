@@ -36,6 +36,8 @@ namespace MyPortfolio.DataAccessLayer.Context
         public DbSet<Feature> Features { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Portfolio> Portfolios { get; set; }
+        public DbSet<PortfolioDetail> PortfolioDetails { get; set; }
+        public DbSet<PortfolioImage> PortfolioImages { get; set; }
         public DbSet<Skill> Skills { get; set; }
         public DbSet<SocialMedia> SocialMedias { get; set; }
         public DbSet<Testimonial> Testimonials { get; set; }

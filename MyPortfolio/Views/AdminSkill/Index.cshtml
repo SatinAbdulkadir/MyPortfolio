@@ -51,10 +51,13 @@
                                     <a href="/AdminSkill/UpdateSkill/@item.Id" class="btn btn-outline-warning btn-sm me-1">
                                         <i class="fas fa-edit"></i> Düzenle
                                     </a>
-                                    <a href="/AdminSkill/DeleteSkill/@item.Id" class="btn btn-outline-danger btn-sm"
-                                       onclick="return confirm('Bu yeteneği silmek istediğine emin misin reis?')">
-                                        <i class="fas fa-trash"></i> Sil
-                                    </a>
+                                    @* Silme POST + antiforgery token ile yapılır (CSRF koruması) *@
+                                    <form method="post" action="/AdminSkill/DeleteSkill/@item.Id" asp-antiforgery="true" class="d-inline"
+                                          onsubmit="return confirm('Bu yeteneği silmek istediğine emin misin reis?')">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-trash"></i> Sil
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         }

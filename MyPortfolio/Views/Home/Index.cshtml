@@ -1,13 +1,21 @@
-﻿@{
+@inject MyPortfolio.WebUI.Services.ContentCacheVersion CacheVersion
+@{
     ViewData["Title"] = "Hakkımda";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@await Component.InvokeAsync("_FeatureComponentPartial")
-@await Component.InvokeAsync("_AboutComponentPartial")
-@await Component.InvokeAsync("_ExperienceComponentPartial")
-@await Component.InvokeAsync("_SkillComponentPartial")
-@await Component.InvokeAsync("_PortfolioComponentPartial")
-@await Component.InvokeAsync("_TestimonialComponentPartial")
-@await Component.InvokeAsync("_ContactComponentPartial")
+@* Ana sayfa bileşenleri önbellekte tutulur: her ziyarette 7 ayrı DB sorgusu yerine hazır HTML döner.
+   vary-by CacheVersion'a bağlı — admin bir şey kaydettiği ANDA önbellek tazelenir, 30 dk beklenmez. *@
+<cache expires-after="TimeSpan.FromMinutes(30)" vary-by="@CacheVersion.Current">
+    @await Component.InvokeAsync("_FeatureComponentPartial")
+    @await Component.InvokeAsync("_AboutComponentPartial")
+    @await Component.InvokeAsync("_ExperienceComponentPartial")
+    @await Component.InvokeAsync("_SkillComponentPartial")
+    @await Component.InvokeAsync("_PortfolioComponentPartial")
+    @await Component.InvokeAsync("_TestimonialComponentPartial")
+    @await Component.InvokeAsync("_ContactComponentPartial")
+</cache>
+
+@* Mesaj formu BİLEREK önbellek dışında: içindeki antiforgery token ve Turnstile
+   ziyaretçiye özeldir; önbellekten servis edilirse form 400 hatası verir. *@
 @await Component.InvokeAsync("_MessageComponentPartial")

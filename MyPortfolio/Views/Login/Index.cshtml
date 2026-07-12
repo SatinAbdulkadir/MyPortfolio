@@ -71,6 +71,8 @@
         <p class="text-muted mb-4 small">Lütfen kimlik bilgilerinizi girin</p>
 
         <form method="post" novalidate>
+            @* Gizli anahtar: GET'te doğrulanan key, POST'ta tekrar kontrol edilmek üzere taşınır *@
+            <input type="hidden" name="key" value="@ViewBag.LoginKey" />
             <div class="mb-3 text-start">
                 <input type="text" asp-for="UserName" class="form-control" placeholder="Kullanıcı Adı" />
                 <span asp-validation-for="UserName" class="error-text fw-bold"></span>

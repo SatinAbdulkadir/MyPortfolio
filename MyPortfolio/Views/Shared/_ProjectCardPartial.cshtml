@@ -1,0 +1,20 @@
+@model MyPortfolio.BusinessLayer.Dtos.PortfolioDtos.ResultPortfolioDto
+
+@* Ortak proje kartı: ana sayfadaki "Projelerim" ızgarası ve detay sayfasındaki
+   "Diğer Projeler" şeridi bu partial'ı kullanır (DRY). *@
+<div class="col-lg-4 col-md-6">
+    <div class="portfolio-card">
+        <div class="portfolio-img">
+            <img src="@Model.ImageUrl" class="img-fluid" alt="@Model.Title">
+            <div class="portfolio-overlay">
+                <div class="overlay-content">
+                    <span class="category">@Model.SubTitle</span>
+                    <h4 class="project-name">@Model.Title</h4>
+                    <a href="/Portfolio/Detail/@Model.Id" class="project-link">
+                        İNCELE <i class="fa fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

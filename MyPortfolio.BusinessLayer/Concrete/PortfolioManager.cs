@@ -50,6 +50,12 @@ namespace MyPortfolio.BusinessLayer.Concrete
             return _mapper.Map<UpdatePortfolioDto>(value);
         }
 
+        public async Task<ResultPortfolioDto?> TGetPortfolioByIdAsync(int id)
+        {
+            var value = await _portfolioDal.GetByIdAsync(id);
+            return value == null ? null : _mapper.Map<ResultPortfolioDto>(value);
+        }
+
         public async Task TUpdatePortfolioAsync(UpdatePortfolioDto updateDto)
         {
             var existing = await _portfolioDal.GetByIdAsync(updateDto.Id);

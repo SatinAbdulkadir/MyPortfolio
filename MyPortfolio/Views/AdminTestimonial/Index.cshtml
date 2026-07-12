@@ -51,10 +51,13 @@
                                     <a href="/AdminTestimonial/UpdateTestimonial/@item.Id" class="btn btn-outline-warning btn-sm">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="/AdminTestimonial/DeleteTestimonial/@item.Id" class="btn btn-outline-danger btn-sm"
-                                       onclick="return confirm('Bu referansı silmek istediğine emin misin reis?')">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
+                                    @* Silme POST + antiforgery token ile yapılır (CSRF koruması) *@
+                                    <form method="post" action="/AdminTestimonial/DeleteTestimonial/@item.Id" asp-antiforgery="true" class="d-inline"
+                                          onsubmit="return confirm('Bu referansı silmek istediğine emin misin reis?')">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         }

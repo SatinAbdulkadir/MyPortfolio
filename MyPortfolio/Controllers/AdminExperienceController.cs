@@ -59,6 +59,7 @@ public class AdminExperienceController : Controller
         return RedirectToAction("Index");
     }
 
+    [HttpPost]
     public async Task<IActionResult> DeleteExperience(int id)
     {
         await _experienceService.TDeleteExperienceAsync(id);

@@ -6,6 +6,8 @@ using MyPortfolio.BusinessLayer.Dtos.ExperienceDtos;
 using MyPortfolio.BusinessLayer.Dtos.FeatureDtos;
 using MyPortfolio.BusinessLayer.Dtos.MessageDtos;
 using MyPortfolio.BusinessLayer.Dtos.PortfolioDtos;
+using MyPortfolio.BusinessLayer.Dtos.PortfolioDetailDtos;
+using MyPortfolio.BusinessLayer.Dtos.PortfolioImageDtos;
 using MyPortfolio.BusinessLayer.Dtos.SkillDtos;
 using MyPortfolio.BusinessLayer.Dtos.SocialMediaDtos;
 using MyPortfolio.BusinessLayer.Dtos.TestimonialDtos;
@@ -42,6 +44,13 @@ namespace MyPortfolio.BusinessLayer.Mappings
             CreateMap<Portfolio, ResultPortfolioDto>().ReverseMap();
             CreateMap<Portfolio, CreatePortfolioDto>().ReverseMap();
             CreateMap<Portfolio, UpdatePortfolioDto>().ReverseMap();
+
+            CreateMap<PortfolioDetail, ResultPortfolioDetailDto>().ReverseMap();
+            CreateMap<PortfolioDetail, CreatePortfolioDetailDto>().ReverseMap();
+            CreateMap<PortfolioDetail, UpdatePortfolioDetailDto>().ReverseMap();
+
+            CreateMap<PortfolioImage, ResultPortfolioImageDto>().ReverseMap();
+            CreateMap<PortfolioImage, CreatePortfolioImageDto>().ReverseMap();
 
             CreateMap<Skill, ResultSkillDto>().ReverseMap();
             CreateMap<Skill, CreateSkillDto>().ReverseMap();

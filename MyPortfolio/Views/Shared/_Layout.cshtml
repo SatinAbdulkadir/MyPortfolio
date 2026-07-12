@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject MyPortfolio.WebUI.Services.ContentCacheVersion CacheVersion
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
@@ -26,9 +27,16 @@
     @* Overlay: Sidebar açıkken arka planı karartır, tıklayınca sidebar kapanır *@
     <div id="sidebar-overlay"></div>
 
+    @{
+        // Sidebar görünümü sayfa bağlamına göre değişir (detay sayfasında PROJELER vurgulanır);
+        // önbellek anahtarı hem içerik sürümünü hem bu bağlamı içerir
+        var sidebarContext = (Context.Request.Path.Value ?? "").StartsWith("/Portfolio/Detail", StringComparison.OrdinalIgnoreCase) ? "detail" : "main";
+    }
     <div class="wrapper">
         <aside class="sidebar-wrapper">
-            @await Component.InvokeAsync("_SidebarComponentPartial")
+            <cache expires-after="TimeSpan.FromMinutes(30)" vary-by="@($"{CacheVersion.Current}|{sidebarContext}")">
+                @await Component.InvokeAsync("_SidebarComponentPartial")
+            </cache>
         </aside>
         <main class="main-content">
             @RenderBody()

@@ -1,29 +1,6 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
 
     // ==========================================================================
-    // 1. SKILL BARLARI — Scroll tetiklemeli animasyon
-    // ==========================================================================
-    const skillSection = document.getElementById('skills');
-    const progressBars = document.querySelectorAll('.progress-bar');
-
-    if (skillSection && progressBars.length > 0) {
-        const showProgress = () => {
-            progressBars.forEach(function (progressBar) {
-                const value = progressBar.dataset.width;
-                progressBar.style.width = value + '%';
-            });
-        };
-
-        window.addEventListener('scroll', function () {
-            const sectionPos = skillSection.getBoundingClientRect().top;
-            const screenPos = window.innerHeight / 1.2;
-            if (sectionPos < screenPos) {
-                showProgress();
-            }
-        });
-    }
-
-    // ==========================================================================
     // 2. SWIPER — Referanslar slider (tek init, çift çalışmayı önler)
     // ==========================================================================
     var swiperEl = document.querySelector('.testimonials-slider');
@@ -50,17 +27,23 @@
 
     // ==========================================================================
     // 3. YUMUŞAK KAYDIRMA — Hamburger kapatma ile entegre
+    // Sidebar linkleri "/#bolum" formatında: aynı sayfadaysak smooth scroll,
+    // farklı sayfadaysak (örn. proje detayı) normal navigasyonla ana sayfaya döner
     // ==========================================================================
-    document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+    document.querySelectorAll('a[href^="#"], .sidebar-menu a').forEach(function (anchor) {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
+            var hash = this.hash;
+            var samePage = this.pathname === window.location.pathname;
 
-            var target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth' });
+            if (hash && samePage) {
+                var target = document.querySelector(hash);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
             }
 
-            // Mobil/tablette menü açıksa smooth scroll sonrası kapat
+            // Mobil/tablette menü açıksa kapat (scroll da olsa navigasyon da olsa)
             var sidebar = document.querySelector('.sidebar-wrapper');
             var overlay = document.getElementById('sidebar-overlay');
             var btn = document.getElementById('hamburger-btn');
@@ -149,16 +132,27 @@
                 MessageDetail: document.getElementById('MessageDetail').value.trim()
             };
 
+            // CSRF token: sunucu her POST'ta bu token'ı doğrular (AutoValidateAntiforgeryToken)
+            const antiForgeryInput = contactForm.querySelector('input[name="__RequestVerificationToken"]');
+            const antiForgeryToken = antiForgeryInput ? antiForgeryInput.value : '';
+
             try {
                 const response = await fetch('/Home/SendMessage', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                        'cf-turnstile-response': turnstileResponse // Token'ı Backend'e Header üzerinden yolluyoruz
+                        'cf-turnstile-response': turnstileResponse, // Token'ı Backend'e Header üzerinden yolluyoruz
+                        'RequestVerificationToken': antiForgeryToken // CSRF koruması
                     },
                     body: JSON.stringify(messageData)
                 });
+
+                // Rate limit: kısa sürede çok fazla deneme yapıldıysa sunucu 429 döner
+                if (response.status === 429) {
+                    alert("Kısa sürede çok fazla mesaj denemesi yaptınız. Lütfen bir dakika bekleyip tekrar deneyin.");
+                    return;
+                }
 
                 // Sunucu 500 hatası verirse json parse etmeye çalışıp patlamasın diye güvenlik kontrolü
                 if (!response.ok && response.status !== 400 && response.status !== 500) {
@@ -213,17 +207,21 @@
             '.testimonial-item',
             '.contact-card',
             '.contact-header-info',
-            '.message-form-wrapper'
+            '.message-form-wrapper',
+            '.detail-section',
+            '.detail-panel',
+            '.other-projects .row > [class*="col-"]'
         ];
 
         var revealTargets = document.querySelectorAll(revealSelectors.join(', '));
 
-        // Aynı grid içindeki kartlara kademeli gecikme ver (stagger efekti)
-        var staggerIndex = {};
+        // Aynı grid içindeki kartlara kademeli gecikme ver (stagger efekti).
+        // Ebeveyn elementin kendisi Map anahtarı olur — DOM taraması gerekmez.
+        var parentGroups = new Map();
         revealTargets.forEach(function (el) {
-            var parentKey = el.parentElement ? Array.prototype.indexOf.call(document.querySelectorAll('*'), el.parentElement) : 0;
-            staggerIndex[parentKey] = (staggerIndex[parentKey] || 0) + 1;
-            el.style.setProperty('--reveal-delay', (Math.min(staggerIndex[parentKey] - 1, 8) * 0.07) + 's');
+            var count = (parentGroups.get(el.parentElement) || 0) + 1;
+            parentGroups.set(el.parentElement, count);
+            el.style.setProperty('--reveal-delay', (Math.min(count - 1, 8) * 0.07) + 's');
             el.classList.add('reveal');
         });
 
@@ -244,12 +242,13 @@
     // ==========================================================================
     // 7. SCROLLSPY — Görünen bölümün menü linkini vurgular
     // ==========================================================================
-    var menuLinks = document.querySelectorAll('.sidebar-menu a[href^="#"]');
+    var menuLinks = document.querySelectorAll('.sidebar-menu a');
 
     if (menuLinks.length > 0 && 'IntersectionObserver' in window) {
         var sectionMap = {};
         menuLinks.forEach(function (link) {
-            var section = document.querySelector(link.getAttribute('href'));
+            // link.hash "/#about" içinden "#about" kısmını verir; bölüm bu sayfada yoksa atlanır
+            var section = link.hash ? document.querySelector(link.hash) : null;
             if (section) {
                 sectionMap[section.id] = link;
             }

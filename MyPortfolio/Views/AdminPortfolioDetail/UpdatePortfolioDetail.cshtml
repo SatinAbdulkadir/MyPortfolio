@@ -1,0 +1,108 @@
+@model MyPortfolio.BusinessLayer.Dtos.PortfolioDetailDtos.UpdatePortfolioDetailDto
+@{
+    ViewData["Title"] = "Proje Detayı Düzenle";
+    Layout = "_AdminLayout";
+    var galleryImages = ViewBag.GalleryImages as List<MyPortfolio.BusinessLayer.Dtos.PortfolioImageDtos.ResultPortfolioImageDto>;
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-white">
+        <h6 class="m-0 fw-bold text-primary">
+            <i class="fas fa-edit me-2"></i> Proje Detayı Düzenle
+            @if (ViewBag.PortfolioTitle != null)
+            {
+                <span class="badge bg-info text-dark ms-2">@ViewBag.PortfolioTitle</span>
+            }
+        </h6>
+    </div>
+    <div class="card-body">
+        @* DİKKAT: enctype eklemezsek dosyalar null gelir! *@
+        <form method="post" enctype="multipart/form-data" novalidate>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="PortfolioId" />
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Detay Açıklaması</label>
+                <textarea asp-for="DetailDescription" rows="8" class="form-control"></textarea>
+                <span asp-validation-for="DetailDescription" class="text-danger small fw-bold"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Kullanılan Teknolojiler</label>
+                <input type="text" asp-for="Technologies" class="form-control" placeholder="Örn: Unity, C#, Blender" />
+                <span asp-validation-for="Technologies" class="text-danger small fw-bold"></span>
+                <small class="text-muted">Virgülle ayırarak yazın; sitede rozet (çip) olarak görünür.</small>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Yeni Video Dosyası (mp4)</label>
+                        <input type="file" asp-for="VideoFile" class="form-control" accept="video/mp4,video/webm" />
+                        <span asp-validation-for="VideoFile" class="text-danger small fw-bold"></span>
+                        <small class="text-muted">Yüklerseniz mevcut videonun yerine geçer (en fazla 100 MB).</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Video Linki (mevcut)</label>
+                        <input type="url" asp-for="VideoUrl" class="form-control" placeholder="https://www.youtube.com/watch?v=..." />
+                        <span asp-validation-for="VideoUrl" class="text-danger small fw-bold"></span>
+                        <small class="text-muted">Alanı boşaltırsanız video bölümü sitede görünmez.</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Yeni Galeri Resimleri Ekle</label>
+                <input type="file" asp-for="GalleryFiles" class="form-control" accept="image/*" multiple />
+                <span asp-validation-for="GalleryFiles" class="text-danger small fw-bold"></span>
+                <small class="text-muted">Seçilen resimler mevcut galeriye eklenir.</small>
+            </div>
+
+            <div class="text-end mt-4">
+                <a href="/AdminPortfolioDetail/Index" class="btn btn-secondary shadow-sm px-4 me-2">Vazgeç</a>
+                <button type="submit" class="btn btn-primary shadow-sm px-5">
+                    <i class="fas fa-save me-2"></i> Değişiklikleri Kaydet
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* Mevcut galeri: silme işlemi form dışında ayrı linklerle yapılır *@
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-white">
+        <h6 class="m-0 fw-bold text-primary"><i class="fas fa-images me-2"></i> Mevcut Galeri Resimleri</h6>
+    </div>
+    <div class="card-body">
+        @if (galleryImages != null && galleryImages.Count > 0)
+        {
+            <div class="row g-3">
+                @foreach (var image in galleryImages)
+                {
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <div class="border rounded shadow-sm p-2 text-center bg-light">
+                            <img src="@image.ImageUrl" class="rounded mb-2"
+                                 style="width: 100%; height: 90px; object-fit: cover;" alt="Galeri" />
+                            @* Silme POST + antiforgery token ile yapılır (CSRF koruması) *@
+                            <form method="post" action="/AdminPortfolioDetail/DeletePortfolioImage?id=@image.Id&detailId=@Model.Id" asp-antiforgery="true"
+                                  onsubmit="return confirm('Bu resmi galeriden silmek istediğine emin misin reis?')">
+                                <button type="submit" class="btn btn-outline-danger btn-sm w-100">
+                                    <i class="fas fa-trash"></i> Sil
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted text-center py-3 mb-0">
+                <i class="fas fa-image d-block mb-2 fa-2x"></i>
+                Henüz galeri resmi eklenmemiş. Yukarıdaki formdan ekleyebilirsiniz.
+            </p>
+        }
+    </div>
+</div>

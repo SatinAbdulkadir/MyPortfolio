@@ -80,6 +80,20 @@
         </script>
     }
 
+    @* Uyarı mesajı: işlem başarılı ama dikkat gerektiren bir durum var (örn. atlanan galeri dosyaları) *@
+    @if (TempData["WarningMessage"] != null)
+    {
+        <script>
+            Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 6000,
+                timerProgressBar: true
+            }).fire({ icon: 'warning', title: 'Dikkat!', text: @Json.Serialize(TempData["WarningMessage"]) });
+        </script>
+    }
+
     @* 3. KRİTİK SATIR: View'lardan gelen özel scriptleri buraya basar *@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
