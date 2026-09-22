@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MyPortfolio.BusinessLayer.Dtos.AboutDtos;
 using MyPortfolio.BusinessLayer.Dtos.AppUserDtos;
+using MyPortfolio.BusinessLayer.Dtos.CertificateCategoryDtos;
+using MyPortfolio.BusinessLayer.Dtos.CertificateDtos;
 using MyPortfolio.BusinessLayer.Dtos.ContactDtos;
 using MyPortfolio.BusinessLayer.Dtos.ExperienceDtos;
 using MyPortfolio.BusinessLayer.Dtos.FeatureDtos;
@@ -24,6 +26,19 @@ namespace MyPortfolio.BusinessLayer.Mappings
             CreateMap<ResultAboutDto, UpdateAboutDto>().ReverseMap();
             CreateMap<About, UpdateAboutDto>().ReverseMap();
 
+
+            // Sertifikalar: kategori adı/ikonu entity'de yok, manager ayrı sorgudan doldurur
+            CreateMap<Certificate, ResultCertificateDto>()
+                .ForMember(dest => dest.CategoryName, opt => opt.Ignore())
+                .ForMember(dest => dest.CategoryIcon, opt => opt.Ignore());
+            CreateMap<Certificate, CreateCertificateDto>().ReverseMap();
+            CreateMap<Certificate, UpdateCertificateDto>().ReverseMap();
+
+            // CertificateCount da aynı şekilde manager tarafından hesaplanır
+            CreateMap<CertificateCategory, ResultCertificateCategoryDto>()
+                .ForMember(dest => dest.CertificateCount, opt => opt.Ignore());
+            CreateMap<CertificateCategory, CreateCertificateCategoryDto>().ReverseMap();
+            CreateMap<CertificateCategory, UpdateCertificateCategoryDto>().ReverseMap();
 
             CreateMap<Contact, ResultContactDto>().ReverseMap();
             CreateMap<ResultContactDto, UpdateContactDto>().ReverseMap();

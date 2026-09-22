@@ -1,4 +1,4 @@
-using FluentValidation;
+﻿using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyPortfolio.BusinessLayer.Abstract;
@@ -18,6 +18,8 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped(typeof(IGenericDal<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IFeatureService, FeatureManager>();
 builder.Services.AddScoped<IAboutService, AboutManager>();
+builder.Services.AddScoped<ICertificateService, CertificateManager>();
+builder.Services.AddScoped<ICertificateCategoryService, CertificateCategoryManager>();
 builder.Services.AddScoped<IContactService, ContactManager>();
 builder.Services.AddScoped<IExperienceService, ExperienceManager>();
 builder.Services.AddScoped<IPortfolioService, PortfolioManager>();
