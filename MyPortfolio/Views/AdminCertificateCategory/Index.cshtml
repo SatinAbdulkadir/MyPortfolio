@@ -1,0 +1,86 @@
+﻿@using MyPortfolio.BusinessLayer.Dtos.CertificateCategoryDtos
+@model List<ResultCertificateCategoryDto>
+@{
+    ViewData["Title"] = "Sertifika Kategorileri";
+    Layout = "_AdminLayout";
+    int count = 0;
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center bg-white">
+        <h6 class="m-0 fw-bold text-primary"><i class="fas fa-layer-group me-2"></i> Sertifika Kategorileri</h6>
+        <a href="/AdminCertificateCategory/CreateCertificateCategory" class="btn btn-primary btn-sm shadow-sm">
+            <i class="fas fa-plus fa-sm me-1"></i> Yeni Kategori Ekle
+        </a>
+    </div>
+    <div class="card-body">
+        <p class="text-muted small">
+            Sertifikalar sitede bu kategorilere göre gruplanır. Sıra değeri küçük olan kategori önce görünür.
+        </p>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                <thead class="table-light text-center">
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th style="width: 70px;">İkon</th>
+                        <th>Kategori Adı</th>
+                        <th style="width: 120px;">Sıra</th>
+                        <th style="width: 140px;">Sertifika Sayısı</th>
+                        <th style="width: 150px;">İşlemler</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        foreach (var item in Model)
+                        {
+                            count++;
+                            <tr>
+                                <td class="text-center fw-bold">@count</td>
+                                <td class="text-center">
+                                    @if (!string.IsNullOrWhiteSpace(item.Icon))
+                                    {
+                                        <i class="@item.Icon fa-lg text-warning"></i>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">—</span>
+                                    }
+                                </td>
+                                <td>@item.Name</td>
+                                <td class="text-center">@item.DisplayOrder</td>
+                                <td class="text-center">
+                                    <span class="badge @(item.CertificateCount > 0 ? "bg-info" : "bg-secondary")">
+                                        @item.CertificateCount
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <a href="/AdminCertificateCategory/UpdateCertificateCategory/@item.Id" class="btn btn-outline-info btn-sm">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    @* Silme POST + antiforgery token ile yapılır (CSRF koruması) *@
+                                    <form method="post" action="/AdminCertificateCategory/DeleteCertificateCategory/@item.Id" asp-antiforgery="true" class="d-inline"
+                                          onsubmit="return confirm('@item.Name kategorisini silmek istediğine emin misin?')">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" @(item.CertificateCount > 0 ? "disabled" : "")
+                                                title="@(item.CertificateCount > 0 ? "Dolu kategori silinemez" : "Sil")">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="fas fa-info-circle me-2"></i> Henüz bir kategori eklenmemiş. Sertifika ekleyebilmek için önce kategori oluştur.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
