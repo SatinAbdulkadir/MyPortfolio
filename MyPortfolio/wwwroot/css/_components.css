@@ -1302,3 +1302,244 @@ input:-webkit-autofill:focus {
     padding-top: var(--space-lg);
     border-top: 1px solid var(--border);
 }
+
+/* =====================
+   SERTİFİKALAR
+   Ana sayfadaki "öne çıkanlar" ızgarası ve /Certificate sayfası ortak kullanır
+   ===================== */
+.certificates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-md);
+}
+
+.certificate-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: var(--transition);
+}
+
+    .certificate-card:hover {
+        border-color: var(--accent-border);
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-card);
+    }
+
+.certificate-media {
+    position: relative;
+}
+
+    /* Sertifika belgesinin tamamı görünmeli: galeri kartlarındaki kırpma (cover) burada istenmez */
+    .certificate-media .gallery-item {
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid var(--border);
+        border-radius: 0;
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+        .certificate-media .gallery-item img {
+            object-fit: contain;
+            padding: 6px;
+        }
+
+        .certificate-media .gallery-item:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+/* PDF veya dosyasız sertifikalar için görsel yerine geçen alan */
+.certificate-file {
+    aspect-ratio: 16 / 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    background: rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+    .certificate-file i {
+        font-size: clamp(2rem, 6vw, 2.6rem);
+        color: var(--accent);
+    }
+
+    a.certificate-file:hover {
+        background: var(--accent-soft);
+        color: var(--accent);
+    }
+
+.certificate-file-empty i {
+    color: var(--text-muted);
+    opacity: 0.55;
+}
+
+.certificate-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: var(--space-md);
+}
+
+.certificate-cat {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 4px 10px;
+    border-radius: 100px;
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-border);
+    color: var(--accent);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.5px;
+}
+
+.certificate-title {
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    color: var(--text-white);
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.certificate-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-sm);
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+}
+
+    .certificate-meta i {
+        color: var(--accent);
+        margin-right: 4px;
+    }
+
+.certificate-desc {
+    color: var(--text-muted);
+    font-size: var(--fs-sm);
+    line-height: 1.7;
+    margin: 0;
+    /* Uzun açıklama kart yüksekliklerini bozmasın: 3 satırda kes */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.certificate-verify {
+    align-self: flex-start;
+    margin-top: auto;
+    padding-top: var(--space-xs);
+    color: var(--accent);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+    .certificate-verify:hover {
+        color: var(--accent-2);
+        transform: translateX(3px);
+    }
+
+.certificates-cta {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-lg);
+}
+
+/* --- /Certificate sayfası --- */
+.certificates-lead {
+    color: var(--text-muted);
+    font-size: var(--fs-base);
+    max-width: 640px;
+    margin-top: var(--space-sm);
+}
+
+.cert-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-lg);
+}
+
+.cert-filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-muted);
+    font-size: var(--fs-xs);
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: var(--transition);
+    -webkit-tap-highlight-color: transparent;
+}
+
+    .cert-filter-chip:hover {
+        color: var(--text-white);
+        border-color: var(--accent-border);
+    }
+
+    .cert-filter-chip.active {
+        background: var(--accent-soft);
+        border-color: var(--accent);
+        color: var(--accent);
+    }
+
+.cert-filter-count {
+    padding: 1px 8px;
+    border-radius: 100px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 0.7rem;
+}
+
+.cert-group {
+    margin-bottom: var(--space-xl);
+}
+
+.cert-group-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    color: var(--text-white);
+    padding-bottom: var(--space-sm);
+    margin-bottom: var(--space-md);
+    border-bottom: 1px solid var(--border);
+}
+
+    .cert-group-title i {
+        color: var(--accent);
+    }
+
+.certificates-empty {
+    text-align: center;
+    color: var(--text-muted);
+    padding: var(--space-xl) 0;
+}
+
+    .certificates-empty i {
+        font-size: 2.5rem;
+        color: var(--accent);
+        opacity: 0.5;
+        margin-bottom: var(--space-sm);
+    }

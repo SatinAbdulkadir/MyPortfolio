@@ -203,6 +203,7 @@
             '.about-info-content',
             '.timeline-item',
             '.skill-card',
+            '.certificate-card',
             '#portfolio .row > [class*="col-"]',
             '.testimonial-item',
             '.contact-card',
@@ -269,7 +270,55 @@
     }
 
     // ==========================================================================
-    // 8. YUKARI DÖN BUTONU
+    // 8. LIGHTBOX — Görsel tam ekran önizleme
+    // Proje detay galerisi ve sertifika kartları ortak kullanır:
+    // sayfada #lightbox ve .gallery-item varsa devreye girer, yoksa sessizce çıkar.
+    // ==========================================================================
+    var lightbox = document.getElementById('lightbox');
+    var lightboxItems = Array.prototype.slice.call(document.querySelectorAll('.gallery-item'));
+
+    if (lightbox && lightboxItems.length > 0) {
+        var lightboxImg = lightbox.querySelector('img');
+        var currentIndex = 0;
+
+        var showLightbox = function (index) {
+            currentIndex = (index + lightboxItems.length) % lightboxItems.length;
+            lightboxImg.src = lightboxItems[currentIndex].dataset.full;
+            lightboxImg.alt = lightboxItems[currentIndex].dataset.caption || '';
+            lightbox.classList.add('open');
+            lightbox.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        };
+
+        var closeLightbox = function () {
+            lightbox.classList.remove('open');
+            lightbox.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        };
+
+        lightboxItems.forEach(function (item, index) {
+            item.addEventListener('click', function () { showLightbox(index); });
+        });
+
+        lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+        lightbox.querySelector('.lightbox-prev').addEventListener('click', function (e) { e.stopPropagation(); showLightbox(currentIndex - 1); });
+        lightbox.querySelector('.lightbox-next').addEventListener('click', function (e) { e.stopPropagation(); showLightbox(currentIndex + 1); });
+
+        // Boş alana tıklayınca kapat
+        lightbox.addEventListener('click', function (e) {
+            if (e.target === lightbox) closeLightbox();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (!lightbox.classList.contains('open')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') showLightbox(currentIndex - 1);
+            if (e.key === 'ArrowRight') showLightbox(currentIndex + 1);
+        });
+    }
+
+    // ==========================================================================
+    // 9. YUKARI DÖN BUTONU
     // ==========================================================================
     var backToTopBtn = document.getElementById('back-to-top');
 

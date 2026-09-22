@@ -1,9 +1,12 @@
-@model MyPortfolio.WebUI.Models.SidebarViewModel
+﻿@model MyPortfolio.WebUI.Models.SidebarViewModel
 @{
     // Proje detay sayfasındayken menüde PROJELER vurgulanır ("projeler bölgesindesin" hissi);
     // sayfanın kendisi konum bilgisini breadcrumb ve sticky panelle verir
     var currentPath = Context.Request.Path.Value ?? "";
     var isDetailPage = currentPath.StartsWith("/Portfolio/Detail", StringComparison.OrdinalIgnoreCase);
+
+    // Sertifika sayfasindayken menude SERTIFIKALAR vurgulanir
+    var isCertificatePage = currentPath.StartsWith("/Certificate", StringComparison.OrdinalIgnoreCase);
 }
 
 <div class="profile-section">
@@ -30,6 +33,7 @@
         <li><a href="/#experience"><i class="fa fa-briefcase"></i> DENEYİMLER</a></li>
         <li><a href="/#skills"><i class="fa fa-star"></i> YETENEKLER</a></li>
         <li><a href="/#portfolio" class="@(isDetailPage ? "active" : "")"><i class="fa fa-code"></i> PROJELER</a></li>
+        <li><a href="/#certificates" class="@(isCertificatePage ? "active" : "")"><i class="fa fa-certificate"></i> SERTİFİKALAR</a></li>
         @if (Model.Testimonials != null && Model.Testimonials.Any())
         {
             <li><a href="/#testimonials"><i class="fa fa-quote-right"></i> REFERANSLAR</a></li>
