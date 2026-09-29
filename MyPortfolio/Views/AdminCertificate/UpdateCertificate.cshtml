@@ -1,0 +1,113 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.CertificateDtos.UpdateCertificateDto
+@{
+    ViewData["Title"] = "Sertifikayı Düzenle";
+    Layout = "_AdminLayout";
+    bool isPdf = string.Equals(Model.FileType, "pdf", StringComparison.OrdinalIgnoreCase);
+    bool hasFile = !string.IsNullOrWhiteSpace(Model.FileUrl);
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 bg-white">
+        <h6 class="m-0 fw-bold text-primary"><i class="fas fa-edit me-2"></i> Sertifikayı Düzenle</h6>
+    </div>
+    <div class="card-body">
+        <form method="post" enctype="multipart/form-data" novalidate>
+            <input type="hidden" asp-for="Id" />
+            @* Yeni dosya seçilmezse mevcut dosya aynen korunur *@
+            <input type="hidden" asp-for="FileUrl" />
+            <input type="hidden" asp-for="FileType" />
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Sertifika Adı</label>
+                        <input type="text" asp-for="Title" class="form-control" />
+                        <span asp-validation-for="Title" class="text-danger small fw-bold"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Kategori</label>
+                        <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select">
+                            <option value="">-- Kategori seç --</option>
+                        </select>
+                        <span asp-validation-for="CategoryId" class="text-danger small fw-bold"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Veren Kurum</label>
+                        <input type="text" asp-for="Issuer" class="form-control" />
+                        <span asp-validation-for="Issuer" class="text-danger small fw-bold"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Alınma Tarihi</label>
+                        <input type="date" asp-for="IssueDate" asp-format="{0:yyyy-MM-dd}" class="form-control" />
+                        <span asp-validation-for="IssueDate" class="text-danger small fw-bold"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Sertifika Dosyası</label>
+                        <input type="file" asp-for="CertificateFile" class="form-control" accept="image/*,application/pdf" />
+                        <span asp-validation-for="CertificateFile" class="text-danger small fw-bold"></span>
+                        <small class="text-muted">Yeni dosya seçersen eskisi silinir.</small>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mevcut Dosya</label>
+                        <div>
+                            @if (hasFile && isPdf)
+                            {
+                                <a href="@Model.FileUrl" target="_blank" rel="noopener" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-file-pdf me-1"></i> PDF'i Aç
+                                </a>
+                            }
+                            else if (hasFile)
+                            {
+                                <img src="@Model.FileUrl" alt="@Model.Title" class="img-thumbnail" style="max-height: 120px;" />
+                            }
+                            else
+                            {
+                                <span class="text-muted small">Bu sertifikada dosya yok.</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Doğrulama Linki</label>
+                <input type="url" asp-for="CredentialUrl" class="form-control" placeholder="https://www.credly.com/..." />
+                <span asp-validation-for="CredentialUrl" class="text-danger small fw-bold"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Açıklama</label>
+                <textarea asp-for="Description" rows="4" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger small fw-bold"></span>
+            </div>
+
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" asp-for="IsFeatured" />
+                <label class="form-check-label fw-bold" asp-for="IsFeatured">Ana sayfada öne çıkar</label>
+            </div>
+
+            <div class="text-end mt-4">
+                <a href="/AdminCertificate/Index" class="btn btn-secondary shadow-sm px-4 me-2">Vazgeç</a>
+                <button type="submit" class="btn btn-primary shadow-sm px-5">
+                    <i class="fas fa-save me-2"></i> Güncelle
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

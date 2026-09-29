@@ -15,6 +15,7 @@ namespace MyPortfolio.BusinessLayer.Helpers
         // zararlı içerik servis edilebilir (stored XSS / oltalama sayfası).
         private static readonly string[] ImageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
         private static readonly string[] VideoExtensions = { ".mp4", ".webm" };
+        private static readonly string[] DocumentExtensions = { ".pdf" };
 
         // Optimizasyon ayarları: uzun kenar en fazla 1920px, WebP kalite 80.
         // 4-5 MB'lık telefon fotoğrafını ~100-300 KB'a indirir, gözle fark edilmez.
@@ -32,6 +33,41 @@ namespace MyPortfolio.BusinessLayer.Helpers
 
         public Task<string?> UploadVideoAsync(IFormFile videoFile, string folderName = "videos")
             => UploadAsync(videoFile, folderName, VideoExtensions, optimizeImage: false);
+
+        // Sertifika dosyası hem görsel hem PDF olabilir: görsel her zamanki gibi WebP'ye
+        // çevrilip küçültülür, PDF ise olduğu gibi saklanır (küçültülecek bir şey yok).
+        // Dönen tür arayüzde kullanılır: "image" büyütülür, "pdf" yeni sekmede açılır.
+        // Dosya reddedilirse (null, null) döner.
+        public async Task<(string? Url, string? Type)> UploadCertificateFileAsync(IFormFile file, string folderName = "certificates")
+        {
+            if (file == null || file.Length == 0) return (null, null);
+
+            string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (DocumentExtensions.Contains(extension))
+            {
+                // Uzantısı .pdf yapılmış başka bir dosya olmasın: imza baytları kontrol edilir.
+                // Resimlerde bu doğrulamayı zaten ImageSharp'ın parse etmesi sağlıyor.
+                if (!await HasPdfSignatureAsync(file)) return (null, null);
+
+                string? documentUrl = await UploadAsync(file, folderName, DocumentExtensions, optimizeImage: false);
+                return documentUrl == null ? (null, null) : (documentUrl, "pdf");
+            }
+
+            string? imageUrl = await UploadImageAsync(file, folderName);
+            return imageUrl == null ? (null, null) : (imageUrl, "image");
+        }
+
+        // Her PDF dosyası "%PDF-" ile başlar
+        private static async Task<bool> HasPdfSignatureAsync(IFormFile file)
+        {
+            var signature = new byte[5];
+
+            using var stream = file.OpenReadStream();
+            int read = await stream.ReadAsync(signature.AsMemory(0, signature.Length));
+
+            return read == signature.Length && System.Text.Encoding.ASCII.GetString(signature) == "%PDF-";
+        }
 
         private async Task<string?> UploadAsync(IFormFile file, string folderName, string[] allowedExtensions, bool optimizeImage)
         {

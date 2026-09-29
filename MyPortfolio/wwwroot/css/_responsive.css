@@ -190,3 +190,29 @@
             margin: 0 auto;
         }
 }
+
+/* =====================
+   Sertifikalar — mobil
+   ===================== */
+@media (max-width: 575.98px) {
+    /* Dar ekranda 280px'lik minimum sütun taşmaya yol açıyordu */
+    .certificates-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Çipler alt alta yığılmak yerine yatay kaydırılır */
+    .cert-filter-bar {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: var(--space-xs);
+        scrollbar-width: none;
+    }
+
+        .cert-filter-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+    .cert-filter-chip {
+        flex-shrink: 0;
+    }
+}

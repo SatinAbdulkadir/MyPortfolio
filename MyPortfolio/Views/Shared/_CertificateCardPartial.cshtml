@@ -1,0 +1,57 @@
+﻿@model MyPortfolio.BusinessLayer.Dtos.CertificateDtos.ResultCertificateDto
+
+@* Ortak sertifika kartı: ana sayfadaki "öne çıkanlar" ızgarası ve
+   /Certificate sayfasındaki tam liste bu partial'ı kullanır (DRY). *@
+<article class="certificate-card">
+    <div class="certificate-media">
+        @if (Model.HasImage)
+        {
+            @* .gallery-item sınıfı lightbox davranışını da getirir (bkz. site.js) *@
+            <button type="button" class="gallery-item" data-full="@Model.FileUrl"
+                    data-caption="@Model.Title" aria-label="@Model.Title sertifikasını büyüt">
+                <img src="@Model.FileUrl" alt="@Model.Title sertifikası" loading="lazy" />
+                <span class="gallery-zoom"><i class="fa fa-magnifying-glass-plus"></i></span>
+            </button>
+        }
+        else if (Model.IsPdf)
+        {
+            @* PDF sayfa içinde gömülemiyor (X-Frame-Options: DENY), yeni sekmede açılır *@
+            <a href="@Model.FileUrl" target="_blank" rel="noopener" class="certificate-file">
+                <i class="fa fa-file-pdf"></i>
+                <span>PDF olarak görüntüle</span>
+            </a>
+        }
+        else
+        {
+            <div class="certificate-file certificate-file-empty">
+                <i class="fa fa-certificate"></i>
+            </div>
+        }
+    </div>
+
+    <div class="certificate-body">
+        <span class="certificate-cat">
+            <i class="@(string.IsNullOrWhiteSpace(Model.CategoryIcon) ? "fa fa-folder" : Model.CategoryIcon)"></i>
+            @Model.CategoryName
+        </span>
+
+        <h4 class="certificate-title">@Model.Title</h4>
+
+        <div class="certificate-meta">
+            <span><i class="fa fa-building-columns"></i> @Model.Issuer</span>
+            <span><i class="far fa-calendar-check"></i> @Model.IssueDateText</span>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Description))
+        {
+            <p class="certificate-desc">@Model.Description</p>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.CredentialUrl))
+        {
+            <a href="@Model.CredentialUrl" target="_blank" rel="noopener" class="certificate-verify">
+                <i class="fa fa-shield-halved"></i> Doğrula
+            </a>
+        }
+    </div>
+</article>

@@ -1,0 +1,97 @@
+﻿@model MyPortfolio.WebUI.Models.CertificateListViewModel
+@{
+    ViewData["Title"] = "Sertifikalar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<section class="detail-page section-padding">
+    <div class="container">
+
+        @* Üst şerit: geri dön *@
+        <a href="/#certificates" class="detail-back-link">
+            <i class="fa fa-arrow-left"></i> Ana Sayfaya Dön
+        </a>
+
+        <div class="detail-header">
+            <span class="subtitle">BELGELERİM</span>
+            <h1 class="detail-title">Sertifikalar</h1>
+            <p class="certificates-lead">
+                Katıldığım eğitimler ve aldığım belgeler. Toplam @Model.TotalCount sertifika,
+                @Model.Categories.Count kategori altında listeleniyor.
+            </p>
+        </div>
+
+        @if (Model.TotalCount == 0)
+        {
+            <div class="certificates-empty">
+                <i class="fa fa-certificate"></i>
+                <p>Henüz bir sertifika eklenmemiş.</p>
+            </div>
+        }
+        else
+        {
+            @* Filtre çipleri: JS ile grupları gösterip gizler (sayfa yenilenmez) *@
+            <div class="cert-filter-bar" role="group" aria-label="Kategori filtresi">
+                <button type="button" class="cert-filter-chip active" data-filter="all">
+                    Tümü <span class="cert-filter-count">@Model.TotalCount</span>
+                </button>
+                @foreach (var category in Model.Categories)
+                {
+                    <button type="button" class="cert-filter-chip" data-filter="@category.Id">
+                        @if (!string.IsNullOrWhiteSpace(category.Icon))
+                        {
+                            <i class="@category.Icon"></i>
+                        }
+                        @category.Name
+                        <span class="cert-filter-count">@Model.CertificatesByCategory[category.Id].Count</span>
+                    </button>
+                }
+            </div>
+
+            @foreach (var category in Model.Categories)
+            {
+                <div class="cert-group" data-category="@category.Id">
+                    <h2 class="cert-group-title">
+                        <i class="@(string.IsNullOrWhiteSpace(category.Icon) ? "fa fa-folder" : category.Icon)"></i>
+                        @category.Name
+                    </h2>
+
+                    <div class="certificates-grid">
+                        @foreach (var item in Model.CertificatesByCategory[category.Id])
+                        {
+                            @await Html.PartialAsync("_CertificateCardPartial", item)
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</section>
+
+@await Html.PartialAsync("_LightboxPartial")
+
+@section Scripts {
+    <script>
+        // Kategori filtresi — yalnızca bu sayfada gerekli olduğu için site.js yerine burada
+        document.addEventListener("DOMContentLoaded", function () {
+            var chips = Array.prototype.slice.call(document.querySelectorAll('.cert-filter-chip'));
+            var groups = Array.prototype.slice.call(document.querySelectorAll('.cert-group'));
+
+            if (chips.length === 0) return;
+
+            chips.forEach(function (chip) {
+                chip.addEventListener('click', function () {
+                    var filter = chip.dataset.filter;
+
+                    chips.forEach(function (c) { c.classList.remove('active'); });
+                    chip.classList.add('active');
+
+                    groups.forEach(function (group) {
+                        var visible = filter === 'all' || group.dataset.category === filter;
+                        group.hidden = !visible;
+                    });
+                });
+            });
+        });
+    </script>
+}

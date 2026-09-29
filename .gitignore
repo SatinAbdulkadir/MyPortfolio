@@ -376,3 +376,9 @@ appsettings.Production.json
 *.mdf
 *.ldf
 /MyPortfolio.WebUI/logs/
+
+# Panelden yüklenen sertifika dosyaları (görsel/PDF)
+# Bunlar kaynak kod değil kullanıcı içeriği: repoyu şişirir ve git geçmişinden
+# sonradan temizlenemez. Klasörü FileImageHelper çalışma anında oluşturur,
+# bu yüzden temiz bir clone'da eksik olması hata vermez.
+MyPortfolio/wwwroot/certificates/

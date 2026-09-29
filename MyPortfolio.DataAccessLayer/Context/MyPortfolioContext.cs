@@ -31,6 +31,8 @@ namespace MyPortfolio.DataAccessLayer.Context
         }
 
         public DbSet<About> Abouts { get; set; }
+        public DbSet<Certificate> Certificates { get; set; }
+        public DbSet<CertificateCategory> CertificateCategories { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Experience> Experiences { get; set; }
         public DbSet<Feature> Features { get; set; }
