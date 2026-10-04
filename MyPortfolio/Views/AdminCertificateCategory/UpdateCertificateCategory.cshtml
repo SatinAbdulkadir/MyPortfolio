@@ -18,6 +18,17 @@
                 <span asp-validation-for="Name" class="text-danger small fw-bold"></span>
             </div>
 
+            <div class="mb-3">
+                <label class="form-label fw-bold">Üst Kategori</label>
+                <select asp-for="ParentId" asp-items="ViewBag.ParentCategories" class="form-select">
+                    <option value="">— Yok, bu bir ana kategori —</option>
+                </select>
+                <span asp-validation-for="ParentId" class="text-danger small fw-bold"></span>
+                <small class="text-muted">
+                    Örn: "Front End" için üst kategori "Yazılım" olur. Sadece ana kategoriler listelenir; alt kategorinin altına kategori açılamaz.
+                </small>
+            </div>
+
             <div class="row">
                 <div class="col-md-8">
                     <div class="mb-3">

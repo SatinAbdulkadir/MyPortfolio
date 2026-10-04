@@ -22,9 +22,8 @@ namespace MyPortfolio.EntityLayer.Concrete
         // "image" veya "pdf": arayüz görseli mi büyütecek yoksa yeni sekmede mi açacak
         public string? FileType { get; set; }
 
-        // Kategori ilişkisi: projede navigation property kullanılmıyor (bkz. PortfolioDetail),
-        // kategori bilgisi manager içinde ayrı sorguyla birleştirilir
-        public required int CategoryId { get; set; }
+        // Kategoriler ara tablo üzerinden bağlanır (bkz. CertificateCategoryLink):
+        // bir sertifika birden fazla kategoride görünebilir
 
         // Ana sayfadaki "öne çıkan sertifikalar" bölümünde görünsün mü
         public bool IsFeatured { get; set; }

@@ -279,12 +279,24 @@
 
     if (lightbox && lightboxItems.length > 0) {
         var lightboxImg = lightbox.querySelector('img');
+        var activeItems = [];
         var currentIndex = 0;
 
+        // Gezinme listesi tıklama anında kurulur: filtreyle gizlenmiş gruplar atlanır,
+        // aynı sertifika sayfada iki kategoride görünse de görseli bir kez gösterilir
+        var collectActiveItems = function () {
+            var seen = {};
+            return lightboxItems.filter(function (item) {
+                if (item.offsetParent === null || seen[item.dataset.full]) return false;
+                seen[item.dataset.full] = true;
+                return true;
+            });
+        };
+
         var showLightbox = function (index) {
-            currentIndex = (index + lightboxItems.length) % lightboxItems.length;
-            lightboxImg.src = lightboxItems[currentIndex].dataset.full;
-            lightboxImg.alt = lightboxItems[currentIndex].dataset.caption || '';
+            currentIndex = (index + activeItems.length) % activeItems.length;
+            lightboxImg.src = activeItems[currentIndex].dataset.full;
+            lightboxImg.alt = activeItems[currentIndex].dataset.caption || '';
             lightbox.classList.add('open');
             lightbox.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
@@ -296,8 +308,17 @@
             document.body.style.overflow = '';
         };
 
-        lightboxItems.forEach(function (item, index) {
-            item.addEventListener('click', function () { showLightbox(index); });
+        lightboxItems.forEach(function (item) {
+            item.addEventListener('click', function () {
+                activeItems = collectActiveItems();
+
+                // Tıklanan, listedeki ilk kopyası olmayabilir: aynı görseli adresinden bul
+                var start = 0;
+                for (var i = 0; i < activeItems.length; i++) {
+                    if (activeItems[i].dataset.full === item.dataset.full) { start = i; break; }
+                }
+                showLightbox(start);
+            });
         });
 
         lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);

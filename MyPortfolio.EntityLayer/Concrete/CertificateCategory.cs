@@ -2,8 +2,9 @@
 
 namespace MyPortfolio.EntityLayer.Concrete
 {
-    // Sertifikaların gruplandığı başlık: "Yazılım Geliştirme", "Office & İşletim Sistemleri" gibi.
+    // Sertifikaların gruplandığı başlık: "Yazılım", "Front End", ".NET Developer Pozisyonu" gibi.
     // İsimleri sabit liste değil, admin panelinden yönetilir.
+    // İki seviyelidir: ParentId boşsa ana kategori, doluysa bir ana kategorinin alt kategorisi.
     public class CertificateCategory : BaseEntity
     {
         public required string Name { get; set; }
@@ -13,5 +14,9 @@ namespace MyPortfolio.EntityLayer.Concrete
 
         // Sitede grupların görünme sırası; küçük olan önce gelir
         public int DisplayOrder { get; set; }
+
+        // Üst (ana) kategori. Derinlik 2 ile sınırlı: üst kategorinin kendi üstü olamaz
+        // (kural CertificateCategoryManager.TValidateParentAsync'te uygulanır)
+        public int? ParentId { get; set; }
     }
 }

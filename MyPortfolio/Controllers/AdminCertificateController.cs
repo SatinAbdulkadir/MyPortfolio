@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using MyPortfolio.BusinessLayer.Abstract;
+using MyPortfolio.BusinessLayer.Dtos.CertificateCategoryDtos;
 using MyPortfolio.BusinessLayer.Dtos.CertificateDtos;
 using MyPortfolio.BusinessLayer.Helpers;
 
@@ -39,8 +39,13 @@ namespace MyPortfolio.WebUI.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateCertificate()
         {
-            // Kategori yoksa sertifika da eklenemez; kullanıcıyı boş dropdown'la baş başa bırakma
-            if (!await PopulateCategoriesAsync()) return RedirectToAction("Index", "AdminCertificateCategory");
+            // Kategori yoksa sertifika da eklenemez; kullanıcıyı boş seçim listesiyle baş başa bırakma
+            var categories = await LoadCategoriesAsync();
+            if (categories.Count == 0)
+            {
+                TempData["WarningMessage"] = "Önce en az bir sertifika kategorisi oluşturmalısın.";
+                return RedirectToAction("Index", "AdminCertificateCategory");
+            }
 
             return View();
         }
@@ -48,12 +53,14 @@ namespace MyPortfolio.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCertificate(CreateCertificateDto dto)
         {
+            var categories = await LoadCategoriesAsync();
+            dto.CategoryIds = KeepExistingCategoryIds(dto.CategoryIds, categories);
+
             var result = await _createValidator.ValidateAsync(dto);
             if (!result.IsValid)
             {
                 foreach (var item in result.Errors) { ModelState.AddModelError(item.PropertyName, item.ErrorMessage); }
                 TempData["ValidationResult"] = "error";
-                await PopulateCategoriesAsync();
                 return View(dto);
             }
 
@@ -66,7 +73,6 @@ namespace MyPortfolio.WebUI.Controllers
                 {
                     ModelState.AddModelError("CertificateFile", FileRejectedMessage);
                     TempData["ValidationResult"] = "error";
-                    await PopulateCategoriesAsync();
                     return View(dto);
                 }
 
@@ -85,19 +91,21 @@ namespace MyPortfolio.WebUI.Controllers
             var value = await _certificateService.TGetByIdAsync(id);
             if (value == null) return NotFound();
 
-            await PopulateCategoriesAsync();
+            await LoadCategoriesAsync();
             return View(value);
         }
 
         [HttpPost]
         public async Task<IActionResult> UpdateCertificate(UpdateCertificateDto dto)
         {
+            var categories = await LoadCategoriesAsync();
+            dto.CategoryIds = KeepExistingCategoryIds(dto.CategoryIds, categories);
+
             var result = await _updateValidator.ValidateAsync(dto);
             if (!result.IsValid)
             {
                 foreach (var item in result.Errors) { ModelState.AddModelError(item.PropertyName, item.ErrorMessage); }
                 TempData["ValidationResult"] = "error";
-                await PopulateCategoriesAsync();
                 return View(dto);
             }
 
@@ -111,7 +119,6 @@ namespace MyPortfolio.WebUI.Controllers
                     ModelState.AddModelError("CertificateFile", FileRejectedMessage);
                     TempData["ValidationResult"] = "error";
                     dto.FileUrl = oldFileUrl;
-                    await PopulateCategoriesAsync();
                     return View(dto);
                 }
 
@@ -130,25 +137,26 @@ namespace MyPortfolio.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteCertificate(int id)
         {
-            // Yüklenen dosyanın silinmesi manager'ın işi (bkz. CertificateManager)
+            // Bağlantıların ve yüklenen dosyanın silinmesi manager'ın işi (bkz. CertificateManager)
             await _certificateService.TDeleteCertificateAsync(id);
             TempData["ValidationResult"] = "success";
             return RedirectToAction("Index");
         }
 
-        // Kategori dropdown'ını doldurur; hiç kategori yoksa false döner
-        private async Task<bool> PopulateCategoriesAsync()
+        // Formdaki kategori onay kutuları için ağaç sırasında liste (ana → alt kategoriler)
+        private async Task<List<ResultCertificateCategoryDto>> LoadCategoriesAsync()
         {
             var categories = await _categoryService.TGetCategoryListAsync();
-            ViewBag.Categories = new SelectList(categories, "Id", "Name");
+            ViewBag.Categories = categories;
+            return categories;
+        }
 
-            if (categories.Count == 0)
-            {
-                TempData["WarningMessage"] = "Önce en az bir sertifika kategorisi oluşturmalısın.";
-                return false;
-            }
-
-            return true;
+        // Elle değiştirilmiş bir formdan var olmayan kategori Id'si gelirse
+        // ara tablodaki FK hata vermesin: sadece gerçekten var olanlar kalır
+        private static List<int> KeepExistingCategoryIds(List<int> requested, List<ResultCertificateCategoryDto> categories)
+        {
+            var existing = categories.Select(c => c.Id).ToHashSet();
+            return requested.Where(existing.Contains).Distinct().ToList();
         }
     }
 }

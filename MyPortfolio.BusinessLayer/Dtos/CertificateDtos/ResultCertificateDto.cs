@@ -10,12 +10,10 @@
         public string? CredentialUrl { get; set; }
         public string? FileUrl { get; set; }
         public string? FileType { get; set; }
-        public required int CategoryId { get; set; }
         public bool IsFeatured { get; set; }
 
-        // Kategori bilgisi ayrı sorgudan birleştirilir (entity'de navigation property yok)
-        public string CategoryName { get; set; } = string.Empty;
-        public string? CategoryIcon { get; set; }
+        // Bağlı olduğu tüm kategoriler; ara tablodan manager doldurur
+        public List<CertificateCategoryLabelDto> Categories { get; set; } = new();
 
         // Kartta gösterilecek biçim: "Mart 2026"
         public string IssueDateText => IssueDate.ToString("MMMM yyyy", new System.Globalization.CultureInfo("tr-TR"));

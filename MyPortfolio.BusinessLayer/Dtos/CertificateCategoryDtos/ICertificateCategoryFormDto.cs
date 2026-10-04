@@ -7,5 +7,6 @@
         string Name { get; }
         string? Icon { get; }
         int DisplayOrder { get; }
+        int? ParentId { get; }
     }
 }

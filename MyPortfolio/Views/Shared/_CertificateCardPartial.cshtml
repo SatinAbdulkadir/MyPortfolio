@@ -30,10 +30,27 @@
     </div>
 
     <div class="certificate-body">
-        <span class="certificate-cat">
-            <i class="@(string.IsNullOrWhiteSpace(Model.CategoryIcon) ? "fa fa-folder" : Model.CategoryIcon)"></i>
-            @Model.CategoryName
-        </span>
+        @if (Model.Categories.Count > 0)
+        {
+            @* Sertifika birden fazla kategoride olabilir; kart kalabalıklaşmasın diye ilk ikisi + "+N" *@
+            const int visibleLabelCount = 2;
+            <div class="certificate-cats">
+                @foreach (var category in Model.Categories.Take(visibleLabelCount))
+                {
+                    <span class="certificate-cat">
+                        <i class="@(string.IsNullOrWhiteSpace(category.Icon) ? "fa fa-folder" : category.Icon)"></i>
+                        @category.FullName
+                    </span>
+                }
+                @if (Model.Categories.Count > visibleLabelCount)
+                {
+                    <span class="certificate-cat certificate-cat-more"
+                          title="@string.Join(", ", Model.Categories.Skip(visibleLabelCount).Select(c => c.FullName))">
+                        +@(Model.Categories.Count - visibleLabelCount)
+                    </span>
+                }
+            </div>
+        }
 
         <h4 class="certificate-title">@Model.Title</h4>
 

@@ -14,6 +14,11 @@ namespace MyPortfolio.BusinessLayer.ValidationRules
             RuleFor(x => x.Icon).MaximumLength(100).WithMessage("İkon sınıfı 100 karakteri aşamaz.");
 
             RuleFor(x => x.DisplayOrder).GreaterThanOrEqualTo(0).WithMessage("Sıra değeri negatif olamaz.");
+
+            // Üst kategorinin gerçekten ana kategori olup olmadığı veritabanı gerektirir;
+            // o kontrol CertificateCategoryManager.TValidateParentAsync'te yapılır
+            RuleFor(x => x.ParentId).GreaterThan(0).When(x => x.ParentId.HasValue)
+                                    .WithMessage("Geçersiz üst kategori.");
         }
     }
 }

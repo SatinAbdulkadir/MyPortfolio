@@ -30,9 +30,40 @@ namespace MyPortfolio.DataAccessLayer.Context
             }
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            // Identity tabloları için zorunlu: önce temel yapılandırma
+            base.OnModelCreating(builder);
+
+            // Projede navigation property kullanılmıyor; ilişkiler yine de veritabanında
+            // FK olarak tanımlanır ki ara tabloda sahipsiz kayıt kalamasın.
+            builder.Entity<CertificateCategoryLink>(link =>
+            {
+                // Aynı sertifika aynı kategoriye iki kez bağlanamaz
+                link.HasIndex(x => new { x.CertificateId, x.CategoryId }).IsUnique();
+
+                // Sertifika silinince bağlantıları da gider
+                link.HasOne<Certificate>().WithMany()
+                    .HasForeignKey(x => x.CertificateId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Dolu kategori silinemez (manager da engelliyor, bu son savunma hattı)
+                link.HasOne<CertificateCategory>().WithMany()
+                    .HasForeignKey(x => x.CategoryId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // Alt kategorisi olan ana kategori silinemez
+            builder.Entity<CertificateCategory>()
+                .HasOne<CertificateCategory>().WithMany()
+                .HasForeignKey(x => x.ParentId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
+
         public DbSet<About> Abouts { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<CertificateCategory> CertificateCategories { get; set; }
+        public DbSet<CertificateCategoryLink> CertificateCategoryLinks { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Experience> Experiences { get; set; }
         public DbSet<Feature> Features { get; set; }
