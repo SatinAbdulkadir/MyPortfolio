@@ -56,7 +56,7 @@
     </div>
 </nav>
 
-<script>
+<script nonce="@Context.GetCspNonce()">
     document.addEventListener("DOMContentLoaded", function() {
         const searchInput = document.getElementById('adminSearchInput');
         const searchBtn = document.getElementById('btnAdminSearch');

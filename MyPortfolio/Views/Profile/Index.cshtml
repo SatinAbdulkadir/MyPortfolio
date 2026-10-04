@@ -129,7 +129,7 @@
 </div>
 
 @section Scripts {
-    <script>
+    <script nonce="@Context.GetCspNonce()">
         // Göz ikonu: şifreyi yazarken kontrol edebilmek için göster/gizle
         document.querySelectorAll('.js-toggle-password').forEach(function (btn) {
             btn.addEventListener('click', function () {

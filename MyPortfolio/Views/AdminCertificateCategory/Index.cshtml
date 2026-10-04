@@ -84,7 +84,7 @@
                                     </a>
                                     @* Silme POST + antiforgery token ile yapılır (CSRF koruması) *@
                                     <form method="post" action="/AdminCertificateCategory/DeleteCertificateCategory/@item.Id" asp-antiforgery="true" class="d-inline"
-                                          onsubmit="return confirm('@item.Name kategorisini silmek istediğine emin misin?')">
+                                          data-confirm="@item.Name kategorisini silmek istediğine emin misin?">
                                         <button type="submit" class="btn btn-outline-danger btn-sm" @(item.CanDelete ? "" : "disabled")
                                                 title="@(item.CanDelete ? "Sil" : "Sertifikası veya alt kategorisi olan kategori silinemez")">
                                             <i class="fas fa-trash"></i>

@@ -101,7 +101,7 @@
 @await Html.PartialAsync("_LightboxPartial")
 
 @section Scripts {
-    <script>
+    <script nonce="@Context.GetCspNonce()">
         // Kategori filtresi — yalnızca bu sayfada gerekli olduğu için site.js yerine burada
         document.addEventListener("DOMContentLoaded", function () {
             var chips = Array.prototype.slice.call(document.querySelectorAll('.cert-filter-chip'));

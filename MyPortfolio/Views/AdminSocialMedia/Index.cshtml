@@ -50,7 +50,7 @@
                                     </a>
                                     @* Silme POST + antiforgery token ile yapılır (CSRF koruması) *@
                                     <form method="post" action="/AdminSocialMedia/DeleteSocialMedia/@item.Id" asp-antiforgery="true" class="d-inline"
-                                          onsubmit="return confirm('Bu hesabı silmek istediğine emin misin?')">
+                                          data-confirm="Bu hesabı silmek istediğine emin misin?">
                                         <button type="submit" class="btn btn-outline-danger btn-sm">
                                             <i class="fas fa-trash"></i> Sil
                                         </button>

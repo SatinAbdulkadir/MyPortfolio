@@ -95,7 +95,7 @@
     @* Hatalı girişte sağ üstten Toast fırlatalım *@
     @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ContainsKey(""))
     {
-        <script>
+        <script nonce="@Context.GetCspNonce()">
             Swal.fire({
                 toast: true,
                 position: 'top-end',
