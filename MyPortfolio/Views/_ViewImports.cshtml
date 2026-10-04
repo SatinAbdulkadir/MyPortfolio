@@ -2,7 +2,9 @@
 @using MyPortfolio.Models
 @using MyPortfolio.WebUI.Security
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
-@* WebOptimizer'ın link/script yardımcıları: paketlenen dosyalara (/css/site.css) içeriğin özetinden
-   ?v= ekler. Olmadan MVC'nin asp-append-version'ı wwwroot'taki 3 baytlık yer tutucu site.css'in özetini
-   kullanıyordu: v= hiç değişmiyor, 1 yıl "immutable" önbellek yüzünden ziyaretçiler eski CSS'i görüyordu. *@
-@addTagHelper *, WebOptimizer.Core
+@* WebOptimizer'ın SADECE link yardımcısı: paket olan /css/site.css'e içeriğin özetinden ?v= ekler.
+   Olmadan MVC'nin asp-append-version'ı wwwroot'taki 3 baytlık yer tutucu site.css'in özetini kullanıyordu:
+   v= hiç değişmiyor, 1 yıl "immutable" önbellek yüzünden ziyaretçiler eski CSS'i görüyordu.
+   Script yardımcısı bilerek alınmadı: asp-append-version'lı script'lere ikinci bir ?v= ekliyordu;
+   script'ler (site.js, admin.js) gerçek dosya olduğu için MVC'nin asp-append-version'ı yeterli. *@
+@addTagHelper WebOptimizer.Taghelpers.LinkTagHelper, WebOptimizer.Core
