@@ -382,3 +382,7 @@ appsettings.Production.json
 # sonradan temizlenemez. Klasörü FileImageHelper çalışma anında oluşturur,
 # bu yüzden temiz bir clone'da eksik olması hata vermez.
 MyPortfolio/wwwroot/certificates/
+
+# Deploy çıktıları (bkz. DEPLOY.md): yayın paketi ve migration betiği repoya girmez
+publish/
+migrate.sql
