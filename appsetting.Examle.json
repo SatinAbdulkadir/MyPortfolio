@@ -10,6 +10,9 @@
   "AdminSettings": {
     "LoginKey": "ozel-giris-anahtari-buraya"
   },
+  "AutoMapper": {
+    "LicenseKey": "LUCKYPENNY_COMMUNITY_LISANS_ANAHTARI_BURAYA"
+  },
   "MailSettings": {
     "Server": "mail.abdulkadirsatin.com.tr",
     "Port": 587,

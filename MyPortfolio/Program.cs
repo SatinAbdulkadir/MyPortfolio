@@ -43,7 +43,10 @@ builder.Services.AddDbContext<MyPortfolioContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // --- 3. Ara�lar (AutoMapper) ---
-builder.Services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies());
+// AutoMapper 15+ ticari lisanslıdır: canlıda lisans anahtarı gerekir (bireyler ve küçük şirketler için
+// ücretsiz "Community" lisansı: luckypennysoftware.com). Anahtar koda değil ayara yazılır: "AutoMapper:LicenseKey".
+// Anahtar yoksa AutoMapper yine çalışır, sadece açılışta loga lisans uyarısı yazar.
+builder.Services.AddAutoMapper(cfg => { cfg.LicenseKey = builder.Configuration["AutoMapper:LicenseKey"]; }, AppDomain.CurrentDomain.GetAssemblies());
 
 // --- 4. Identity ve G�venlik Ayarlar� ---
 builder.Services.AddIdentity<AppUser, AppRole>()
