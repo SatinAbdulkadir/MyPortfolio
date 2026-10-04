@@ -1,0 +1,135 @@
+﻿@using System.Text.Json
+@using System.Text.Encodings.Web
+@using System.Text.Unicode
+@using System.Text.RegularExpressions
+@inject MyPortfolio.WebUI.Services.SiteProfileProvider ProfileProvider
+@inject Microsoft.Extensions.Options.IOptions<MyPortfolio.WebUI.Services.SeoOptions> SeoOptionsAccessor
+@*
+    Public sayfaların ortak SEO etiketleri: başlık, açıklama, canonical, Open Graph, Twitter Card, JSON-LD.
+    Sayfalar sadece ViewData ile bilgi verir, etiketleri bu partial üretir:
+      Title       → sayfa başlığı (ana sayfada boş bırakılır)
+      Description → arama sonucunda görünen açıklama (yoksa site sahibinin tanıtımından üretilir)
+      OgImage     → paylaşım kartı görseli (yoksa varsayılan görsel)
+      OgType      → "website" (varsayılan) veya "article" (proje detayı gibi tekil içerik)
+      IsHome      → ana sayfa: başlık "Ad | Unvan" olur, Person/WebSite JSON-LD eklenir
+      NoIndex     → arama motorlarına "dizine ekleme" der
+*@
+@{
+    var seo = SeoOptionsAccessor.Value;
+    var profile = await ProfileProvider.GetAsync();
+
+    var isHome = ViewData["IsHome"] as bool? == true;
+    var noIndex = ViewData["NoIndex"] as bool? == true;
+    var pageTitle = ViewData["Title"] as string;
+
+    var title = isHome || string.IsNullOrWhiteSpace(pageTitle)
+        ? $"{profile.Name} | {profile.JobTitle}"
+        : $"{pageTitle} | {profile.Name}";
+
+    // Google açıklamanın ~155 karakterini gösterir; uzun metin kelime sınırından kesilir
+    static string Clip(string text, int max)
+    {
+        text = Regex.Replace(text ?? "", @"\s+", " ").Trim();
+        if (text.Length <= max) return text;
+        var cut = text.LastIndexOf(' ', max - 1);
+        return text[..(cut > 60 ? cut : max - 1)].TrimEnd(',', '.', ';', ':') + "…";
+    }
+
+    var defaultDescription = $"{profile.Name} — {profile.JobTitle}. {profile.Summary}";
+    var description = Clip(ViewData["Description"] as string is { Length: > 0 } d ? d : defaultDescription, 160);
+
+    // Canonical: aynı içeriğin tek resmi adresi (www/www'siz, /Home/Index, sorgu parametreleri tek adrese iner)
+    var canonical = seo.Absolute(isHome ? "/" : Context.Request.Path.Value ?? "/");
+
+    var imagePath = ViewData["OgImage"] as string is { Length: > 0 } img ? img : seo.DefaultImagePath;
+    var image = seo.Absolute(imagePath);
+    var isDefaultImage = imagePath == seo.DefaultImagePath;
+    var ogType = ViewData["OgType"] as string ?? "website";
+
+    // JSON-LD: Google'a "bu sitenin sahibi kim, ne iş yapıyor, profilleri nerede" bilgisini yapısal verir.
+    // JavaScriptEncoder <, >, & gibi karakterleri kaçırır: içerikteki bir "</script>" bloğu kıramaz.
+    string? jsonLd = null;
+    var personId = seo.Absolute("/#person");
+    if (isHome)
+    {
+        jsonLd = JsonSerializer.Serialize(new Dictionary<string, object>
+        {
+            ["@context"] = "https://schema.org",
+            ["@graph"] = new object[]
+            {
+                new Dictionary<string, object?>
+                {
+                    ["@type"] = "Person",
+                    ["@id"] = personId,
+                    ["name"] = profile.Name,
+                    ["jobTitle"] = profile.JobTitle,
+                    ["description"] = string.IsNullOrWhiteSpace(profile.Summary) ? null : profile.Summary,
+                    ["url"] = seo.Absolute("/"),
+                    ["image"] = image,
+                    ["sameAs"] = profile.SameAs
+                },
+                new Dictionary<string, object>
+                {
+                    ["@type"] = "WebSite",
+                    ["@id"] = seo.Absolute("/#website"),
+                    ["url"] = seo.Absolute("/"),
+                    ["name"] = profile.Name,
+                    ["inLanguage"] = "tr-TR",
+                    ["publisher"] = new Dictionary<string, string> { ["@id"] = personId }
+                }
+            }
+        }, JsonLdOptions);
+    }
+    else if (ogType == "article" && !noIndex)
+    {
+        jsonLd = JsonSerializer.Serialize(new Dictionary<string, object>
+        {
+            ["@context"] = "https://schema.org",
+            ["@type"] = "CreativeWork",
+            ["name"] = pageTitle ?? title,
+            ["description"] = description,
+            ["url"] = canonical,
+            ["image"] = image,
+            ["inLanguage"] = "tr-TR",
+            ["author"] = new Dictionary<string, string> { ["@type"] = "Person", ["@id"] = personId, ["name"] = profile.Name }
+        }, JsonLdOptions);
+    }
+}
+@functions {
+    // null alanlar yazılmaz; Türkçe karakterler okunur kalır, HTML'e duyarlı karakterler kaçırılır
+    private static readonly JsonSerializerOptions JsonLdOptions = new()
+    {
+        Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+    };
+}
+<title>@title</title>
+<meta name="description" content="@description" />
+<meta name="robots" content="@(noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large")" />
+<link rel="canonical" href="@canonical" />
+
+@* Open Graph: LinkedIn, WhatsApp, Facebook vb. link önizleme kartı *@
+<meta property="og:locale" content="tr_TR" />
+<meta property="og:site_name" content="@profile.Name" />
+<meta property="og:type" content="@ogType" />
+<meta property="og:title" content="@title" />
+<meta property="og:description" content="@description" />
+<meta property="og:url" content="@canonical" />
+<meta property="og:image" content="@image" />
+<meta property="og:image:alt" content="@title" />
+@if (isDefaultImage)
+{
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+}
+
+@* Twitter / X kartı *@
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="@title" />
+<meta name="twitter:description" content="@description" />
+<meta name="twitter:image" content="@image" />
+
+@if (jsonLd != null)
+{
+    <script type="application/ld+json">@Html.Raw(jsonLd)</script>
+}

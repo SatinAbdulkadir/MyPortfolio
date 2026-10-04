@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Abdulkadir Portfolio</title>
+    @* Başlık, açıklama, canonical, Open Graph, Twitter Card, JSON-LD: tek yerden (bkz. _SeoHeadPartial) *@
+    @await Html.PartialAsync("_SeoHeadPartial")
     <link rel="icon" type="image/x-icon" href="~/favicon.ico">
     <meta name="theme-color" content="#08080d" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">

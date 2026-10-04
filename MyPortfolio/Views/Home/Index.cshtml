@@ -1,6 +1,8 @@
 @inject MyPortfolio.WebUI.Services.ContentCacheVersion CacheVersion
 @{
-    ViewData["Title"] = "Hakkımda";
+    // Ana sayfa: başlık "Ad | Unvan" olur ve Person JSON-LD eklenir (bkz. _SeoHeadPartial).
+    // Eskiden sekmede/Google'da "Hakkımda - Abdulkadir Portfolio" görünüyordu.
+    ViewData["IsHome"] = true;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
