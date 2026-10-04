@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using MyPortfolio.BusinessLayer.Abstract;
 using MyPortfolio.BusinessLayer.Dtos.AppUserDtos;
 using MyPortfolio.EntityLayer.Concrete;
@@ -9,44 +8,39 @@ namespace MyPortfolio.BusinessLayer.Concrete
     public class AppUserManager : IAppUserService
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly IMapper _mapper;
 
-        public AppUserManager(UserManager<AppUser> userManager, IMapper mapper)
+        public AppUserManager(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
-            _mapper = mapper;
         }
 
-        public async Task<EditProfileDto> GetUserForEditAsync(string userName)
+        public async Task<IdentityResult> ChangePasswordAsync(string userName, ChangePasswordDto dto)
         {
             var user = await _userManager.FindByNameAsync(userName);
-            return _mapper.Map<EditProfileDto>(user);
+            if (user == null) return IdentityResult.Failed(_userManager.ErrorDescriber.DefaultError());
+
+            // Eskiden PasswordHasher ile hash elle yazılıyordu: Identity'nin şifre kuralları
+            // (8 karakter, rakam, sembol...) atlanıyor ve security stamp yenilenmiyordu,
+            // yani şifre değişse de diğer cihazlardaki eski oturumlar açık kalıyordu.
+            // ChangePasswordAsync mevcut şifreyi doğrular, kuralları uygular ve stamp'i yeniler.
+            return await _userManager.ChangePasswordAsync(user, dto.CurrentPassword ?? "", dto.NewPassword ?? "");
         }
 
-        public async Task<bool> UpdateUserProfileAsync(EditProfileDto editProfileDto, string userName)
+        public async Task<IdentityResult> ChangeUserNameAsync(string userName, ChangeUserNameDto dto)
         {
-            
-            if (string.IsNullOrEmpty(userName)) return false;
-
             var user = await _userManager.FindByNameAsync(userName);
+            if (user == null) return IdentityResult.Failed(_userManager.ErrorDescriber.DefaultError());
 
-            
-            if (user == null) return false;
-
-            
-            if (!string.IsNullOrEmpty(editProfileDto.Password))
+            if (!await _userManager.CheckPasswordAsync(user, dto.CurrentPassword ?? ""))
             {
-                var currentPassword = editProfileDto.CurrentPassword ?? ""; 
-                var checkPassword = await _userManager.CheckPasswordAsync(user, currentPassword);
-
-                if (!checkPassword) return false;
-
-                user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, editProfileDto.Password);
+                return IdentityResult.Failed(_userManager.ErrorDescriber.PasswordMismatch());
             }
 
-            _mapper.Map(editProfileDto, user);
-            var result = await _userManager.UpdateAsync(user);
-            return result.Succeeded;
+            var newUserName = (dto.NewUserName ?? "").Trim();
+
+            // SetUserNameAsync izin verilen karakterleri ve başka hesapta kullanılıp kullanılmadığını
+            // denetler, normalize edilmiş adı ve security stamp'i de günceller
+            return await _userManager.SetUserNameAsync(user, newUserName);
         }
     }
 }

@@ -47,7 +47,8 @@ builder.Services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies
 // --- 4. Identity ve G�venlik Ayarlar� ---
 builder.Services.AddIdentity<AppUser, AppRole>()
     .AddEntityFrameworkStores<MyPortfolioContext>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddErrorDescriber<MyPortfolio.BusinessLayer.Helpers.TurkishIdentityErrorDescriber>(); // Şifre kuralı mesajları Türkçe
 
 builder.Services.Configure<IdentityOptions>(options =>
 {

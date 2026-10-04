@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using MyPortfolio.BusinessLayer.Dtos.AboutDtos;
-using MyPortfolio.BusinessLayer.Dtos.AppUserDtos;
 using MyPortfolio.BusinessLayer.Dtos.CertificateCategoryDtos;
 using MyPortfolio.BusinessLayer.Dtos.CertificateDtos;
 using MyPortfolio.BusinessLayer.Dtos.ContactDtos;
@@ -86,7 +85,6 @@ namespace MyPortfolio.BusinessLayer.Mappings
 
 
 
-            CreateMap<AppUser, EditProfileDto>().ReverseMap();
 
 
             CreateMap<Message, CreateMessageDto>().ReverseMap();
