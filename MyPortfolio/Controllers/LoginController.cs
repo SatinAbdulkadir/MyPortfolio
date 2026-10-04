@@ -6,6 +6,8 @@ using MyPortfolio.BusinessLayer.Dtos.AppUserDtos;
 using MyPortfolio.EntityLayer.Concrete;
 using Microsoft.Extensions.Configuration;
 using MyPortfolio.WebUI.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 [AllowAnonymous]
 public class LoginController : Controller
@@ -25,9 +27,7 @@ public class LoginController : Controller
     [HttpGet]
     public IActionResult Index(string key)
     {
-        var secretKey = _configuration.GetValue<string>("AdminSettings:LoginKey");
-
-        if (key==secretKey)
+        if (IsValidLoginKey(key))
         {
             // Key, POST'ta tekrar doğrulanmak üzere forma hidden alan olarak gömülür
             ViewBag.LoginKey = key;
@@ -42,8 +42,7 @@ public class LoginController : Controller
     {
         // Güvenlik: gizli anahtar sadece GET'te değil POST'ta da doğrulanır;
         // yoksa form sayfasını hiç görmeden direkt POST atarak şifre denenebilir
-        var secretKey = _configuration.GetValue<string>("AdminSettings:LoginKey");
-        if (key != secretKey)
+        if (!IsValidLoginKey(key))
         {
             return NotFound();
         }
@@ -81,5 +80,17 @@ public class LoginController : Controller
     {
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
+    }
+
+    // Gizli giriş anahtarı kontrolü (GET ve POST aynı kuralı kullanır).
+    // FAIL-CLOSED: ayar tanımlı değilse giriş kapısı kapalı kalır. Eskiden "key == secretKey"
+    // karşılaştırması ayar eksikken null == null olup anahtarsız girişe izin veriyordu.
+    private bool IsValidLoginKey(string? key)
+    {
+        var secretKey = _configuration.GetValue<string>("AdminSettings:LoginKey");
+        if (string.IsNullOrWhiteSpace(secretKey) || string.IsNullOrEmpty(key)) return false;
+
+        // Sabit süreli karşılaştırma: yanıt süresindeki farktan anahtar harf harf tahmin edilemesin
+        return CryptographicOperations.FixedTimeEquals(Encoding.UTF8.GetBytes(key), Encoding.UTF8.GetBytes(secretKey));
     }
 }

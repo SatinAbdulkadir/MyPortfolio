@@ -182,32 +182,41 @@ using (var scope = app.Services.CreateScope())
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
     var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 
-    // E�er veritaban�nda hi� kullan�c� yoksa (�lk kurulum)
+    // Veritabanında hiç kullanıcı yoksa (ilk kurulum) admin hesabı ayarlardan oluşturulur.
+    // FAIL-CLOSED: ayar eksikse tahmin edilebilir bir varsayılan hesap açmak yerine uygulama durur.
+    // Eskiden "admin" + koda gömülü bir şifreye düşüyordu; repo public olduğu için o şifre herkesçe biliniyordu.
+    // Değerler appsettings, user-secrets veya ortam değişkeninden gelebilir (örn. AdminUser__Password).
+    // Not: kullanıcı zaten varsa bu blok hiç çalışmaz, yani canlıdaki mevcut site etkilenmez.
     if (!userManager.Users.Any())
     {
         var adminSettings = configuration.GetSection("AdminUser");
+        var userName = adminSettings["UserName"];
+        var email = adminSettings["Email"];
+        var password = adminSettings["Password"];
+
+        if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        {
+            throw new InvalidOperationException(
+                "İlk kurulum için admin bilgileri eksik: AdminUser:UserName, AdminUser:Email ve AdminUser:Password " +
+                "ayarlanmalı (appsettings, user-secrets veya ortam değişkeni).");
+        }
 
         var user = new AppUser
         {
-            UserName = adminSettings["UserName"] ?? "admin", // Null ise varsay�lan de�er
-            Email = adminSettings["Email"] ?? "admin@site.com",
+            UserName = userName,
+            Email = email,
             Name = "Abdulkadir",
             Surname = "Admin",
             EmailConfirmed = true
         };
 
-        // appsettings'den oku, yoksa varsay�lan g�venli �ifreyi dene
-        string password = adminSettings["Password"] ?? "AS_Portfolio_2026_V1!";
-
         var result = await userManager.CreateAsync(user, password);
 
+        // Eskiden hata sadece konsola yazılıyordu: sunucuda kimse görmez ve site admin'siz açılırdı
         if (!result.Succeeded)
         {
-            // E�er Identity kurallar�na (8 karakter vb.) tak�l�rsa hata burada yakalan�r
-            foreach (var error in result.Errors)
-            {
-                Console.WriteLine($"Seed Hata: {error.Description}");
-            }
+            var errors = string.Join(" ", result.Errors.Select(e => e.Description));
+            throw new InvalidOperationException($"Admin hesabı oluşturulamadı (şifre Identity kurallarına uymuyor olabilir): {errors}");
         }
     }
 }
