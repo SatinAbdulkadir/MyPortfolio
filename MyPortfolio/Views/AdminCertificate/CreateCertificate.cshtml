@@ -12,20 +12,11 @@
         @* DİKKAT: enctype eklemezsek CertificateFile null gelir! *@
         <form method="post" enctype="multipart/form-data" novalidate>
             <div class="row">
-                <div class="col-md-8">
+                <div class="col-12">
                     <div class="mb-3">
                         <label class="form-label fw-bold">Sertifika Adı</label>
                         <input type="text" asp-for="Title" class="form-control" placeholder="Örn: C# ile Nesne Yönelimli Programlama" />
                         <span asp-validation-for="Title" class="text-danger small fw-bold"></span>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Kategori</label>
-                        <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select">
-                            <option value="">-- Kategori seç --</option>
-                        </select>
-                        <span asp-validation-for="CategoryId" class="text-danger small fw-bold"></span>
                     </div>
                 </div>
             </div>
@@ -46,6 +37,9 @@
                     </div>
                 </div>
             </div>
+
+            @* null geçilirse PartialAsync üst view'ın modelini aktarır; boş liste bunu önler *@
+            @await Html.PartialAsync("_CategoryPickerPartial", Model?.CategoryIds ?? new List<int>())
 
             <div class="row">
                 <div class="col-md-6">

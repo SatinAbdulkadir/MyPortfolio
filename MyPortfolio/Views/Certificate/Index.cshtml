@@ -17,11 +17,11 @@
             <h1 class="detail-title">Sertifikalar</h1>
             <p class="certificates-lead">
                 Katıldığım eğitimler ve aldığım belgeler. Toplam @Model.TotalCount sertifika,
-                @Model.Categories.Count kategori altında listeleniyor.
+                @Model.Groups.Count ana kategori altında listeleniyor.
             </p>
         </div>
 
-        @if (Model.TotalCount == 0)
+        @if (Model.Groups.Count == 0)
         {
             <div class="certificates-empty">
                 <i class="fa fa-certificate"></i>
@@ -30,38 +30,63 @@
         }
         else
         {
-            @* Filtre çipleri: JS ile grupları gösterip gizler (sayfa yenilenmez) *@
+            @* Filtre çipleri ana kategorileri gösterir; JS ile grupları gösterip gizler (sayfa yenilenmez) *@
             <div class="cert-filter-bar" role="group" aria-label="Kategori filtresi">
                 <button type="button" class="cert-filter-chip active" data-filter="all">
                     Tümü <span class="cert-filter-count">@Model.TotalCount</span>
                 </button>
-                @foreach (var category in Model.Categories)
+                @foreach (var group in Model.Groups)
                 {
-                    <button type="button" class="cert-filter-chip" data-filter="@category.Id">
-                        @if (!string.IsNullOrWhiteSpace(category.Icon))
+                    <button type="button" class="cert-filter-chip" data-filter="@group.Category.Id">
+                        @if (!string.IsNullOrWhiteSpace(group.Category.Icon))
                         {
-                            <i class="@category.Icon"></i>
+                            <i class="@group.Category.Icon"></i>
                         }
-                        @category.Name
-                        <span class="cert-filter-count">@Model.CertificatesByCategory[category.Id].Count</span>
+                        @group.Category.Name
+                        <span class="cert-filter-count">@group.DistinctCount</span>
                     </button>
                 }
             </div>
 
-            @foreach (var category in Model.Categories)
+            @foreach (var group in Model.Groups)
             {
-                <div class="cert-group" data-category="@category.Id">
+                <div class="cert-group" data-category="@group.Category.Id">
                     <h2 class="cert-group-title">
-                        <i class="@(string.IsNullOrWhiteSpace(category.Icon) ? "fa fa-folder" : category.Icon)"></i>
-                        @category.Name
+                        <i class="@(string.IsNullOrWhiteSpace(group.Category.Icon) ? "fa fa-folder" : group.Category.Icon)"></i>
+                        @group.Category.Name
                     </h2>
 
-                    <div class="certificates-grid">
-                        @foreach (var item in Model.CertificatesByCategory[category.Id])
-                        {
-                            @await Html.PartialAsync("_CertificateCardPartial", item)
-                        }
-                    </div>
+                    @* Ana kategoriye doğrudan bağlı sertifikalar, alt bölümlerden önce *@
+                    @if (group.Certificates.Count > 0)
+                    {
+                        <div class="certificates-grid">
+                            @foreach (var item in group.Certificates)
+                            {
+                                @await Html.PartialAsync("_CertificateCardPartial", item)
+                            }
+                        </div>
+                    }
+
+                    @foreach (var sub in group.SubGroups)
+                    {
+                        <div class="cert-subgroup">
+                            <h3 class="cert-subgroup-title">
+                                @if (!string.IsNullOrWhiteSpace(sub.Category.Icon))
+                                {
+                                    <i class="@sub.Category.Icon"></i>
+                                }
+                                @sub.Category.Name
+                                <span class="cert-filter-count">@sub.Certificates.Count</span>
+                            </h3>
+
+                            <div class="certificates-grid">
+                                @foreach (var item in sub.Certificates)
+                                {
+                                    @await Html.PartialAsync("_CertificateCardPartial", item)
+                                }
+                            </div>
+                        </div>
+                    }
                 </div>
             }
         }

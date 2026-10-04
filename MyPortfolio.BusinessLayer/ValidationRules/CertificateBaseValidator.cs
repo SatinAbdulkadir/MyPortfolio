@@ -16,7 +16,7 @@ namespace MyPortfolio.BusinessLayer.ValidationRules
             RuleFor(x => x.Issuer).NotEmpty().WithMessage("Sertifikayı veren kurum boş geçilemez.")
                                   .MaximumLength(150).WithMessage("Kurum adı 150 karakteri aşamaz.");
 
-            RuleFor(x => x.CategoryId).GreaterThan(0).WithMessage("Lütfen bir sertifika kategorisi seçiniz.");
+            RuleFor(x => x.CategoryIds).NotEmpty().WithMessage("Lütfen en az bir kategori seçiniz.");
 
             RuleFor(x => x.IssueDate).NotEmpty().WithMessage("Sertifika tarihi boş geçilemez.")
                                      .LessThanOrEqualTo(_ => DateTime.Today.AddDays(1))

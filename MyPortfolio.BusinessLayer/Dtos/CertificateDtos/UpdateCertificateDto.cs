@@ -11,8 +11,9 @@ namespace MyPortfolio.BusinessLayer.Dtos.CertificateDtos
         public DateTime IssueDate { get; set; }
         public string? Description { get; set; }
         public string? CredentialUrl { get; set; }
-        public required int CategoryId { get; set; }
         public bool IsFeatured { get; set; }
+
+        public List<int> CategoryIds { get; set; } = new();
 
         // Mevcut dosya formda hidden olarak taşınır; yeni dosya seçilmezse aynen korunur
         public string? FileUrl { get; set; }

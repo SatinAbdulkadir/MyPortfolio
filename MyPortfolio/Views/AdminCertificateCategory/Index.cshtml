@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Sertifika Kategorileri";
     Layout = "_AdminLayout";
-    int count = 0;
 }
 
 <div class="card shadow mb-4">
@@ -15,18 +14,20 @@
     </div>
     <div class="card-body">
         <p class="text-muted small">
-            Sertifikalar sitede bu kategorilere göre gruplanır. Sıra değeri küçük olan kategori önce görünür.
+            Kategoriler iki seviyelidir: <strong>ana kategori</strong> (örn. Yazılım) ve onun altındaki
+            <strong>alt kategoriler</strong> (örn. Front End). Bir sertifika birden fazla kategoride görünebilir.
+            Sıra değeri küçük olan önce gelir.
         </p>
 
         <div class="table-responsive">
-            <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+            <table class="table table-bordered table-hover align-middle" width="100%" cellspacing="0">
                 <thead class="table-light text-center">
                     <tr>
-                        <th style="width: 50px;">#</th>
                         <th style="width: 70px;">İkon</th>
-                        <th>Kategori Adı</th>
-                        <th style="width: 120px;">Sıra</th>
-                        <th style="width: 140px;">Sertifika Sayısı</th>
+                        <th>Kategori</th>
+                        <th style="width: 110px;">Tür</th>
+                        <th style="width: 80px;">Sıra</th>
+                        <th style="width: 120px;">Sertifika</th>
                         <th style="width: 150px;">İşlemler</th>
                     </tr>
                 </thead>
@@ -35,9 +36,7 @@
                     {
                         foreach (var item in Model)
                         {
-                            count++;
-                            <tr>
-                                <td class="text-center fw-bold">@count</td>
+                            <tr class="@(item.IsMain ? "table-light" : "")">
                                 <td class="text-center">
                                     @if (!string.IsNullOrWhiteSpace(item.Icon))
                                     {
@@ -48,7 +47,31 @@
                                         <span class="text-muted small">—</span>
                                     }
                                 </td>
-                                <td>@item.Name</td>
+                                <td>
+                                    @if (item.IsMain)
+                                    {
+                                        <span class="fw-bold">@item.Name</span>
+                                        @if (item.ChildCount > 0)
+                                        {
+                                            <span class="text-muted small ms-1">(@item.ChildCount alt kategori)</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @* Alt kategori: ana kategorisinin hemen altında girintili *@
+                                        <span class="ms-4 text-muted"><i class="fas fa-level-up-alt fa-rotate-90 me-2"></i></span>@item.Name
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (item.IsMain)
+                                    {
+                                        <span class="badge bg-primary">Ana</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-light text-dark border">Alt</span>
+                                    }
+                                </td>
                                 <td class="text-center">@item.DisplayOrder</td>
                                 <td class="text-center">
                                     <span class="badge @(item.CertificateCount > 0 ? "bg-info" : "bg-secondary")">
@@ -62,8 +85,8 @@
                                     @* Silme POST + antiforgery token ile yapılır (CSRF koruması) *@
                                     <form method="post" action="/AdminCertificateCategory/DeleteCertificateCategory/@item.Id" asp-antiforgery="true" class="d-inline"
                                           onsubmit="return confirm('@item.Name kategorisini silmek istediğine emin misin?')">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm" @(item.CertificateCount > 0 ? "disabled" : "")
-                                                title="@(item.CertificateCount > 0 ? "Dolu kategori silinemez" : "Sil")">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" @(item.CanDelete ? "" : "disabled")
+                                                title="@(item.CanDelete ? "Sil" : "Sertifikası veya alt kategorisi olan kategori silinemez")">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </form>

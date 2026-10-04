@@ -1,0 +1,46 @@
+﻿@using MyPortfolio.BusinessLayer.Dtos.CertificateCategoryDtos
+@model List<int>
+@{
+    // Model: seçili kategori Id'leri. Liste controller'da ViewBag.Categories olarak ağaç sırasında gelir.
+    var categories = ViewBag.Categories as List<ResultCertificateCategoryDto> ?? new();
+    var selected = Model ?? new List<int>();
+}
+
+@* Create ve Update formlarının ortak kategori seçicisi.
+   Aynı name="CategoryIds" ile birden fazla kutu işaretlenince model binder listeye toplar. *@
+<div class="mb-3">
+    <label class="form-label fw-bold">Kategoriler</label>
+    <div class="text-muted small mb-2">
+        Sertifika işaretlediğin her kategoride görünür. Örn: C# sertifikası hem "Yazılım › Backend" hem ".NET Developer" altında olabilir.
+    </div>
+
+    <div class="border rounded p-3 bg-light" style="max-height: 340px; overflow-y: auto;">
+        @foreach (var main in categories.Where(c => c.IsMain))
+        {
+            <div class="mb-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="CategoryIds" value="@main.Id"
+                           id="cat-@main.Id" @(selected.Contains(main.Id) ? "checked" : "") />
+                    <label class="form-check-label fw-bold" for="cat-@main.Id">
+                        @if (!string.IsNullOrWhiteSpace(main.Icon))
+                        {
+                            <i class="@main.Icon text-warning me-1"></i>
+                        }
+                        @main.Name
+                    </label>
+                </div>
+
+                @foreach (var child in categories.Where(c => c.ParentId == main.Id))
+                {
+                    <div class="form-check ms-4">
+                        <input class="form-check-input" type="checkbox" name="CategoryIds" value="@child.Id"
+                               id="cat-@child.Id" @(selected.Contains(child.Id) ? "checked" : "") />
+                        <label class="form-check-label" for="cat-@child.Id">@child.Name</label>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <span class="text-danger small fw-bold">@Html.ValidationMessage("CategoryIds")</span>
+</div>

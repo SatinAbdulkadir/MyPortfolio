@@ -9,6 +9,6 @@
         DateTime IssueDate { get; }
         string? Description { get; }
         string? CredentialUrl { get; }
-        int CategoryId { get; }
+        List<int> CategoryIds { get; }
     }
 }

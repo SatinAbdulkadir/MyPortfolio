@@ -4,7 +4,7 @@ namespace MyPortfolio.BusinessLayer.Abstract
 {
     public interface ICertificateService
     {
-        // Tümü, tarihe göre yeniden eskiye sıralı; kategori adı/ikonu birleştirilmiş
+        // Tümü, tarihe göre yeniden eskiye sıralı; bağlı kategorileri doldurulmuş
         Task<List<ResultCertificateDto>> TGetCertificateListAsync();
 
         // Ana sayfadaki "öne çıkanlar" bölümü için işaretli olanlar
@@ -15,10 +15,7 @@ namespace MyPortfolio.BusinessLayer.Abstract
         Task TCreateCertificateAsync(CreateCertificateDto createDto);
         Task TUpdateCertificateAsync(UpdateCertificateDto updateDto);
 
-        // Kaydı siler, varsa yüklenmiş dosyayı da diskten temizler
+        // Kaydı ve kategori bağlantılarını siler, varsa yüklenmiş dosyayı da diskten temizler
         Task TDeleteCertificateAsync(int id);
-
-        // Kategori silinmeden önce "dolu mu" kontrolü için
-        Task<int> TCountByCategoryAsync(int categoryId);
     }
 }

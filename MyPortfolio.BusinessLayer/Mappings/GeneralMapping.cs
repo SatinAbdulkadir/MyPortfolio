@@ -27,16 +27,21 @@ namespace MyPortfolio.BusinessLayer.Mappings
             CreateMap<About, UpdateAboutDto>().ReverseMap();
 
 
-            // Sertifikalar: kategori adı/ikonu entity'de yok, manager ayrı sorgudan doldurur
+            // Sertifikalar: kategoriler ara tablodan gelir, manager doldurur
             CreateMap<Certificate, ResultCertificateDto>()
-                .ForMember(dest => dest.CategoryName, opt => opt.Ignore())
-                .ForMember(dest => dest.CategoryIcon, opt => opt.Ignore());
-            CreateMap<Certificate, CreateCertificateDto>().ReverseMap();
-            CreateMap<Certificate, UpdateCertificateDto>().ReverseMap();
+                .ForMember(dest => dest.Categories, opt => opt.Ignore());
+            CreateMap<Certificate, CreateCertificateDto>()
+                .ForMember(dest => dest.CategoryIds, opt => opt.Ignore())
+                .ReverseMap();
+            CreateMap<Certificate, UpdateCertificateDto>()
+                .ForMember(dest => dest.CategoryIds, opt => opt.Ignore())
+                .ReverseMap();
 
-            // CertificateCount da aynı şekilde manager tarafından hesaplanır
+            // Sayılar ve üst kategori adı da manager tarafından hesaplanır
             CreateMap<CertificateCategory, ResultCertificateCategoryDto>()
-                .ForMember(dest => dest.CertificateCount, opt => opt.Ignore());
+                .ForMember(dest => dest.CertificateCount, opt => opt.Ignore())
+                .ForMember(dest => dest.ChildCount, opt => opt.Ignore())
+                .ForMember(dest => dest.ParentName, opt => opt.Ignore());
             CreateMap<CertificateCategory, CreateCertificateCategoryDto>().ReverseMap();
             CreateMap<CertificateCategory, UpdateCertificateCategoryDto>().ReverseMap();
 

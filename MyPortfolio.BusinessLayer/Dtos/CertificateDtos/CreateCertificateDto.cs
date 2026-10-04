@@ -10,8 +10,10 @@ namespace MyPortfolio.BusinessLayer.Dtos.CertificateDtos
         public DateTime IssueDate { get; set; } = DateTime.Today;
         public string? Description { get; set; }
         public string? CredentialUrl { get; set; }
-        public required int CategoryId { get; set; }
         public bool IsFeatured { get; set; }
+
+        // Formdaki onay kutularından gelir; sertifika seçilen her kategoride görünür
+        public List<int> CategoryIds { get; set; } = new();
 
         // Yükleme sonucu doldurulur (bkz. FileImageHelper); form üzerinden gelmez
         public string? FileUrl { get; set; }

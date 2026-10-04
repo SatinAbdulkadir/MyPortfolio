@@ -31,7 +31,7 @@
                         <th style="width: 50px;">#</th>
                         <th style="width: 90px;">Dosya</th>
                         <th>Sertifika</th>
-                        <th>Kategori</th>
+                        <th>Kategoriler</th>
                         <th style="width: 130px;">Tarih</th>
                         <th style="width: 90px;">Öne Çıkan</th>
                         <th style="width: 150px;">İşlemler</th>
@@ -72,13 +72,14 @@
                                     }
                                 </td>
                                 <td>
-                                    <span class="badge bg-secondary">
-                                        @if (!string.IsNullOrWhiteSpace(item.CategoryIcon))
-                                        {
-                                            <i class="@item.CategoryIcon me-1"></i>
-                                        }
-                                        @item.CategoryName
-                                    </span>
+                                    @foreach (var category in item.Categories)
+                                    {
+                                        <span class="badge bg-secondary mb-1">@category.FullName</span>
+                                    }
+                                    @if (item.Categories.Count == 0)
+                                    {
+                                        <span class="badge bg-warning text-dark" title="Hiçbir kategoride görünmüyor">Kategorisiz</span>
+                                    }
                                 </td>
                                 <td class="text-center">@item.IssueDateText</td>
                                 <td class="text-center">

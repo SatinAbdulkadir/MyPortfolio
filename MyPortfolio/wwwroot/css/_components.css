@@ -1392,6 +1392,13 @@ input:-webkit-autofill:focus {
     padding: var(--space-md);
 }
 
+/* Sertifika birden fazla kategoride olabilir: etiketler yan yana, sığmazsa alt satıra */
+.certificate-cats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
 .certificate-cat {
     display: inline-flex;
     align-items: center;
@@ -1404,6 +1411,13 @@ input:-webkit-autofill:focus {
     color: var(--accent);
     font-size: var(--fs-xs);
     letter-spacing: 0.5px;
+}
+
+.certificate-cat-more {
+    background: var(--surface-2);
+    border-color: var(--border-strong);
+    color: var(--text-muted);
+    cursor: help;
 }
 
 .certificate-title {
@@ -1528,6 +1542,29 @@ input:-webkit-autofill:focus {
 }
 
     .cert-group-title i {
+        color: var(--accent);
+    }
+
+/* Ana kategori içindeki alt kategori bölümü (örn. Yazılım › Front End) */
+.cert-subgroup {
+    margin-top: var(--space-lg);
+}
+
+.cert-subgroup-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-display);
+    font-size: var(--fs-base);
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-sm);
+    padding-left: var(--space-sm);
+    border-left: 3px solid var(--accent-border);
+}
+
+    .cert-subgroup-title i {
         color: var(--accent);
     }
 
