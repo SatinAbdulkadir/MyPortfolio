@@ -22,6 +22,10 @@ namespace MyPortfolio.EntityLayer.Concrete
         // "image" veya "pdf": arayüz görseli mi büyütecek yoksa yeni sekmede mi açacak
         public string? FileType { get; set; }
 
+        // PDF'in ilk sayfasından üretilen WebP önizleme (/certificates/x.preview.webp).
+        // Kartta görsel olarak gösterilir; üretilemediyse boş kalır ve kart kompakt görünür.
+        public string? PreviewUrl { get; set; }
+
         // Kategoriler ara tablo üzerinden bağlanır (bkz. CertificateCategoryLink):
         // bir sertifika birden fazla kategoride görünebilir
 

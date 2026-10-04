@@ -107,6 +107,8 @@ dotnet run --project MyPortfolio
 The admin panel is at `/Login/Index?key=<your LoginKey>`.
 
 ### Deployment notes
+Step-by-step guide (in Turkish): [DEPLOY.md](DEPLOY.md)
+
 - Apply migrations to the production database **before** deploying new code, e.g. generate a script with `dotnet ef migrations script --idempotent`.
 - Set `ASPNETCORE_ENVIRONMENT=Production`.
 - Uploaded files live in `wwwroot/images`, `wwwroot/videos` and `wwwroot/certificates`; make sure publishing does not delete files that exist only on the server.

@@ -1,33 +1,21 @@
 ﻿@model MyPortfolio.BusinessLayer.Dtos.CertificateDtos.ResultCertificateDto
 
 @* Ortak sertifika kartı: ana sayfadaki "öne çıkanlar" ızgarası ve
-   /Certificate sayfasındaki tam liste bu partial'ı kullanır (DRY). *@
-<article class="certificate-card">
-    <div class="certificate-media">
-        @if (Model.HasImage)
-        {
+   /Certificate sayfasındaki tam liste bu partial'ı kullanır (DRY).
+   Görsel varsa (yüklenen resim ya da PDF'in otomatik önizlemesi) kartın üstünde gösterilir;
+   yoksa kart büyük boş bir kutu yerine kompakt görünür. *@
+<article class="certificate-card @(Model.HasVisual ? "" : "certificate-card--compact")">
+    @if (Model.HasVisual)
+    {
+        <div class="certificate-media">
             @* .gallery-item sınıfı lightbox davranışını da getirir (bkz. site.js) *@
-            <button type="button" class="gallery-item" data-full="@Model.FileUrl"
+            <button type="button" class="gallery-item" data-full="@Model.DisplayImageUrl"
                     data-caption="@Model.Title" aria-label="@Model.Title sertifikasını büyüt">
-                <img src="@Model.FileUrl" alt="@Model.Title sertifikası" loading="lazy" />
+                <img src="@Model.DisplayImageUrl" alt="@Model.Title sertifikası" loading="lazy" />
                 <span class="gallery-zoom"><i class="fa fa-magnifying-glass-plus"></i></span>
             </button>
-        }
-        else if (Model.IsPdf)
-        {
-            @* PDF sayfa içinde gömülemiyor (X-Frame-Options: DENY), yeni sekmede açılır *@
-            <a href="@Model.FileUrl" target="_blank" rel="noopener" class="certificate-file">
-                <i class="fa fa-file-pdf"></i>
-                <span>PDF olarak görüntüle</span>
-            </a>
-        }
-        else
-        {
-            <div class="certificate-file certificate-file-empty">
-                <i class="fa fa-certificate"></i>
-            </div>
-        }
-    </div>
+        </div>
+    }
 
     <div class="certificate-body">
         @if (Model.Categories.Count > 0)
@@ -64,11 +52,23 @@
             <p class="certificate-desc">@Model.Description</p>
         }
 
-        @if (!string.IsNullOrWhiteSpace(Model.CredentialUrl))
+        @if (Model.IsPdf || !string.IsNullOrWhiteSpace(Model.CredentialUrl))
         {
-            <a href="@Model.CredentialUrl" target="_blank" rel="noopener" class="certificate-verify">
-                <i class="fa fa-shield-halved"></i> Doğrula
-            </a>
+            <div class="certificate-actions">
+                @if (Model.IsPdf)
+                {
+                    @* PDF sayfa içinde gömülemiyor (CSP frame-ancestors / X-Frame-Options), yeni sekmede açılır *@
+                    <a href="@Model.FileUrl" target="_blank" rel="noopener" class="certificate-action">
+                        <i class="fa fa-file-pdf"></i> PDF
+                    </a>
+                }
+                @if (!string.IsNullOrWhiteSpace(Model.CredentialUrl))
+                {
+                    <a href="@Model.CredentialUrl" target="_blank" rel="noopener" class="certificate-action">
+                        <i class="fa fa-shield-halved"></i> Doğrula
+                    </a>
+                }
+            </div>
         }
     </div>
 </article>

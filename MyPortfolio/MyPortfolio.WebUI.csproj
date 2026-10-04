@@ -29,4 +29,10 @@
     <Folder Include="wwwroot\vendors\" />
   </ItemGroup>
 
+  <!-- Yerel geliştirme ayarları sunucuya gitmez: canlı ortam Production olarak çalışır,
+       Development dosyasına hiç ihtiyaç duymaz ve içindeki yerel bilgiler sunucuda durmamalı. -->
+  <ItemGroup>
+    <Content Update="appsettings.Development.json" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+
 </Project>

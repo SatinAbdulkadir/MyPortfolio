@@ -1,6 +1,9 @@
+using Docnet.Core;
+using Docnet.Core.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.Processing;
 
@@ -134,6 +137,68 @@ namespace MyPortfolio.BusinessLayer.Helpers
             catch (Exception)
             {
                 // Bozuk/egzotik format: optimizasyon atlanır, çağıran orijinal kaydetmeye düşer
+                return null;
+            }
+        }
+
+        // PDF önizlemesi: ilk sayfa bu ölçekte (72 dpi × 2 ≈ 144 dpi) çizilir, sonra en fazla bu genişliğe küçültülür.
+        // A4 yatay bir sertifika ~1684 px çıkar; kartta ve lightbox'ta net görünür, dosya ~100-200 KB olur.
+        private const double PdfRenderScale = 2.0;
+        private const int MaxPreviewWidth = 1600;
+
+        // PDFium (Docnet.Core'un kullandığı Chrome PDF motoru) aynı anda birden çok iş parçacığından
+        // çağrılmaya uygun değil; iki admin aynı anda PDF yüklese bile çizimler sırayla yapılır.
+        private static readonly object PdfiumLock = new();
+
+        // Yüklenmiş bir PDF'in ilk sayfasından kartta ve lightbox'ta gösterilecek WebP önizleme üretir.
+        // Sertifikalar genelde tek sayfa olduğu için önizleme = belgenin kendisi.
+        // Herhangi bir sorunda (bozuk/şifreli PDF, sunucuda PDFium yüklenemedi...) null döner: kart o zaman
+        // önizlemesiz, kompakt görünür ve yükleme işlemi başarısız SAYILMAZ.
+        public async Task<string?> TryCreatePdfPreviewAsync(string? pdfRelativeUrl)
+        {
+            if (string.IsNullOrWhiteSpace(pdfRelativeUrl) || !pdfRelativeUrl.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase)) return null;
+
+            string webRoot = Path.GetFullPath(_webHostEnvironment.WebRootPath);
+            string pdfPath = Path.GetFullPath(Path.Combine(webRoot, pdfRelativeUrl.TrimStart('/')));
+
+            // Path traversal koruması: sadece wwwroot içindeki dosyalar
+            if (!pdfPath.StartsWith(webRoot, StringComparison.OrdinalIgnoreCase) || !File.Exists(pdfPath)) return null;
+
+            try
+            {
+                byte[] bgra;
+                int width, height;
+
+                lock (PdfiumLock)
+                {
+                    using var document = DocLib.Instance.GetDocReader(pdfPath, new PageDimensions(PdfRenderScale));
+                    if (document.GetPageCount() == 0) return null;
+
+                    using var page = document.GetPageReader(0);
+                    bgra = page.GetImage(RenderFlags.RenderAnnotations);
+                    width = page.GetPageWidth();
+                    height = page.GetPageHeight();
+                }
+
+                using var image = Image.LoadPixelData<Bgra32>(bgra, width, height);
+
+                // PDFium arka planı şeffaf çizer; WebP'de siyah/şeffaf görünmesin diye beyaz zemin
+                image.Mutate(x => x.BackgroundColor(Color.White));
+
+                if (image.Width > MaxPreviewWidth)
+                {
+                    image.Mutate(x => x.Resize(new ResizeOptions { Mode = ResizeMode.Max, Size = new Size(MaxPreviewWidth, MaxPreviewWidth * 4) }));
+                }
+
+                // /certificates/abc.pdf → /certificates/abc.preview.webp (hangi PDF'e ait olduğu adından belli)
+                string previewRelativeUrl = pdfRelativeUrl[..^".pdf".Length] + ".preview.webp";
+                string previewPath = Path.GetFullPath(Path.Combine(webRoot, previewRelativeUrl.TrimStart('/')));
+
+                await image.SaveAsWebpAsync(previewPath, new WebpEncoder { Quality = WebpQuality });
+                return previewRelativeUrl;
+            }
+            catch (Exception)
+            {
                 return null;
             }
         }
