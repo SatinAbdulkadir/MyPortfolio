@@ -72,11 +72,15 @@ namespace MyPortfolio.DataAccessLayer.Migrations
             // VERİ TAŞIMA: EF varsayılan olarak CategoryId'yi en başta siliyordu ve mevcut
             // sertifika-kategori bağları kaybolurdu. Önce ara tabloya kopyalanıyor, sonra siliniyor.
             // Var olmayan kategoriye işaret eden satır olursa FK patlamasın diye o satırlar atlanır.
+            // EXEC içinde: idempotent betikte (migrations script --idempotent) bu SQL "zaten uygulandı mı"
+            // IF bloğunda durur. SQL Server bloğu çalıştırmadan önce derlediği için, migration uygulanmış bir
+            // veritabanında (CategoryId silinmiş) betik tekrar çalıştırılırsa IF atlansa bile
+            // "Invalid column name" verirdi. EXEC'teki SQL sadece gerçekten çalışacağı an derlenir.
             migrationBuilder.Sql(@"
-                INSERT INTO CertificateCategoryLinks (CertificateId, CategoryId, CreatedDate, IsActive)
-                SELECT c.Id, c.CategoryId, GETDATE(), 1
-                FROM Certificates c
-                WHERE c.CategoryId IN (SELECT Id FROM CertificateCategories);");
+                EXEC(N'INSERT INTO CertificateCategoryLinks (CertificateId, CategoryId, CreatedDate, IsActive)
+                       SELECT c.Id, c.CategoryId, GETDATE(), 1
+                       FROM Certificates c
+                       WHERE c.CategoryId IN (SELECT Id FROM CertificateCategories);');");
 
             migrationBuilder.DropColumn(
                 name: "CategoryId",
@@ -96,9 +100,9 @@ namespace MyPortfolio.DataAccessLayer.Migrations
                 defaultValue: 0);
 
             migrationBuilder.Sql(@"
-                UPDATE c SET CategoryId = ISNULL(
-                    (SELECT MIN(l.CategoryId) FROM CertificateCategoryLinks l WHERE l.CertificateId = c.Id), 0)
-                FROM Certificates c;");
+                EXEC(N'UPDATE c SET CategoryId = ISNULL(
+                           (SELECT MIN(l.CategoryId) FROM CertificateCategoryLinks l WHERE l.CertificateId = c.Id), 0)
+                       FROM Certificates c;');");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_CertificateCategories_CertificateCategories_ParentId",
