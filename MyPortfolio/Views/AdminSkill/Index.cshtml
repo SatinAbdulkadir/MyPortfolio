@@ -53,7 +53,7 @@
                                     </a>
                                     @* Silme POST + antiforgery token ile yapılır (CSRF koruması) *@
                                     <form method="post" action="/AdminSkill/DeleteSkill/@item.Id" asp-antiforgery="true" class="d-inline"
-                                          onsubmit="return confirm('Bu yeteneği silmek istediğine emin misin reis?')">
+                                          data-confirm="Bu yeteneği silmek istediğine emin misin reis?">
                                         <button type="submit" class="btn btn-outline-danger btn-sm">
                                             <i class="fas fa-trash"></i> Sil
                                         </button>

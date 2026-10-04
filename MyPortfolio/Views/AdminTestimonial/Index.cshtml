@@ -53,7 +53,7 @@
                                     </a>
                                     @* Silme POST + antiforgery token ile yapılır (CSRF koruması) *@
                                     <form method="post" action="/AdminTestimonial/DeleteTestimonial/@item.Id" asp-antiforgery="true" class="d-inline"
-                                          onsubmit="return confirm('Bu referansı silmek istediğine emin misin reis?')">
+                                          data-confirm="Bu referansı silmek istediğine emin misin reis?">
                                         <button type="submit" class="btn btn-outline-danger btn-sm">
                                             <i class="fas fa-trash"></i>
                                         </button>

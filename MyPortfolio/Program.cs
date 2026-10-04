@@ -168,6 +168,10 @@ app.Use(async (context, next) =>
     context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
     // Kullan�lmayan taray�c� yetenekleri (kamera, mikrofon, konum) kapat�l�r
     context.Response.Headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
+    // İçerik Güvenlik Politikası: izin verilen script/stil/font/iframe kaynakları ve bu isteğe özel
+    // nonce (inline script'ler sadece bu nonce ile çalışır). Ayrıntılar: Security/ContentSecurityPolicy.cs
+    var cspNonce = MyPortfolio.WebUI.Security.ContentSecurityPolicy.CreateNonce(context);
+    context.Response.Headers["Content-Security-Policy"] = MyPortfolio.WebUI.Security.ContentSecurityPolicy.Build(cspNonce);
     await next();
 });
 
