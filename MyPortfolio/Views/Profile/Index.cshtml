@@ -1,79 +1,144 @@
-﻿@model MyPortfolio.BusinessLayer.Dtos.AppUserDtos.EditProfileDto
+﻿@model MyPortfolio.WebUI.Models.AccountSettingsViewModel
+@inject Microsoft.Extensions.Options.IOptions<Microsoft.AspNetCore.Identity.IdentityOptions> IdentityOptions
 @{
-    ViewData["Title"] = "Profilim ve Şifre";
+    ViewData["Title"] = "Hesap Güvenliği";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+    // Şifre kuralları elle yazılmaz, Program.cs'teki Identity ayarlarından okunur (tek kaynak)
+    var pw = IdentityOptions.Value.Password;
+    var rules = new List<string> { $"En az {pw.RequiredLength} karakter" };
+    if (pw.RequireUppercase) rules.Add("En az bir büyük harf (A-Z)");
+    if (pw.RequireLowercase) rules.Add("En az bir küçük harf (a-z)");
+    if (pw.RequireDigit) rules.Add("En az bir rakam (0-9)");
+    if (pw.RequireNonAlphanumeric) rules.Add("En az bir sembol (! ? * _ gibi)");
+
+    var isDefaultUserName = string.Equals(Model.CurrentUserName, "admin", StringComparison.OrdinalIgnoreCase);
 }
 
-<div class="col-12 grid-margin stretch-card">
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <h4 class="card-title mb-4">Profil Bilgilerimi Güncelle</h4>
-            <p class="card-description mb-5">
-                Bu panelden kişisel bilgilerinizi ve giriş şifrenizi güncelleyebilirsiniz.
-            </p>
+<div class="mb-4">
+    <h4 class="fw-bold mb-1"><i class="fas fa-user-lock text-primary me-2"></i>Hesap Güvenliği</h4>
+    <p class="text-muted mb-0">Panele giriş yaptığın kullanıcı adını ve şifreni buradan değiştirebilirsin.</p>
+</div>
 
-            <form class="forms-sample" method="post" novalidate>
-                @* Model bazlı genel hataları (Şifre yanlış vb.) göstermek için *@
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-4 fw-bold"></div>
+@if (TempData["AccountMessage"] is string message)
+{
+    <div class="alert alert-success d-flex align-items-center shadow-sm" role="alert">
+        <i class="fas fa-check-circle me-2"></i> @message
+    </div>
+}
 
-                @* KİŞİSEL BİLGİLER BÖLÜMÜ *@
-                <div class="row mb-4">
-                    <div class="form-group col-md-6 pb-2">
-                        <label class="font-weight-bold">Adınız</label>
-                        <input type="text" asp-for="Name" class="form-control" placeholder="Adınızı giriniz">
-                        <span asp-validation-for="Name" class="text-danger small fw-bold"></span>
+<div class="row g-4">
+    @* KULLANICI ADI *@
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header py-3 bg-white">
+                <h6 class="m-0 fw-bold text-primary"><i class="fas fa-id-badge me-2"></i>Kullanıcı Adı</h6>
+            </div>
+            <div class="card-body">
+                <p class="mb-3">
+                    Şu anki kullanıcı adın:
+                    <span class="badge bg-dark fs-6 ms-1">@Model.CurrentUserName</span>
+                </p>
+
+                @if (isDefaultUserName)
+                {
+                    <div class="alert alert-warning small py-2">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        <strong>admin</strong> en çok tahmin edilen kullanıcı adıdır. Değiştirirsen giriş için
+                        hem kullanıcı adının hem şifrenin bilinmesi gerekir.
+                    </div>
+                }
+
+                <form method="post" asp-action="ChangeUserName" novalidate>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" asp-for="UserNameForm.NewUserName">Yeni kullanıcı adı</label>
+                        <input type="text" asp-for="UserNameForm.NewUserName" class="form-control" autocomplete="username" placeholder="Örn: abdulkadir.satin" />
+                        <span asp-validation-for="UserNameForm.NewUserName" class="text-danger small fw-bold"></span>
+                        <div class="form-text">Harf, rakam ve <code>- . _ @@ +</code> kullanılabilir. Türkçe karakter ve boşluk kullanılamaz.</div>
                     </div>
 
-                    <div class="form-group col-md-6 pb-2">
-                        <label class="font-weight-bold">Soyadınız</label>
-                        <input type="text" asp-for="Surname" class="form-control" placeholder="Soyadınızı giriniz">
-                        <span asp-validation-for="Surname" class="text-danger small fw-bold"></span>
-                    </div>
-                </div>
-
-                <div class="form-group mb-4 pb-2">
-                    <label class="font-weight-bold">E-posta Adresiniz</label>
-                    <input type="email" asp-for="Email" class="form-control" placeholder="E-posta adresinizi giriniz">
-                    <span asp-validation-for="Email" class="text-danger small fw-bold"></span>
-                </div>
-
-                <div class="form-group mb-5 pb-2">
-                    <label class="font-weight-bold">Profil Fotoğrafı Linki (URL)</label>
-                    <input type="text" asp-for="ImageUrl" class="form-control" placeholder="/images/user-profile.jpg">
-                    <span asp-validation-for="ImageUrl" class="text-danger small fw-bold"></span>
-                </div>
-
-                @* GÜVENLİK BÖLÜMÜ *@
-                <div class="p-4 mb-5 border-left border-warning" style="background-color: #fffaf0; border-radius: 8px;">
-                    <h5 class="text-warning mb-4"><i class="fas fa-shield-alt me-2"></i> Güvenlik Doğrulaması</h5>
-
-                    <div class="form-group mb-4">
-                        <label><strong>Mevcut Şifreniz</strong> <span class="text-muted small">(Değişiklikleri onaylamak için zorunludur)</span></label>
-                        <input type="password" asp-for="CurrentPassword" class="form-control border-warning" placeholder="Şu anki şifrenizi giriniz">
-                        <span asp-validation-for="CurrentPassword" class="text-danger small fw-bold"></span>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-md-6 mb-3">
-                            <label>Yeni Şifre <span class="text-muted small">(İsteğe bağlı)</span></label>
-                            <input type="password" asp-for="Password" class="form-control" placeholder="Yeni şifre">
-                            <span asp-validation-for="Password" class="text-danger small fw-bold"></span>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold" asp-for="UserNameForm.CurrentPassword">Mevcut şifren</label>
+                        <div class="input-group">
+                            <input type="password" asp-for="UserNameForm.CurrentPassword" class="form-control" autocomplete="current-password" placeholder="Onay için şu anki şifren" />
+                            <button type="button" class="btn btn-outline-secondary js-toggle-password" aria-label="Şifreyi göster"><i class="fas fa-eye"></i></button>
                         </div>
-
-                        <div class="form-group col-md-6 mb-3">
-                            <label>Yeni Şifre Tekrar</label>
-                            <input type="password" asp-for="ConfirmPassword" class="form-control" placeholder="Yeni şifreyi tekrarla">
-                            <span asp-validation-for="ConfirmPassword" class="text-danger small fw-bold"></span>
-                        </div>
+                        <span asp-validation-for="UserNameForm.CurrentPassword" class="text-danger small fw-bold"></span>
                     </div>
-                </div>
 
-                @* BUTONLAR *@
-                <div class="mt-4 pt-3 border-top">
-                    <button type="submit" class="btn btn-primary btn-lg mr-2 px-4 shadow">Değişiklikleri Kaydet</button>
-                    <button type="reset" class="btn btn-light btn-lg px-4">İptal</button>
-                </div>
-            </form>
+                    <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                        <i class="fas fa-save me-1"></i> Kullanıcı Adını Değiştir
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @* ŞİFRE *@
+    <div class="col-lg-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header py-3 bg-white">
+                <h6 class="m-0 fw-bold text-primary"><i class="fas fa-key me-2"></i>Şifre</h6>
+            </div>
+            <div class="card-body">
+                <form method="post" asp-action="ChangePassword" novalidate>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" asp-for="PasswordForm.CurrentPassword">Mevcut şifren</label>
+                        <div class="input-group">
+                            <input type="password" asp-for="PasswordForm.CurrentPassword" class="form-control" autocomplete="current-password" />
+                            <button type="button" class="btn btn-outline-secondary js-toggle-password" aria-label="Şifreyi göster"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <span asp-validation-for="PasswordForm.CurrentPassword" class="text-danger small fw-bold"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" asp-for="PasswordForm.NewPassword">Yeni şifre</label>
+                        <div class="input-group">
+                            <input type="password" asp-for="PasswordForm.NewPassword" class="form-control" autocomplete="new-password" />
+                            <button type="button" class="btn btn-outline-secondary js-toggle-password" aria-label="Şifreyi göster"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <span asp-validation-for="PasswordForm.NewPassword" class="text-danger small fw-bold"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold" asp-for="PasswordForm.ConfirmPassword">Yeni şifre (tekrar)</label>
+                        <div class="input-group">
+                            <input type="password" asp-for="PasswordForm.ConfirmPassword" class="form-control" autocomplete="new-password" />
+                            <button type="button" class="btn btn-outline-secondary js-toggle-password" aria-label="Şifreyi göster"><i class="fas fa-eye"></i></button>
+                        </div>
+                        <span asp-validation-for="PasswordForm.ConfirmPassword" class="text-danger small fw-bold"></span>
+                    </div>
+
+                    <div class="bg-light border rounded p-3 mb-4 small">
+                        <div class="fw-bold mb-1"><i class="fas fa-list-check me-1"></i>Yeni şifre kuralları</div>
+                        <ul class="mb-0 ps-3">
+                            @foreach (var rule in rules)
+                            {
+                                <li>@rule</li>
+                            }
+                        </ul>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                        <i class="fas fa-save me-1"></i> Şifreyi Değiştir
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Göz ikonu: şifreyi yazarken kontrol edebilmek için göster/gizle
+        document.querySelectorAll('.js-toggle-password').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var input = btn.parentElement.querySelector('input');
+                var show = input.type === 'password';
+                input.type = show ? 'text' : 'password';
+                btn.querySelector('i').className = show ? 'fas fa-eye-slash' : 'fas fa-eye';
+                btn.setAttribute('aria-label', show ? 'Şifreyi gizle' : 'Şifreyi göster');
+            });
+        });
+    </script>
+}

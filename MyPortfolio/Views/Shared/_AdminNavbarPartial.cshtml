@@ -12,7 +12,7 @@
                     <option value="Referanslar (Testimonial)" />
                     <option value="Sosyal Medya (Social)" />
                     <option value="Hakkımda (About)" />
-                    <option value="Profilim & Şifre" />
+                    <option value="Hesap Güvenliği (Kullanıcı adı & Şifre)" />
                 </datalist>
 
                 <button class="btn btn-primary" type="button" id="btnAdminSearch">
@@ -39,7 +39,7 @@
                             <span class="d-block small text-muted">Hoş geldin,</span>
                             <span class="fw-bold">@User.Identity?.Name</span>
                         </li>
-                        <li><a class="dropdown-item py-2" href="/Profile/Index"><i class="fa fa-user me-2 text-primary"></i>Profilim & Şifre</a></li>
+                        <li><a class="dropdown-item py-2" href="/Profile/Index"><i class="fa fa-user-lock me-2 text-primary"></i>Hesap Güvenliği</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li>
                             @* Çıkış da durum değiştiren bir işlem: POST + antiforgery token ile yapılır *@
@@ -86,7 +86,7 @@
             else if (val.includes('hakkım') || val.includes('about')) {
                 window.location.href = '/AdminAbout/Index';
             }
-            else if (val.includes('profil')) {
+            else if (val.includes('profil') || val.includes('hesap') || val.includes('şifre') || val.includes('kullanıcı')) {
                 window.location.href = '/Profile/Index';
             }
             else {

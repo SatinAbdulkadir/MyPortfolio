@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using MyPortfolio.BusinessLayer.Abstract;
 using MyPortfolio.BusinessLayer.Dtos.AppUserDtos;
 using MyPortfolio.EntityLayer.Concrete;
@@ -9,51 +8,39 @@ namespace MyPortfolio.BusinessLayer.Concrete
     public class AppUserManager : IAppUserService
     {
         private readonly UserManager<AppUser> _userManager;
-        private readonly IMapper _mapper;
 
-        public AppUserManager(UserManager<AppUser> userManager, IMapper mapper)
+        public AppUserManager(UserManager<AppUser> userManager)
         {
             _userManager = userManager;
-            _mapper = mapper;
         }
 
-        public async Task<EditProfileDto> GetUserForEditAsync(string userName)
-        {
-            var user = await _userManager.FindByNameAsync(userName);
-            return _mapper.Map<EditProfileDto>(user);
-        }
-
-        public async Task<IdentityResult> UpdateUserProfileAsync(EditProfileDto editProfileDto, string userName)
+        public async Task<IdentityResult> ChangePasswordAsync(string userName, ChangePasswordDto dto)
         {
             var user = await _userManager.FindByNameAsync(userName);
             if (user == null) return IdentityResult.Failed(_userManager.ErrorDescriber.DefaultError());
 
-            var currentPassword = editProfileDto.CurrentPassword ?? "";
-            var changingPassword = !string.IsNullOrEmpty(editProfileDto.Password);
+            // Eskiden PasswordHasher ile hash elle yazılıyordu: Identity'nin şifre kuralları
+            // (8 karakter, rakam, sembol...) atlanıyor ve security stamp yenilenmiyordu,
+            // yani şifre değişse de diğer cihazlardaki eski oturumlar açık kalıyordu.
+            // ChangePasswordAsync mevcut şifreyi doğrular, kuralları uygular ve stamp'i yeniler.
+            return await _userManager.ChangePasswordAsync(user, dto.CurrentPassword ?? "", dto.NewPassword ?? "");
+        }
 
-            // Mevcut şifre her değişiklikte istenir (formdaki "Değişiklikleri onaylamak için zorunludur").
-            // Eskiden sadece yeni şifre girilince soruluyordu; e-posta şifresiz değiştirilebiliyordu.
-            // Şifre değişiyorsa bu doğrulamayı aşağıdaki ChangePasswordAsync kendisi yapar.
-            if (!changingPassword && !await _userManager.CheckPasswordAsync(user, currentPassword))
+        public async Task<IdentityResult> ChangeUserNameAsync(string userName, ChangeUserNameDto dto)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+            if (user == null) return IdentityResult.Failed(_userManager.ErrorDescriber.DefaultError());
+
+            if (!await _userManager.CheckPasswordAsync(user, dto.CurrentPassword ?? ""))
             {
                 return IdentityResult.Failed(_userManager.ErrorDescriber.PasswordMismatch());
             }
 
-            // Profil alanları (ad, soyad, e-posta, görsel) önce nesneye işlenir;
-            // aşağıdaki iki çağrıdan hangisi çalışırsa kullanıcıyı bu alanlarla birlikte kaydeder
-            _mapper.Map(editProfileDto, user);
+            var newUserName = (dto.NewUserName ?? "").Trim();
 
-            if (changingPassword)
-            {
-                // Eskiden PasswordHasher ile hash elle yazılıyordu: Identity'nin şifre kuralları
-                // (8 karakter, rakam, sembol...) atlanıyor ve security stamp yenilenmiyordu,
-                // yani şifre değişse de diğer cihazlardaki eski oturumlar açık kalıyordu.
-                // ChangePasswordAsync mevcut şifreyi doğrular, kuralları uygular ve stamp'i yeniler.
-                // Başarısız olursa hiçbir şey kaydedilmez (profil alanları dahil).
-                return await _userManager.ChangePasswordAsync(user, currentPassword, editProfileDto.Password!);
-            }
-
-            return await _userManager.UpdateAsync(user);
+            // SetUserNameAsync izin verilen karakterleri ve başka hesapta kullanılıp kullanılmadığını
+            // denetler, normalize edilmiş adı ve security stamp'i de günceller
+            return await _userManager.SetUserNameAsync(user, newUserName);
         }
     }
 }
