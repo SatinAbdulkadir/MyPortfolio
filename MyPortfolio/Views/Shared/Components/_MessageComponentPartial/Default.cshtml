@@ -1,3 +1,4 @@
+@inject Microsoft.Extensions.Configuration.IConfiguration Configuration
 <section id="message-form" class="section-padding pt-0">
     <div class="container">
         <div class="row justify-content-center">
@@ -44,7 +45,10 @@
 
                             <div class="col-12 text-center mt-3">
                                 <!-- BURAYA CLOUDFLARE SITE KEY YAZILACAK -->
-                                <div class="cf-turnstile" data-sitekey="0x4AAAAAADIX1U3xUbSNrznV"></div>
+                                @* Site anahtarı ayardan okunur (TurnstileSettings:SiteKey); yerelde Cloudflare'in test anahtarı
+                                   kullanılabilsin diye. Ayar yoksa canlıdaki anahtar kullanılır. Site anahtarı gizli
+                                   değildir, tasarım gereği HTML'de görünür (gizli olan SecretKey'dir). *@
+                                <div class="cf-turnstile" data-sitekey="@(string.IsNullOrWhiteSpace(Configuration["TurnstileSettings:SiteKey"]) ? "0x4AAAAAADIX1U3xUbSNrznV" : Configuration["TurnstileSettings:SiteKey"])"></div>
                             </div>
                             @* Gönder Butonu *@
                             <div class="col-12 text-center mt-4">

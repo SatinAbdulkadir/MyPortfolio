@@ -17,8 +17,15 @@
     "Server": "mail.abdulkadirsatin.com.tr",
     "Port": 587,
     "SenderEmail": "info@abdulkadirsatin.com.tr",
-    "SenderPassword": "MAIL_SIFRESI_BURAYA",
+    "Password": "MAIL_SIFRESI_BURAYA",
     "ReceiverEmail": "kisisel_mailin@gmail.com"
+  },
+  "TurnstileSettings": {
+    "SiteKey": "CLOUDFLARE_TURNSTILE_SITE_KEY",
+    "SecretKey": "CLOUDFLARE_TURNSTILE_SECRET_KEY"
+  },
+  "Seo": {
+    "BaseUrl": "https://abdulkadirsatin.com.tr"
   },
   "Logging": {
     "LogLevel": {
