@@ -23,30 +23,37 @@ namespace MyPortfolio.BusinessLayer.Concrete
             return _mapper.Map<EditProfileDto>(user);
         }
 
-        public async Task<bool> UpdateUserProfileAsync(EditProfileDto editProfileDto, string userName)
+        public async Task<IdentityResult> UpdateUserProfileAsync(EditProfileDto editProfileDto, string userName)
         {
-            
-            if (string.IsNullOrEmpty(userName)) return false;
-
             var user = await _userManager.FindByNameAsync(userName);
+            if (user == null) return IdentityResult.Failed(_userManager.ErrorDescriber.DefaultError());
 
-            
-            if (user == null) return false;
+            var currentPassword = editProfileDto.CurrentPassword ?? "";
+            var changingPassword = !string.IsNullOrEmpty(editProfileDto.Password);
 
-            
-            if (!string.IsNullOrEmpty(editProfileDto.Password))
+            // Mevcut şifre her değişiklikte istenir (formdaki "Değişiklikleri onaylamak için zorunludur").
+            // Eskiden sadece yeni şifre girilince soruluyordu; e-posta şifresiz değiştirilebiliyordu.
+            // Şifre değişiyorsa bu doğrulamayı aşağıdaki ChangePasswordAsync kendisi yapar.
+            if (!changingPassword && !await _userManager.CheckPasswordAsync(user, currentPassword))
             {
-                var currentPassword = editProfileDto.CurrentPassword ?? ""; 
-                var checkPassword = await _userManager.CheckPasswordAsync(user, currentPassword);
-
-                if (!checkPassword) return false;
-
-                user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, editProfileDto.Password);
+                return IdentityResult.Failed(_userManager.ErrorDescriber.PasswordMismatch());
             }
 
+            // Profil alanları (ad, soyad, e-posta, görsel) önce nesneye işlenir;
+            // aşağıdaki iki çağrıdan hangisi çalışırsa kullanıcıyı bu alanlarla birlikte kaydeder
             _mapper.Map(editProfileDto, user);
-            var result = await _userManager.UpdateAsync(user);
-            return result.Succeeded;
+
+            if (changingPassword)
+            {
+                // Eskiden PasswordHasher ile hash elle yazılıyordu: Identity'nin şifre kuralları
+                // (8 karakter, rakam, sembol...) atlanıyor ve security stamp yenilenmiyordu,
+                // yani şifre değişse de diğer cihazlardaki eski oturumlar açık kalıyordu.
+                // ChangePasswordAsync mevcut şifreyi doğrular, kuralları uygular ve stamp'i yeniler.
+                // Başarısız olursa hiçbir şey kaydedilmez (profil alanları dahil).
+                return await _userManager.ChangePasswordAsync(user, currentPassword, editProfileDto.Password!);
+            }
+
+            return await _userManager.UpdateAsync(user);
         }
     }
 }

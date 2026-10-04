@@ -12,17 +12,14 @@ namespace MyPortfolio.BusinessLayer.ValidationRules
             RuleFor(x => x.Email).NotEmpty().WithMessage("E-posta alanı boş geçilemez.")
                                  .EmailAddress().WithMessage("Geçerli bir e-posta adresi giriniz.");
 
-            // Şifre alanı doluysa kontrolleri yap (Şifre değişmeyecekse boş kalabilir)
-            RuleSet("PasswordChange", () => {
-                RuleFor(x => x.Password).MinimumLength(6).WithMessage("Yeni şifre en az 6 karakter olmalıdır.")
-                                       .When(x => !string.IsNullOrEmpty(x.Password));
+            // Her değişiklik mevcut şifreyle onaylanır (formdaki açıklamayla aynı kural)
+            RuleFor(x => x.CurrentPassword).NotEmpty().WithMessage("Değişiklikleri onaylamak için mevcut şifrenizi girmelisiniz.");
 
-                RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithMessage("Yeni şifreler birbiriyle uyuşmuyor.")
-                                              .When(x => !string.IsNullOrEmpty(x.Password));
-
-                RuleFor(x => x.CurrentPassword).NotEmpty().WithMessage("Şifre değiştirmek için mevcut şifrenizi girmelisiniz.")
-                                              .When(x => !string.IsNullOrEmpty(x.Password));
-            });
+            // DİKKAT: Bu kurallar eskiden RuleSet("PasswordChange") içindeydi. RuleSet'teki kurallar
+            // düz ValidateAsync(dto) çağrısında hiç çalışmaz; yani tekrar alanı kontrol edilmiyordu.
+            // Uzunluk/karmaşıklık burada yazılmaz: tek kaynak Program.cs'teki Identity şifre ayarları.
+            RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithMessage("Yeni şifreler birbiriyle uyuşmuyor.")
+                                           .When(x => !string.IsNullOrEmpty(x.Password));
         }
     }
 }
