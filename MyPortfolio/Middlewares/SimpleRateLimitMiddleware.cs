@@ -37,17 +37,24 @@ namespace MyPortfolio.WebUI.Middlewares
             _next = next;
         }
 
-        // Cloudflare/reverse proxy arkasında RemoteIpAddress herkes için proxy'nin IP'si olur;
-        // gerçek ziyaretçi IP'si header'da gelir. Aksi halde 6. masum ziyaretçi 429 yerdi.
+        // Gerçek istemci IP'si = TCP bağlantısının karşı ucu (RemoteIpAddress).
+        //
+        // CF-Connecting-IP / X-Forwarded-For gibi başlıklara GÜVENİLMEZ. Site doğrudan IIS üzerinden
+        // yayında, önünde Cloudflare ya da başka bir proxy yok (Ekim 2026'da DNS ve yanıt başlıklarıyla
+        // doğrulandı). Proxy yokken bu başlıkları istemcinin kendisi yazar: eskiden her isteğe farklı
+        // sahte IP koyarak limit sınırsızca aşılabiliyordu. (Turnstile kullanılması siteyi Cloudflare
+        // arkasına koymaz; o sadece CAPTCHA kutusudur.)
+        //
+        // İleride Cloudflare gibi bir proxy eklenirse: Program.cs'te UseForwardedHeaders ile SADECE o
+        // proxy'nin IP aralıklarına (KnownNetworks) güvenilmeli. O zaman RemoteIpAddress gerçek ziyaretçi
+        // IP'sini verir ve bu metot değişmeden doğru çalışır.
         private static string ResolveClientIp(HttpContext context)
         {
-            var cfIp = context.Request.Headers["CF-Connecting-IP"].FirstOrDefault();
-            if (!string.IsNullOrWhiteSpace(cfIp)) return cfIp;
+            var ip = context.Connection.RemoteIpAddress;
+            if (ip == null) return "unknown";
 
-            var forwarded = context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
-            if (!string.IsNullOrWhiteSpace(forwarded)) return forwarded.Split(',')[0].Trim();
-
-            return context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+            // IPv4 istemci IPv6 soketinden "::ffff:1.2.3.4" olarak görünebilir; aynı istemci tek sayaç kullansın
+            return (ip.IsIPv4MappedToIPv6 ? ip.MapToIPv4() : ip).ToString();
         }
 
         public async Task InvokeAsync(HttpContext context)
