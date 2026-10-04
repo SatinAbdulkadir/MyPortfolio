@@ -2,12 +2,10 @@
   "ConnectionStrings": {
     "DefaultConnection": "Server=SUNUCU_ADRESI;Database=VERITABANI_ADI;User Id=KULLANICI_ADI;Password=SIFRE;TrustServerCertificate=True;"
   },
-  "SeedData": {
-    "AdminUserName": "portfolio_admin",
-    "AdminEmail": "admin@abdulkadirsatin.com.tr",
-    "AdminPassword": "GucluSifre_2026!",
-    "AdminName": "Abdulkadir",
-    "AdminSurname": "Satın"
+  "AdminUser": {
+    "UserName": "KULLANICI_ADI_BURAYA",
+    "Email": "admin@abdulkadirsatin.com.tr",
+    "Password": "GUCLU_BIR_SIFRE_BURAYA"
   },
   "AdminSettings": {
     "LoginKey": "ozel-giris-anahtari-buraya"
