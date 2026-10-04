@@ -1,6 +1,11 @@
 ﻿@model MyPortfolio.WebUI.Models.CertificateListViewModel
 @{
     ViewData["Title"] = "Sertifikalar";
+
+    // SEO açıklaması gerçek içerikten üretilir: kaç sertifika, hangi kategoriler
+    ViewData["Description"] = Model.TotalCount > 0
+        ? $"Katıldığım eğitimler ve aldığım {Model.TotalCount} sertifika: {string.Join(", ", Model.Groups.Select(g => g.Category.Name))}. Belgeler ve doğrulama linkleriyle."
+        : "Katıldığım eğitimler ve aldığım sertifikalar.";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 

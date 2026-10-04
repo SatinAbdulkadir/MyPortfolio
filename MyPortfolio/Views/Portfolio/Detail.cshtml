@@ -2,6 +2,11 @@
 @using MyPortfolio.BusinessLayer.Helpers
 @{
     ViewData["Title"] = Model.Portfolio.Title;
+
+    // SEO: Google açıklaması ve link paylaşıldığında çıkan kartta projenin kendi kapak görseli
+    ViewData["Description"] = $"{Model.Portfolio.Title} ({Model.Portfolio.SubTitle}): {Model.Portfolio.Description}";
+    ViewData["OgImage"] = Model.Portfolio.ImageUrl;
+    ViewData["OgType"] = "article";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var technologies = (Model.Detail?.Technologies ?? "")

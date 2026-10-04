@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using MyPortfolio.BusinessLayer.Abstract;
 using MyPortfolio.BusinessLayer.Concrete;
@@ -98,6 +99,12 @@ builder.Services.AddControllersWithViews(options =>
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<MyPortfolio.WebUI.Services.ContentCacheVersion>();
 
+// --- SEO ---
+// Başlık/açıklama/paylaşım kartları için site sahibi bilgileri (DB'den, önbellekli) ve ana adres.
+// Ana adres appsettings'te "Seo:BaseUrl" ile ezilebilir; yoksa SeoOptions'taki varsayılan kullanılır.
+builder.Services.Configure<MyPortfolio.WebUI.Services.SeoOptions>(builder.Configuration.GetSection("Seo"));
+builder.Services.AddScoped<MyPortfolio.WebUI.Services.SiteProfileProvider>();
+
 builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "RequestVerificationToken";
@@ -144,6 +151,11 @@ if (!app.Environment.IsDevelopment())
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 app.UseHttpsRedirection();
+
+// SEO: www.abdulkadirsatin.com.tr ve abdulkadirsatin.com.tr ikisi de 200 dönüyordu; Google bunları
+// aynı içeriğin iki kopyası sayabilir. www'li istekler kalıcı (301) olarak www'siz adrese yönlenir.
+// Sadece "www." ile başlayan host'ları etkiler; localhost etkilenmez.
+app.UseRewriter(new RewriteOptions().AddRedirectToNonWwwPermanent());
 
 // --- G�venlik Ba�l�klar� (Security Headers) ---
 app.Use(async (context, next) =>
