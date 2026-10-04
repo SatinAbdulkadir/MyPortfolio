@@ -19,6 +19,22 @@
         </div>
     </div>
     <div class="card-body">
+        @{
+            var missingPreviews = Model?.Count(c => c.IsPdf && string.IsNullOrWhiteSpace(c.PreviewUrl)) ?? 0;
+        }
+        @if (missingPreviews > 0)
+        {
+            @* Önizleme özelliğinden önce yüklenen PDF'ler için bir kerelik toplu üretim *@
+            <div class="alert alert-info d-flex justify-content-between align-items-center py-2">
+                <span class="small"><i class="fas fa-image me-1"></i> @missingPreviews PDF sertifikanın önizlemesi yok; sitede kompakt kart olarak görünüyorlar.</span>
+                <form method="post" action="/AdminCertificate/GeneratePreviews" asp-antiforgery="true" class="m-0">
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fas fa-magic me-1"></i> Önizlemeleri oluştur
+                    </button>
+                </form>
+            </div>
+        }
+
         <p class="text-muted small">
             <i class="fas fa-star text-warning me-1"></i> işaretli sertifikalar ana sayfadaki "öne çıkanlar" bölümünde görünür;
             tamamı ise Sertifikalar sayfasında listelenir.
@@ -50,9 +66,17 @@
                                     {
                                         <img src="@item.FileUrl" alt="@item.Title" class="img-thumbnail" style="width: 70px; height: 50px; object-fit: cover;" />
                                     }
+                                    else if (item.IsPdf && item.HasVisual)
+                                    {
+                                        @* PDF'in önizlemesi; tıklayınca PDF'in kendisi açılır *@
+                                        <a href="@item.FileUrl" target="_blank" rel="noopener" title="PDF'i aç" class="position-relative d-inline-block">
+                                            <img src="@item.DisplayImageUrl" alt="@item.Title" class="img-thumbnail" style="width: 70px; height: 50px; object-fit: cover;" />
+                                            <i class="fas fa-file-pdf text-danger position-absolute bottom-0 end-0 bg-white rounded px-1"></i>
+                                        </a>
+                                    }
                                     else if (item.IsPdf)
                                     {
-                                        <a href="@item.FileUrl" target="_blank" rel="noopener" title="PDF'i aç">
+                                        <a href="@item.FileUrl" target="_blank" rel="noopener" title="PDF'i aç (önizleme yok)">
                                             <i class="fas fa-file-pdf fa-2x text-danger"></i>
                                         </a>
                                     }

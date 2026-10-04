@@ -143,6 +143,24 @@ namespace MyPortfolio.WebUI.Controllers
             return RedirectToAction("Index");
         }
 
+        // Önizleme özelliği gelmeden önce yüklenmiş PDF'ler için bir kerelik toplu önizleme üretimi
+        [HttpPost]
+        public async Task<IActionResult> GeneratePreviews()
+        {
+            var (created, failed) = await _certificateService.TGenerateMissingPreviewsAsync();
+
+            if (failed > 0)
+            {
+                TempData["WarningMessage"] = $"{created} önizleme oluşturuldu, {failed} PDF için oluşturulamadı (bu kartlar önizlemesiz, kompakt görünür).";
+            }
+            else
+            {
+                TempData["ValidationResult"] = "success";
+            }
+
+            return RedirectToAction("Index");
+        }
+
         // Formdaki kategori onay kutuları için ağaç sırasında liste (ana → alt kategoriler)
         private async Task<List<ResultCertificateCategoryDto>> LoadCategoriesAsync()
         {

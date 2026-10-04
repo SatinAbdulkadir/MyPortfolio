@@ -46,6 +46,13 @@ namespace MyPortfolio.WebUI.Controllers
                     }
                 }
 
+                // Alt kategorisinde zaten görünen sertifika, ana kategorinin doğrudan listesinde tekrar gösterilmez.
+                // (Sertifika hem "Yazılım Geliştirme"ye hem "Web Geliştirme"ye işaretlenebiliyor; eskiden sayfada
+                // 10 sertifika için 19 kart çıkıyordu.) Farklı alt kategorilerde ya da farklı ana kategorilerde
+                // görünmesi ise bilinçli bir seçim olduğu için korunur.
+                var shownInSubGroups = group.SubGroups.SelectMany(s => s.Certificates).Select(c => c.Id).ToHashSet();
+                group.Certificates = group.Certificates.Where(c => !shownInSubGroups.Contains(c.Id)).ToList();
+
                 // Aynı sertifika hem ana kategoride hem alt kategoride olabilir: çipte bir kez sayılsın
                 group.DistinctCount = group.Certificates
                     .Concat(group.SubGroups.SelectMany(s => s.Certificates))

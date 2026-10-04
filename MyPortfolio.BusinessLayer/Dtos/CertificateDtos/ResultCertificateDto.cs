@@ -10,6 +10,7 @@
         public string? CredentialUrl { get; set; }
         public string? FileUrl { get; set; }
         public string? FileType { get; set; }
+        public string? PreviewUrl { get; set; }
         public bool IsFeatured { get; set; }
 
         // Bağlı olduğu tüm kategoriler; ara tablodan manager doldurur
@@ -21,5 +22,9 @@
         // Görsel mi PDF mi: arayüz lightbox mı açsın yoksa yeni sekme mi
         public bool IsPdf => string.Equals(FileType, "pdf", StringComparison.OrdinalIgnoreCase);
         public bool HasImage => !string.IsNullOrWhiteSpace(FileUrl) && !IsPdf;
+
+        // Kartta gösterilecek görsel: yüklenen resim, yoksa PDF'in önizlemesi. İkisi de yoksa kart kompakt.
+        public string? DisplayImageUrl => HasImage ? FileUrl : (string.IsNullOrWhiteSpace(PreviewUrl) ? null : PreviewUrl);
+        public bool HasVisual => DisplayImageUrl != null;
     }
 }

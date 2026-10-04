@@ -64,6 +64,9 @@ namespace MyPortfolio.BusinessLayer.Concrete
         {
             var value = _mapper.Map<Certificate>(createDto);
 
+            // PDF ise ilk sayfasından önizleme üretilir; üretilemezse null kalır (kart kompakt görünür)
+            value.PreviewUrl = await CreatePreviewIfPdfAsync(value);
+
             // InsertAsync SaveChanges yapar; sonrasında value.Id veritabanının verdiği değerdir
             await _certificateDal.InsertAsync(value);
 
@@ -75,7 +78,20 @@ namespace MyPortfolio.BusinessLayer.Concrete
             var existingData = await _certificateDal.GetByIdAsync(updateDto.Id);
             if (existingData == null) return;
 
+            var oldFileUrl = existingData.FileUrl;
+            var oldPreviewUrl = existingData.PreviewUrl;
+
+            // PreviewUrl DTO'da yok: eşleme ona dokunmaz, aşağıda dosya değiştiyse elle güncellenir
             _mapper.Map(updateDto, existingData);
+
+            // Dosya değiştiyse eski önizleme silinir, yeni dosya PDF ise yenisi üretilir
+            // (eski dosyanın kendisini controller siler)
+            if (!string.Equals(oldFileUrl, existingData.FileUrl, StringComparison.Ordinal))
+            {
+                _fileImageHelper.DeleteFile(oldPreviewUrl);
+                existingData.PreviewUrl = await CreatePreviewIfPdfAsync(existingData);
+            }
+
             await _certificateDal.UpdateAsync(existingData);
 
             // Bağlantıları senkronla: sadece çıkarılanlar silinir, sadece yeni seçilenler eklenir
@@ -99,11 +115,34 @@ namespace MyPortfolio.BusinessLayer.Concrete
             var links = await _linkDal.GetByFilterAsync(x => x.CertificateId == id);
             await _linkDal.DeleteRangeAsync(links);
 
-            // Kayıt gidince yüklenen dosya diskte yetim kalmasın
+            // Kayıt gidince yüklenen dosya ve önizlemesi diskte yetim kalmasın
             _fileImageHelper.DeleteFile(value.FileUrl);
+            _fileImageHelper.DeleteFile(value.PreviewUrl);
 
             await _certificateDal.DeleteAsync(value);
         }
+
+        public async Task<(int Created, int Failed)> TGenerateMissingPreviewsAsync()
+        {
+            var pending = await _certificateDal.GetByFilterAsync(x => x.FileType == "pdf" && x.PreviewUrl == null);
+            int created = 0;
+
+            foreach (var certificate in pending)
+            {
+                certificate.PreviewUrl = await CreatePreviewIfPdfAsync(certificate);
+                if (certificate.PreviewUrl == null) continue;
+
+                await _certificateDal.UpdateAsync(certificate);
+                created++;
+            }
+
+            return (created, pending.Count - created);
+        }
+
+        private Task<string?> CreatePreviewIfPdfAsync(Certificate certificate)
+            => string.Equals(certificate.FileType, "pdf", StringComparison.OrdinalIgnoreCase)
+                ? _fileImageHelper.TryCreatePdfPreviewAsync(certificate.FileUrl)
+                : Task.FromResult<string?>(null);
 
         // Formdan aynı Id iki kez gelirse ara tablodaki unique index patlamasın
         private static List<CertificateCategoryLink> BuildLinks(int certificateId, IEnumerable<int> categoryIds)
